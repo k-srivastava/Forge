@@ -106,6 +106,9 @@
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Tuple of the vector’s x and y component respectively.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[float, float]</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -115,10 +118,13 @@
 <dd><p>Check whether the vector is normalized, i.e., its length is equal to one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>precision</strong> – Precision to which the length of the vector is to be checked to keep a delta for floating-point inaccuracies.</p>
+<dd class="field-odd"><p><strong>precision</strong> (<em>int</em>) – Precision to which the length of the vector is to be checked to keep a delta for floating-point inaccuracies; defaults to 4.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if the length pr magnitude of the vector is equal to one; else False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -131,6 +137,9 @@
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Length or magnitude of the vector.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -141,6 +150,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Square of the length or magnitude of the vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -162,7 +174,7 @@
 <dd><p>Scale the vector by another vector’s corresponding components.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>other</strong> – Scaling factor vector.</p>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Scaling factor vector.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -187,12 +199,15 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>from_vector</strong> – Initial vector from which the angle is measured.</p></li>
-<li><p><strong>to_vector</strong> – Final vector from which the angle is stopped being measured.</p></li>
+<li><p><strong>from_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Initial vector from which the angle is measured.</p></li>
+<li><p><strong>to_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Final vector from which the angle is stopped being measured.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Unsigned angle between the two vectors in radians.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -204,16 +219,19 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector</strong> – Vector to be clamped.</p></li>
-<li><p><strong>min</strong> – Minimum bound of the clamp.</p></li>
-<li><p><strong>max</strong> – Maximum bound of the clamp.</p></li>
+<li><p><strong>vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Vector to be clamped.</p></li>
+<li><p><strong>min</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Minimum bound of the clamp.</p></li>
+<li><p><strong>max</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Maximum bound of the clamp.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Vector clamped to the minimum and maximum bound.</p>
 </dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – The maximum bound cannot be greater than the minimum bound on either component axis.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The maximum bound cannot be greater than the minimum bound on either component axis.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,12 +243,15 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector1</strong> – First vector.</p></li>
-<li><p><strong>vector2</strong> – Second vector.</p></li>
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Magnitude of the cross or vector product of the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -242,12 +263,15 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector1</strong> – First vector.</p></li>
-<li><p><strong>vector2</strong> – Second vector.</p></li>
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Distance between the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -259,12 +283,15 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector1</strong> – First vector.</p></li>
-<li><p><strong>vector2</strong> – Second vector.</p></li>
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Square of the distance between the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -276,12 +303,15 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vector1</strong> – First vector.</p></li>
-<li><p><strong>vector2</strong> – Second vector.</p></li>
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Dot or scalar product of the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -294,6 +324,9 @@ rotation becomes irrelevant.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>New down vector.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -303,10 +336,13 @@ rotation becomes irrelevant.</p>
 <dd><p>Create a new vector using an existing tuple of components. Beneficial for internal interoperability with Pygame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>position</strong> – Tuple of the vector’s x and y component respectively.</p>
+<dd class="field-odd"><p><strong>position</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – Tuple of the vector’s x and y component respectively.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Vector created from the tuple.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -319,6 +355,9 @@ rotation becomes irrelevant.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>New left vector.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -329,13 +368,16 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>from_vector</strong> – Initial vector for the interpolation.</p></li>
-<li><p><strong>to_vector</strong> – Final vector for the interpolation.</p></li>
-<li><p><strong>t</strong> – Interpolation parameter to smoothly go from the initial to final vector.</p></li>
+<li><p><strong>from_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Initial vector for the interpolation.</p></li>
+<li><p><strong>to_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Final vector for the interpolation.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Interpolation parameter to smoothly go from the initial to final vector.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Linearly interpolated vector between the initial and final vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,13 +388,16 @@ rotation becomes irrelevant.</p>
 <dd><p>Normalize a vector, i.e., set its length to one while maintaining the same direction and return it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vector</strong> – Vector to be normalized.</p>
+<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Vector to be normalized.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Normalized vector of length or magnitude of one.</p>
 </dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ZeroDivisionError</strong> – A vector of zero length cannot be normalized.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – A vector of zero length cannot be normalized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -365,6 +410,9 @@ rotation becomes irrelevant.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>New one vector.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -376,6 +424,9 @@ rotation becomes irrelevant.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>New random vector.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -386,15 +437,18 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>direction</strong> – Vector to be reflected.</p></li>
-<li><p><strong>normal</strong> – Normal to the reflection.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Vector to be reflected.</p></li>
+<li><p><strong>normal</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Normal to the reflection.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Reflected vector with respect to the normal.</p>
 </dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><strong>ValueError</strong> – The normal vector must be normalized, or have a length or magnitude of one.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The normal vector must be normalized, or have a length or magnitude of one.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -407,6 +461,9 @@ rotation becomes irrelevant.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>New right vector.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -418,6 +475,9 @@ rotation becomes irrelevant.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>New up vector.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -428,6 +488,9 @@ rotation becomes irrelevant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>New zero vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
 </dd>
 </dl>
 </dd></dl>

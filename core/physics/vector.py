@@ -87,6 +87,7 @@ class Vector2D:
         Compute the length of the vector.
 
         :return: Length or magnitude of the vector.
+        :rtype: float
         """
         return math.sqrt(self.x ** 2 + self.y ** 2)
 
@@ -95,6 +96,7 @@ class Vector2D:
         Compute the square of the length of the vector. Faster due to lack of a square root operation.
 
         :return: Square of the length or magnitude of the vector.
+        :rtype: float
         """
         return self.x ** 2 + self.y ** 2
 
@@ -116,10 +118,11 @@ class Vector2D:
         """
         Check whether the vector is normalized, i.e., its length is equal to one.
 
-        :param precision: Precision to which the length of the vector is to be checked to keep a delta for
-        floating-point inaccuracies.
+        :param precision: Precision to which the length of the vector is to be checked to keep a delta for floating-point inaccuracies; defaults to 4.
+        :type precision: int
 
         :return: True if the length pr magnitude of the vector is equal to one; else False.
+        :rtype: bool
         """
         return round(self.length(), precision) == 1
 
@@ -128,6 +131,7 @@ class Vector2D:
         Scale the vector by another vector's corresponding components.
 
         :param other: Scaling factor vector.
+        :type other: Vector2D
         """
         self.x *= other.x
         self.y *= other.y
@@ -137,6 +141,7 @@ class Vector2D:
         Return the x and y components of the vector in a tuple. Beneficial for internal interoperability with Pygame.
 
         :return: Tuple of the vector's x and y component respectively.
+        :rtype: tuple[float, float]
         """
         return self.x, self.y
 
@@ -146,10 +151,14 @@ def clamp(vector: Vector2D, min_: Vector2D, max_: Vector2D) -> Vector2D:
     Clamp a vector between a specified minimum and maximum bound.
 
     :param vector: Vector to be clamped.
+    :type vector: Vector2D
     :param min_: Minimum bound of the clamp.
+    :type min_: Vector2D
     :param max_: Maximum bound of the clamp.
+    :type max_: Vector2D
 
     :return: Vector clamped to the minimum and maximum bound.
+    :rtype: Vector2D
 
     :raises ValueError: The maximum bound cannot be greater than the minimum bound on either component axis.
     """
@@ -182,8 +191,10 @@ def normalized(vector: Vector2D) -> Vector2D:
     Normalize a vector, i.e., set its length to one while maintaining the same direction and return it.
 
     :param vector: Vector to be normalized.
+    :type vector: Vector2D
 
     :return: Normalized vector of length or magnitude of one.
+    :rtype: Vector2D
 
     :raises ZeroDivisionError: A vector of zero length cannot be normalized.
     """
@@ -204,9 +215,12 @@ def angle(from_vector: Vector2D, to_vector: Vector2D) -> float:
     rotation becomes irrelevant.
 
     :param from_vector: Initial vector from which the angle is measured.
+    :type from_vector: Vector2D
     :param to_vector: Final vector from which the angle is stopped being measured.
+    :type to_vector: Vector2D
 
     :return: Unsigned angle between the two vectors in radians.
+    :rtype: float
     """
     if from_vector == to_vector:
         return 0
@@ -219,10 +233,14 @@ def lerp(from_vector: Vector2D, to_vector: Vector2D, t: float) -> Vector2D:
     Compute a smooth linear interpolation of a vector along both axes with respect to a constraint.
 
     :param from_vector: Initial vector for the interpolation.
+    :type from_vector: Vector2D
     :param to_vector: Final vector for the interpolation.
+    :type to_vector: Vector2D
     :param t: Interpolation parameter to smoothly go from the initial to final vector.
+    :type t: float
 
     :return: Linearly interpolated vector between the initial and final vectors.
+    :rtype: Vector2D
     """
     return from_vector + (to_vector - from_vector) * t
 
@@ -232,9 +250,12 @@ def dot(vector1: Vector2D, vector2: Vector2D) -> float:
     Compute the dot product of two vectors.
 
     :param vector1: First vector.
+    :type vector1: Vector2D
     :param vector2: Second vector.
+    :type vector2: Vector2D
 
     :return: Dot or scalar product of the two vectors.
+    :rtype: float
     """
     return vector1.x * vector2.x + vector1.y * vector2.y
 
@@ -244,9 +265,12 @@ def cross(vector1: Vector2D, vector2: Vector2D) -> float:
     Compute the cross product of two vectors.
 
     :param vector1: First vector.
+    :type vector1: Vector2D
     :param vector2: Second vector.
+    :type vector2: Vector2D
 
     :return: Magnitude of the cross or vector product of the two vectors.
+    :rtype: float
     """
     return vector1.x * vector2.y - vector1.y * vector2.x
 
@@ -256,9 +280,12 @@ def distance_between(vector1: Vector2D, vector2: Vector2D) -> float:
     Compute the distance between two vectors.
 
     :param vector1: First vector.
+    :type vector1: Vector2D
     :param vector2: Second vector.
+    :type vector2: Vector2D
 
     :return: Distance between the two vectors.
+    :rtype: float
     """
     return math.sqrt((vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2)
 
@@ -268,9 +295,12 @@ def distance_squared_between(vector1: Vector2D, vector2: Vector2D) -> float:
     Compute the square of the distance between two vectors. Faster due to lack of a square root operation.
 
     :param vector1: First vector.
+    :type vector1: Vector2D
     :param vector2: Second vector.
+    :type vector2: Vector2D
 
     :return: Square of the distance between the two vectors.
+    :rtype: float
     """
     return (vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2
 
@@ -280,9 +310,12 @@ def reflect(direction: Vector2D, normal: Vector2D) -> Vector2D:
     Reflect a vector along a given normal to the direction of the vector.
 
     :param direction: Vector to be reflected.
+    :type direction: Vector2D
     :param normal: Normal to the reflection.
+    :type normal: Vector2D
 
     :return: Reflected vector with respect to the normal.
+    :rtype: Vector2D
 
     :raises ValueError: The normal vector must be normalized, or have a length or magnitude of one.
     """
@@ -297,8 +330,10 @@ def from_tuple(position: tuple[float, float]) -> Vector2D:
     Create a new vector using an existing tuple of components. Beneficial for internal interoperability with Pygame.
 
     :param position: Tuple of the vector's x and y component respectively.
+    :type position: tuple[float, float]
 
     :return: Vector created from the tuple.
+    :rtype: Vector2D
     """
     return Vector2D(*position)
 
@@ -308,6 +343,7 @@ def zero() -> Vector2D:
     Create a new zero vector, i.e., x: 0, y: 0.
 
     :return: New zero vector.
+    :rtype: Vector2D
     """
     return Vector2D(0, 0)
 
@@ -317,6 +353,7 @@ def one() -> Vector2D:
     Create a new one vector: i.e., x: 1, y: 1.
 
     :return: New one vector.
+    :rtype: Vector2D
     """
     return Vector2D(1, 1)
 
@@ -326,6 +363,7 @@ def up() -> Vector2D:
     Create a new vector pointing in the up direction, i.e., x: 0, y: -1.
 
     :return: New up vector.
+    :rtype: Vector2D
     """
     return Vector2D(0, -1)
 
@@ -335,6 +373,7 @@ def down() -> Vector2D:
     Create a new vector pointing in the down direction, i.e., x: 0, y: 1.
 
     :return: New down vector.
+    :rtype: Vector2D
     """
     return Vector2D(0, 1)
 
@@ -344,6 +383,7 @@ def left() -> Vector2D:
     Create a new vector pointing in the left direction, i.e., x: -1, y: 0.
 
     :return: New left vector.
+    :rtype: Vector2D
     """
     return Vector2D(-1, 0)
 
@@ -353,6 +393,7 @@ def right() -> Vector2D:
     Create a new vector pointing in the right direction, i.e., x: 1, y: 0.
 
     :return: New right vector.
+    :rtype: Vector2D
     """
     return Vector2D(1, 0)
 
@@ -362,5 +403,6 @@ def random() -> Vector2D:
     Create a new vector pointing in a random direction, i.e. x: -1 | 0 | 1, y: -1 | 0 | 1.
 
     :return: New random vector.
+    :rtype: Vector2D
     """
     return Vector2D(*rand.choices((-1, 0, 1), k=2))
