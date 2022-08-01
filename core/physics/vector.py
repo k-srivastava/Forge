@@ -1,3 +1,6 @@
+"""
+Two-dimensional vectors in Forge.
+"""
 from __future__ import annotations
 
 import dataclasses
