@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   tests.core.events
    tests.core.physics
 
 Module contents
