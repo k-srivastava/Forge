@@ -10,7 +10,7 @@ _INTERNAL_EVENT_NAMES: list[str] = []
 _EVENTS: dict[str, Event] = {}
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(slots=True)
 class Event:
     """
     Forge's basic but sufficient event system for both internal and developer use.

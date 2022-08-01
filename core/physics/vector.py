@@ -8,7 +8,7 @@ import math
 import random as rand
 
 
-@dataclasses.dataclass
+@dataclasses.dataclass(slots=True)
 class Vector2D:
     """
     Forge's representation of a two-dimensional vector.
