@@ -12,6 +12,13 @@ core.physics.vector module
    :undoc-members:
    :show-inheritance:
 
+core.physics.world module
+--------------------------
+
+.. automodule:: core.physics.world
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------
