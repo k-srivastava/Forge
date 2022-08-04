@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core.physics package &mdash; Forge 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="core.utils package" href="core.utils.html" />
+    <link rel="prev" title="core.managers package" href="core.managers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Forge</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="core.html">core package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="core.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="core.engine.html">core.engine package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.events.html">core.events package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.managers.html">core.managers package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">core.physics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="core.utils.html">core.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#module-core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hearth.html">hearth package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kiln.html">kiln package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Forge</a> &raquo;</li>
+          <li><a href="core.html">core package</a> &raquo;</li>
+      <li>core.physics package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/core.physics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-physics-package">
+<h1>core.physics package<a class="headerlink" href="#core-physics-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-core.physics.vector">
+<span id="core-physics-vector-module"></span><h2>core.physics.vector module<a class="headerlink" href="#module-core.physics.vector" title="Permalink to this heading"></a></h2>
+<p>Two-dimensional vectors in Forge.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">Vector2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core.physics.vector.Vector2D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Forge’s representation of a two-dimensional vector.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.as_tuple">
+<span class="sig-name descname"><span class="pre">as_tuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core.physics.vector.Vector2D.as_tuple" title="Permalink to this definition"></a></dt>
+<dd><p>Return the x and y components of the vector in a tuple. Beneficial for internal interoperability with Pygame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Tuple of the vector’s x and y component respectively.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.is_normalized">
+<span class="sig-name descname"><span class="pre">is_normalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core.physics.vector.Vector2D.is_normalized" title="Permalink to this definition"></a></dt>
+<dd><p>Check whether the vector is normalized, i.e., its length is equal to one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>precision</strong> (<em>int</em>) – Precision to which the length of the vector is to be checked to keep a delta for floating-point inaccuracies; defaults to 4.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the length pr magnitude of the vector is equal to one; else False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#core.physics.vector.Vector2D.length" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the length of the vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Length or magnitude of the vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.length_squared">
+<span class="sig-name descname"><span class="pre">length_squared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#core.physics.vector.Vector2D.length_squared" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the square of the length of the vector. Faster due to lack of a square root operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Square of the length or magnitude of the vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#core.physics.vector.Vector2D.normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize the vector, i.e., set its length to one while maintaining the same direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ZeroDivisionError</strong> – A vector of zero length cannot be normalized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#core.physics.vector.Vector2D.scale" title="Permalink to this definition"></a></dt>
+<dd><p>Scale the vector by another vector’s corresponding components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Scaling factor vector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.x">
+<span class="sig-name descname"><span class="pre">x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#core.physics.vector.Vector2D.x" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.physics.vector.Vector2D.y">
+<span class="sig-name descname"><span class="pre">y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#core.physics.vector.Vector2D.y" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.angle">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#core.physics.vector.angle" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the unsigned angle between one vector and another. The unsigned angle means that the direction of
+rotation becomes irrelevant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Initial vector from which the angle is measured.</p></li>
+<li><p><strong>to_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Final vector from which the angle is stopped being measured.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Unsigned angle between the two vectors in radians.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.clamp">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">clamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.clamp" title="Permalink to this definition"></a></dt>
+<dd><p>Clamp a vector between a specified minimum and maximum bound.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Vector to be clamped.</p></li>
+<li><p><strong>min</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Minimum bound of the clamp.</p></li>
+<li><p><strong>max</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Maximum bound of the clamp.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vector clamped to the minimum and maximum bound.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The maximum bound cannot be greater than the minimum bound on either component axis.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.cross">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">cross</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#core.physics.vector.cross" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the cross product of two vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Magnitude of the cross or vector product of the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.distance_between">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">distance_between</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#core.physics.vector.distance_between" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the distance between two vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Distance between the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.distance_squared_between">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">distance_squared_between</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#core.physics.vector.distance_squared_between" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the square of the distance between two vectors. Faster due to lack of a square root operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Square of the distance between the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.dot">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#core.physics.vector.dot" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the dot product of two vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector1</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – First vector.</p></li>
+<li><p><strong>vector2</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Second vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dot or scalar product of the two vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.down">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">down</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.down" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new vector pointing in the down direction, i.e., x: 0, y: 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New down vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.from_tuple">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">from_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.from_tuple" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new vector using an existing tuple of components. Beneficial for internal interoperability with Pygame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>position</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – Tuple of the vector’s x and y component respectively.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vector created from the tuple.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.left">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">left</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.left" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new vector pointing in the left direction, i.e., x: -1, y: 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New left vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.lerp">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">lerp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.lerp" title="Permalink to this definition"></a></dt>
+<dd><p>Compute a smooth linear interpolation of a vector along both axes with respect to a constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Initial vector for the interpolation.</p></li>
+<li><p><strong>to_vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Final vector for the interpolation.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – Interpolation parameter to smoothly go from the initial to final vector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Linearly interpolated vector between the initial and final vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.normalized">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">normalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.normalized" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize a vector, i.e., set its length to one while maintaining the same direction and return it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vector</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Vector to be normalized.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normalized vector of length or magnitude of one.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – A vector of zero length cannot be normalized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.one">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">one</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.one" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new one vector: i.e., x: 1, y: 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New one vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.random">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.random" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new vector pointing in a random direction, i.e. x: -1 | 0 | 1, y: -1 | 0 | 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New random vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.reflect">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.reflect" title="Permalink to this definition"></a></dt>
+<dd><p>Reflect a vector along a given normal to the direction of the vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>direction</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Vector to be reflected.</p></li>
+<li><p><strong>normal</strong> (<a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Normal to the reflection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reflected vector with respect to the normal.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The normal vector must be normalized, or have a length or magnitude of one.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.right">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">right</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.right" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new vector pointing in the right direction, i.e., x: 1, y: 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New right vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.up">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.up" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new vector pointing in the up direction, i.e., x: 0, y: -1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New up vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.physics.vector.zero">
+<span class="sig-prename descclassname"><span class="pre">core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">zero</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#core.physics.vector.zero" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new zero vector, i.e., x: 0, y: 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New zero vector.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.physics.vector.Vector2D" title="core.physics.vector.Vector2D">Vector2D</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-core.physics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-core.physics" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core.managers.html" class="btn btn-neutral float-left" title="core.managers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core.utils.html" class="btn btn-neutral float-right" title="core.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Kshitij Srivastava.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -16,7 +16,7 @@
 
 `Pygame` is an excellent library to start off with but there are a few key problems with it:
 
-- It doesn't have the best development experience due to a lack of type-hints, good documentation and its general design.
+- Doesn't have the best development experience due to a lack of type-hints, good documentation and its general design.
 - A lot of globals used throughout the code leading to various wildcard imports.
 - The structure of aliases within the library can often confuse many autocomplete engines’ type systems.
 - The code is not very well modularised leading to a difficulty in separation uses of various components. Each file becomes very long and difficult to work with.
@@ -24,17 +24,16 @@
 The crux of the argument is that to many any serious project with `Pygame` requires the creation of another small library on its own.
 
 <aside>
-💡 Using `Pygame` for large projects is like using vanilla `JavaScript` for a large application. You end up making a small and terrible framework of your own at the end, anyway.
-
+💡 Using Pygame for large projects is like using vanilla JavaScript for a large application. You end up making a small and terrible framework of your own at the end, anyway.
 </aside>
 
 ## Why a Wrapper?
 
 For all its demerits, there is one big reason why I am using `Pygame` over making something from scratch: it is cross-platform.
 
-Making a game engine using `OpenGL` would lead to a greater flexibility, but would drastically increase the scope of the project. That would mean adding important features like the `Kiln` CLI and `Hearth` UI system would take far more time than is required.
+Making a game engine using `OpenGL` would lead to a greater flexibility, but would drastically increase the scope of the project. That would mean adding important features like the `Kiln` CLI and `Hearth` UI system would take far more time than is reasonably necessary.
 
-While the scope of the project even as a wrapper is quite large, it’s use-case (a tool for novice developers) doesn't justify the extra overhead that a graphics API like `OpenGL` adds.
+While the scope of the project even as a wrapper is quite large, its use-case (a tool for novice developers) doesn't justify the extra overhead that a graphics API like `OpenGL` adds.
 
 ## What are the Changes?
 
@@ -123,7 +122,7 @@ The scaling is made possible by an advanced system of constraints that allow for
 
 - 
 
-Heart takes inspiration form Apple’s `UIKit` constraint system for its own implementation of constraints.
+`Hearth` takes inspiration form Apple’s `UIKit` constraint system for its own implementation of constraints.
 
 ### Implementation Details
 
@@ -136,3 +135,13 @@ Heart takes inspiration form Apple’s `UIKit` constraint system for its own imp
 `Forge` uses a basic Physics component library to simulate simple Physics-based experiences in 2D. `Pygame` already has a few Physics and Maths classes and implementations however, `Forge` shall not use either for its internal representation of Physics objects.
 
 ### Implementation Details
+
+# Pre-Commit Checklist
+
+1. All the unit tests pass.
+2. The code is correctly documented.
+3. The documentation is updated to the `index.html` file using Sphinx.
+4. There are no known bugs in the code.
+5. PyCharm’s pre-commit checks pass.
+6. All code is manually tested and, if required, added to the test playgrounds.
+7. The correct branch is checked out and only the required files are committed. Internal test files are not to be committed.
