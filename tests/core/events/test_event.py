@@ -2,8 +2,8 @@ from io import StringIO
 from unittest import TestCase
 from unittest.mock import patch
 
-from core.events.event import Event
-from core.events.event import get_event, delete_event
+from core.managers.event import Event
+from core.managers.event import get_event, delete_event
 
 
 class TestEvent(TestCase):
