@@ -28,9 +28,8 @@ class Event:
         if self.name in _INTERNAL_EVENT_NAMES:
             raise ValueError(f'Cannot create event: {self.name}. An internal event of the same name already exists.')
 
-        for event_name in _EVENTS:
-            if event_name == self.name:
-                raise ValueError(f'Cannot create two events of the same name: {self.name}.')
+        if self.name in _EVENTS:
+            raise ValueError(f'Cannot create two events of the same name: {self.name}.')
 
         _EVENTS[self.name] = self
 
