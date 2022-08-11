@@ -54,6 +54,12 @@ class TestVector2D(TestCase):
         vec = vector.Vector2D(self.rand_x, self.rand_y)
         self.assertEqual((self.rand_x, self.rand_y), vec.as_tuple())
 
+    def test_as_pygame_vector(self):
+        forge_vec = vector.Vector2D(self.rand_x, self.rand_y)
+        pygame_vec = pygame.math.Vector2(self.rand_x, self.rand_y)
+
+        self.assertEqual(pygame_vec, forge_vec.as_pygame_vector())
+
     def test_vector_clamp(self):
         vec = vector.Vector2D(100, -100)
         min_ = vector.Vector2D(0, 0)
@@ -79,6 +85,14 @@ class TestVector2D(TestCase):
     def test_vector_normalized_raises(self):
         zero_vec = vector.Vector2D(0, 0)
         self.assertRaises(ZeroDivisionError, vector.normalized, zero_vec)
+
+    def test_vector_scaled(self):
+        vec = vector.Vector2D(self.rand_x, self.rand_y)
+        scaled_vec = vector.scaled(vec, 10)
+
+        # Account for certain floating-point inaccuracies.
+        self.assertAlmostEqual(10, scaled_vec.length())
+        self.assertEqual(vector.normalized(vec), vector.normalized(scaled_vec))
 
     def test_vector_angle(self):
         vec = vector.Vector2D(self.rand_x, self.rand_y)
@@ -124,3 +138,9 @@ class TestVector2D(TestCase):
     def test_vector_from_tuple(self):
         vec = vector.Vector2D(self.rand_x, self.rand_y)
         self.assertEqual(vec, vector.from_tuple((self.rand_x, self.rand_y)))
+
+    def test_vector_from_pygame_vector(self):
+        forge_vec = vector.Vector2D(self.rand_x, self.rand_y)
+        pygame_vec = pygame.math.Vector2(self.rand_x, self.rand_y)
+
+        self.assertEqual(forge_vec, vector.from_pygame_vector(pygame_vec))
