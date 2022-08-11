@@ -6,6 +6,12 @@ from __future__ import annotations
 import dataclasses
 import math
 import random as rand
+import typing
+
+import pygame
+
+if typing.TYPE_CHECKING:
+    import core.physics.transform
 
 
 @dataclasses.dataclass(slots=True)
@@ -44,18 +50,30 @@ class Vector2D:
         return self
 
     def __truediv__(self, scalar: int | float) -> Vector2D:
+        if scalar == 0:
+            raise ZeroDivisionError('Cannot divide a vector by zero.')
+
         return Vector2D(self.x / scalar, self.y / scalar)
 
     def __itruediv__(self, scalar: int | float) -> Vector2D:
+        if scalar == 0:
+            raise ZeroDivisionError('Cannot divide a vector by zero.')
+
         self.x /= scalar
         self.y /= scalar
 
         return self
 
     def __floordiv__(self, scalar: int | float) -> Vector2D:
+        if scalar == 0:
+            raise ZeroDivisionError('Cannot divide a vector by zero.')
+
         return Vector2D(self.x // scalar, self.y // scalar)
 
     def __ifloordiv__(self, scalar: int | float) -> Vector2D:
+        if scalar == 0:
+            raise ZeroDivisionError('Cannot divide a vector by zero.')
+
         self.x //= scalar
         self.y //= scalar
 
@@ -125,20 +143,10 @@ class Vector2D:
         floating-point inaccuracies; defaults to 4.
         :type precision: int
 
-        :return: True if the length pr magnitude of the vector is equal to one; else False.
+        :return: True if the length or magnitude of the vector is equal to one; else False.
         :rtype: bool
         """
         return round(self.length(), precision) == 1
-
-    def scale(self, other: Vector2D) -> None:
-        """
-        Scale the vector by another vector's corresponding components.
-
-        :param other: Scaling factor vector.
-        :type other: Vector2D
-        """
-        self.x *= other.x
-        self.y *= other.y
 
     def as_tuple(self) -> tuple[float, float]:
         """
@@ -148,6 +156,15 @@ class Vector2D:
         :rtype: tuple[float, float]
         """
         return self.x, self.y
+
+    def as_pygame_vector(self) -> pygame.math.Vector2:
+        """
+        Return the vector as a Pygame 2D pygame vector. Beneficial for internal interoperability with Pygame.
+
+        :return: Pygame vector from the vector's x and y component respectively.
+        :rtype: pygame.math.Vector2
+        """
+        return pygame.math.Vector2(self.x, self.y)
 
 
 def clamp(vector: Vector2D, min_: Vector2D, max_: Vector2D) -> Vector2D:
@@ -211,6 +228,52 @@ def normalized(vector: Vector2D) -> Vector2D:
     vector.y /= length
 
     return vector
+
+
+def transformed(vector: Vector2D, transform: 'core.physics.transform.Transform2D') -> Vector2D:
+    """
+    Transform a vector by calculating its position against a supplied transform.
+
+    :param vector: Vector to be transformed.
+    :type vector: Vector2D
+    :param transform: Transform for the vector.
+    :type transform: core.physics.transform.Transform2D
+
+    :return: Transformed vector.
+    :rtype: Vector2D
+    """
+    return Vector2D(
+        (transform.cos() * vector.x - transform.sin() * vector.y) + transform.position.x,
+        (transform.sin() * vector.x + transform.cos() * vector.y) + transform.position.y
+    )
+
+
+def orthogonal(vector: Vector2D) -> Vector2D:
+    """
+    Calculate the orthogonal to a given vector.
+
+    :param vector: Vector whose orthogonal is to be calculated.
+    :type vector: Vector2D
+
+    :return: Orthogonal of the vector.
+    :rtype: Vector2D
+    """
+    return Vector2D(vector.y, -vector.x)
+
+
+def scaled(vector: Vector2D, new_scale: float) -> Vector2D:
+    """
+    Scale a vector to a given length while maintaining its current direction.
+
+    :param vector: Vector to be scaled.
+    :type vector: Vector2D
+    :param new_scale: New length of the vector.
+    :type new_scale: float
+
+    :return: Scaled vector with the given length and same direction.
+    :rtype: Vector2D
+    """
+    return normalized(vector) * new_scale
 
 
 def angle(from_vector: Vector2D, to_vector: Vector2D) -> float:
@@ -340,6 +403,19 @@ def from_tuple(position: tuple[float, float]) -> Vector2D:
     :rtype: Vector2D
     """
     return Vector2D(*position)
+
+
+def from_pygame_vector(vector: pygame.math.Vector2) -> Vector2D:
+    """
+    Create a new vectory using an existing Pygame vector. Beneficial for internal interoperability with Pygame.
+
+    :param vector: Pygame 2D vector.
+    :type vector: pygame.math.Vector2
+
+    :return: Forge vector created from the Pygame vector.
+    :rtype: Vector2D
+    """
+    return Vector2D(vector.x, vector.y)
 
 
 def zero() -> Vector2D:
