@@ -101,7 +101,7 @@ class Vector2D:
         return f'Vector -> x: {self.x:.3f}, y: {self.y:.3f}'
 
     def __str__(self) -> str:
-        return f'Forge Vector2D -> x: {self.x}, y: {self.y}, length: {self.length()}'
+        return f'Forge Vector2D -> x: {self.x}, y: {self.y}, Length: {self.length()}'
 
     def length(self) -> float:
         """
@@ -152,16 +152,16 @@ class Vector2D:
         """
         Return the x and y components of the vector in a tuple. Beneficial for internal interoperability with Pygame.
 
-        :return: Tuple of the vector's x and y component respectively.
+        :return: Tuple of the vector's x and y components respectively.
         :rtype: tuple[float, float]
         """
         return self.x, self.y
 
     def as_pygame_vector(self) -> pygame.math.Vector2:
         """
-        Return the vector as a Pygame 2D pygame vector. Beneficial for internal interoperability with Pygame.
+        Return the vector as a Pygame 2D vector. Beneficial for internal interoperability with Pygame.
 
-        :return: Pygame vector from the vector's x and y component respectively.
+        :return: Pygame vector from the vector's x and y components respectively.
         :rtype: pygame.math.Vector2
         """
         return pygame.math.Vector2(self.x, self.y)
