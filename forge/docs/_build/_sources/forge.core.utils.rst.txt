@@ -1,0 +1,53 @@
+core.utils package
+==================
+
+Submodules
+----------
+
+forge.core.utils.aliases module
+--------------------------------
+
+.. automodule:: forge.core.utils.aliases
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.core.utils.base module
+--------------------------------
+
+.. automodule:: forge.core.utils.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.core.utils.dispatch module
+--------------------------------
+
+.. automodule:: forge.core.utils.dispatch
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.core.utils.loaders module
+--------------------------------
+
+.. automodule:: forge.core.utils.loaders
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.core.utils.shapes module
+--------------------------------
+
+.. automodule:: forge.core.utils.shapes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: forge.core.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
