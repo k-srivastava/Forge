@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "game-forge"
+version = "0.2.1"
+authors = [
+    { name = "Kshitij Srivastava", email = "kshitijsrivastava2312@gmail.com" }
+]
+description = "A Pygame wrapper for making simple, yet detailed 2D games and experiences."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/k-srivastava/Forge/"
+"Bug Tracker" = "https://github.com/k-srivastava/Forge/issues"
