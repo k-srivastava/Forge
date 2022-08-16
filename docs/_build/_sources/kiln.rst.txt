@@ -8,7 +8,6 @@ Subpackages
    :maxdepth: 4
 
    kiln.engine
-   kiln.events
    kiln.managers
 
 Module contents
