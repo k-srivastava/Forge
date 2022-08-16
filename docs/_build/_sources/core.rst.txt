@@ -8,7 +8,6 @@ Subpackages
    :maxdepth: 4
 
    core.engine
-   core.events
    core.managers
    core.physics
    core.utils

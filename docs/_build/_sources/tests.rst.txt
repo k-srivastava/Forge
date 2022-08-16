@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    tests.core
+   tests.playgrounds
 
 Module contents
 ---------------

@@ -19,6 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tests.playgrounds package" href="tests.playgrounds.html" />
     <link rel="prev" title="tests.core.events package" href="tests.core.events.html" /> 
 </head>
 
@@ -46,6 +47,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="tests.html">tests package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="tests.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="tests.core.html">tests.core package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tests.playgrounds.html">tests.playgrounds package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="tests.html#module-tests">Module contents</a></li>
@@ -95,12 +97,17 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="tests.core.physics.test_vector.TestVector2D.rand_x">
-<span class="sig-name descname"><span class="pre">rand_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-41</span></em><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.rand_x" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rand_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-45</span></em><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.rand_x" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="tests.core.physics.test_vector.TestVector2D.rand_y">
-<span class="sig-name descname"><span class="pre">rand_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-30</span></em><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.rand_y" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rand_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">18</span></em><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.rand_y" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="tests.core.physics.test_vector.TestVector2D.test_as_pygame_vector">
+<span class="sig-name descname"><span class="pre">test_as_pygame_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.test_as_pygame_vector" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -159,6 +166,11 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="tests.core.physics.test_vector.TestVector2D.test_vector_from_pygame_vector">
+<span class="sig-name descname"><span class="pre">test_vector_from_pygame_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.test_vector_from_pygame_vector" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="tests.core.physics.test_vector.TestVector2D.test_vector_from_tuple">
 <span class="sig-name descname"><span class="pre">test_vector_from_tuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.test_vector_from_tuple" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -188,6 +200,11 @@
 <span class="sig-name descname"><span class="pre">test_vector_reflect_raises</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.test_vector_reflect_raises" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="tests.core.physics.test_vector.TestVector2D.test_vector_scaled">
+<span class="sig-name descname"><span class="pre">test_vector_scaled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tests.core.physics.test_vector.TestVector2D.test_vector_scaled" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -201,6 +218,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="tests.core.events.html" class="btn btn-neutral float-left" title="tests.core.events package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tests.playgrounds.html" class="btn btn-neutral float-right" title="tests.playgrounds package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
