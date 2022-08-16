@@ -94,14 +94,17 @@ class Event:
     def post(self) -> None:
         """
         Post the event that calls all of its subscriber functions with their respective arguments. If an exception
-        occurs when calling a subscriber function, it is ignored and printed to the console.
+        occurs when calling a subscriber function, it is raised as a warning instead.
+
+        :raises RuntimeWarning: A subscribed function had an error during its execution. The severity is bumped down to
+                                a warning instead.
         """
         for function, arguments in self._subscribers.items():
             try:
                 function(*arguments)
 
             except Exception as e:
-                print(f'Execution of {function.__name__} led to an exception.\n{e}')
+                raise RuntimeWarning(f'Execution of {function.__name__} led to an exception.\n{e}')
 
 
 def get_event(event_name: str) -> Event:
