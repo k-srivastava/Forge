@@ -21,7 +21,8 @@ class Event:
 
     def __post_init__(self) -> None:
         """
-        Check whether the supplied event name is unique and not taken by another existing or internal event.
+        Check whether the supplied event name is unique and not taken by another existing or internal event. If unique,
+        add the event to the dictionary.
 
         :raises ValueError: All event names must be unique.
         """
@@ -35,7 +36,7 @@ class Event:
 
     def __iadd__(self, subscriber: tuple[typing.Callable[[typing.Any], None], tuple[typing.Any, ...]]) -> Event:
         """
-        Register a new function to the event as a tuple of a callable and its arguments.
+        Register a new function to the event as a tuple of a callable and its arguments using the '+=' operator.
 
         :param subscriber: Function and its arguments to be registered to the event.
         :type subscriber: tuple[Callable[Any, None], tuple[Any, ...]]
@@ -52,12 +53,11 @@ class Event:
             raise ValueError(f'Function {function.__name__} is already subscribed to the event.')
 
         self._subscribers[function] = arguments
-
         return self
 
     def __isub__(self, function: typing.Callable) -> Event:
         """
-        Deregister an existing function to the event.
+        Deregister an existing function to the event using the '-=' operator.
 
         :param function: Function to be deregistered from the event.
         :type function: Callable
@@ -71,14 +71,25 @@ class Event:
             raise ValueError(f'Function {function.__name__} never subscribed to the event; cannot be removed.')
 
         self._subscribers.pop(function)
-
         return self
 
     def __repr__(self) -> str:
-        return f'Event -> name: {self.name}, subscriber count: {len(self._subscribers)}'
+        """
+        Internal representation of the event.
+
+        :return: Simple string with event name and subscriber count.
+        :rtype: str
+        """
+        return f'Event -> Name: {self.name}, Subscriber Count: {len(self._subscribers)}'
 
     def __str__(self) -> str:
-        return f'Forge Event -> name {self.name}, subscribers: {self._subscribers.keys()}'
+        """
+        String representation of the event.
+
+        :return: Detailed string with event information.
+        :rtype: str
+        """
+        return f'Forge Event -> Name {self.name}, Subscribers: {self._subscribers.keys()}'
 
     def post(self) -> None:
         """
