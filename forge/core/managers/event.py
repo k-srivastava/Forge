@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import dataclasses
 import typing
+import warnings
 
 _INTERNAL_EVENT_NAMES: list[str] = []
 _EVENTS: dict[str, Event] = {}
@@ -104,7 +105,7 @@ class Event:
                 function(*arguments)
 
             except Exception as e:
-                raise RuntimeWarning(f'Execution of {function.__name__} led to an exception.\n{e}')
+                warnings.warn(f'Execution of {function.__name__} led to an exception.\n{e}')
 
 
 def get_event(event_name: str) -> Event:
