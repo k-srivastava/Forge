@@ -4,20 +4,25 @@ Images in Forge.
 """
 from __future__ import annotations
 
-import copy
 import dataclasses
+import warnings
 
+import attrs
 import pygame
 
 import forge.core.engine.constants
 import forge.core.engine.renderer
-import forge.core.engine.settings
 import forge.core.physics.vector
 import forge.core.utils.aliases
 import forge.core.utils.base
 import forge.core.utils.dispatch
+import forge.core.utils.id
 
-_IMAGES: dict[str, Image] = {}
+_IMAGES: dict[int, Image] = {}
+IMAGE_IDS: dict[str, int] = {}
+
+_IMAGE_POOLS: dict[int, ImagePool] = {}
+IMAGE_POOL_IDS: dict[str, int] = {}
 
 
 @dataclasses.dataclass(slots=True)
@@ -25,26 +30,26 @@ class Image(forge.core.utils.base.Renderable):
     """
     Forge's representation of a unique image.
     """
-    name: str
     filename: str
     position: forge.core.physics.vector.Vector2D
+    name: str = attrs.field(on_setattr=attrs.setters.frozen)
+    parent: ImagePool | None = dataclasses.field(default=None, init=False)
+    _id: int = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
         """
         Check whether the supplied image name is unique and not taken by another existing image. If unique, add the
-        image to the dictionary. Also add the image to the base object renderer if the auto-add setting is enabled.
+        image to the dictionary. Also create a new unique ID for the image.
 
         :raises ValueError: All image names must be unique.
         """
-        if self.name in _IMAGES:
+        if self.name in IMAGE_IDS:
             raise ValueError(f'Cannot create two images of the same name: {self.name}.')
 
-        # Add the image to the dictionary.
-        _IMAGES[self.name] = self
+        self._id = forge.core.utils.id.generate_random_id()
 
-        # Add the image to the renderer.
-        if forge.core.engine.settings.AUTO_ADD_IMAGES:
-            self.add_to_renderer()
+        _IMAGES[self._id] = self
+        IMAGE_IDS[self.name] = self._id
 
     def __repr__(self) -> str:
         """
@@ -62,7 +67,17 @@ class Image(forge.core.utils.base.Renderable):
         :return: Detailed string with image information.
         :rtype: str
         """
-        return f'Forge Image -> Name: {self.name}, Filename: {self.filename}, Position: {self.position.__str__()}'
+        return f'Forge Image -> Name: {self.name}, ID: {self._id} Filename: {self.filename}, ' \
+               f'Position: {self.position.__str__()}'
+
+    def id(self) -> int:
+        """
+        Get the unique ID of the image.
+
+        :return: ID of the image.
+        :rtype: int
+        """
+        return self._id
 
     def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER) -> None:
         """
@@ -83,42 +98,45 @@ class Image(forge.core.utils.base.Renderable):
         """
         display.blit(self.as_pygame_surface(), self.position.as_tuple())
 
-    def as_pygame_surface(self) -> forge.core.utils.aliases.Surface:
+    def as_pygame_surface(self) -> pygame.surface.Surface:
         """
         Return the image as a Pygame surface. Beneficial for internal interoperability with Pygame.
 
         :return: Pygame surface containing the image data without the position.
-        :rtype: core.utils.aliases.Surface
+        :rtype: pygame.surface.Surface
         """
-        return pygame.image.load(self.filename)
+        return pygame.image.load(self.filename).convert_alpha()
 
 
 @dataclasses.dataclass(slots=True)
-class ImagePool(forge.core.utils.base.Renderable):
+class ImagePool:
     """
     Forge's image pool utility.
     """
-    name: str
+    name: str = attrs.field(on_setattr=attrs.setters.frozen)
+    renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER
+    _id: int = dataclasses.field(init=False)
     _images: list[Image] = dataclasses.field(default_factory=list)
+    _belongs_to_renderer: bool = False
 
     def __post_init__(self) -> None:
         """
         Check whether the supplied pool name is unique and not taken by another existing pool. If unique, add the
-        images to the dictionary. Also add the images to the base object renderer if the auto-add setting is enabled.
+        images to the dictionary. Also create a new unique ID for the image pool.
 
-        :raises ValueError: All image names must be unique.
+        :raises ValueError: All image pool names must be unique.
         """
-        for name in _IMAGES:
-            if self.name in name:
-                raise ValueError(f'Cannot create two image pools of the same name.')
+        if self.name in IMAGE_POOL_IDS:
+            raise ValueError(f'Cannot create two image pools of the same name: {self.name}.')
 
-        # Add the images to the dictionary with the image pool prefix.
-        for image in self._images:
-            self._add_image_to_dictionary(image)
+        self._id = forge.core.utils.id.generate_random_id()
 
-        # Add the images to the renderer.
-        if forge.core.engine.settings.AUTO_ADD_IMAGES:
-            self.add_to_renderer()
+        _IMAGE_POOLS[self._id] = self
+        IMAGE_POOL_IDS[self.name] = self._id
+
+        if not self._belongs_to_renderer:
+            for image in self._images:
+                image.parent = self
 
     @forge.core.utils.dispatch.multidispatch(Image)
     def __iadd__(self, image: Image) -> ImagePool:
@@ -128,21 +146,20 @@ class ImagePool(forge.core.utils.base.Renderable):
         :param image: Image to be added.
         :type image: Image
 
-        :return: Image pool with the image added to its internal list and global dictionary.
+        :return: Image pool with the image added to its internal list.
         :rtype: ImagePool
 
         :raises ValueError: All images in the pool must be unique.
         """
-        if image in self._images:
-            raise ValueError(f'Image {image} is already a part of the image pool.')
+        if image.parent == self:
+            warnings.warn(f'Image {image.name} is already part of the pool.')
+            return self
 
-        # First, delete the image from the dictionary as a stand-alone image.
-        # Then, add the image back into the dictionary but this time, as part of a pool, with its prefix.
-        # Finally, add the image to the pools internal list of images.
-        delete_image(image.name)
-        self._add_image_to_dictionary(image)
+        if not self._belongs_to_renderer:
+            image.parent = self
+            forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool += image
+
         self._images.append(image)
-
         return self
 
     @forge.core.utils.dispatch.multidispatch(list)
@@ -153,24 +170,25 @@ class ImagePool(forge.core.utils.base.Renderable):
         :param images: List of images to be added.
         :type images: list[Image]
 
-        :return: Image pool with the images added to its internal list and global dictionary.
+        :return: Image pool with the images added to its internal list.
         :rtype: ImagePool
 
         :raises ValueError: All images in the pool must be unique.
         """
         for image in images:
-            if image in self._images:
-                raise ValueError(f'Image {image} is already a part of the image pool.')
+            if image.parent == self:
+                warnings.warn(f'Image {image.name} is already part of the pool.')
+                continue
 
-            # First, delete the image from the dictionary as a stand-alone image.
-            # Then, add the image back into the dictionary but this time, as part of a pool, with its prefix.
-            # Finally, add the image to the pools internal list of images.
-            delete_image(image.name)
-            self._add_image_to_dictionary(image)
+            if not self._belongs_to_renderer:
+                image.parent = self
+                forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool += image
+
             self._images.append(image)
 
         return self
 
+    @forge.core.utils.dispatch.multidispatch(Image)
     def __isub__(self, image: Image) -> ImagePool:
         """
         Remove an image from the pool using the '-=' operator.
@@ -178,21 +196,48 @@ class ImagePool(forge.core.utils.base.Renderable):
         :param image: Image to be removed.
         :type image: Image
 
-        :return: Image pool with the image removed from its internal list and global dictionary.
+        :return: Image pool with the image removed from its internal list.
         :rtype: ImagePool
 
         :raises ValueError: Image must be part of the pool to be removed.
         """
-        if image not in self._images:
-            raise ValueError(f'Image {image} was never a part of the image pool.')
+        # A no-inspection is used because all overloaded functions will be re-written from scratch.
+        # noinspection DuplicatedCode
+        if self._belongs_to_renderer:
+            self._images.remove(image)
+            return self
 
-        image_name = f'<{self.name}-image-pool>|{image.name}'
+        if image.parent != self:
+            raise ValueError(f'Image {image.name} was never part of the pool.')
 
-        # First, remove the image from the pool's internal list of images.
-        # Then, remove the image from the dictionary.
-        # The Python garbage collector should take care of the rest.
+        image.parent = None
+
         self._images.remove(image)
-        _IMAGES.pop(image_name)
+        forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool -= image
+
+        return self
+
+    @forge.core.utils.dispatch.multidispatch(str)
+    def __isub__(self, image_data: str | int) -> ImagePool:
+        image: Image
+        if type(image_data) is str:
+            image = get_image_from_name(image_data)
+        else:
+            image = get_image_from_id(image_data)
+
+        # A no-inspection is used because all overloaded functions will be re-written from scratch.
+        # noinspection DuplicatedCode
+        if self._belongs_to_renderer:
+            self._images.remove(image)
+            return self
+
+        if image.parent != self:
+            raise ValueError(f'Image {image.name} was never part of the pool.')
+
+        image.parent = None
+
+        self._images.remove(image)
+        forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool -= image
 
         return self
 
@@ -212,8 +257,16 @@ class ImagePool(forge.core.utils.base.Renderable):
         :return: Detailed string with image pool information.
         :rtype: str
         """
-        return f'Forge Image Pool -> Name: {self.name}, Dictionary Prefix: <{self.name}-image-pool>, ' \
-               f'Images: {self._images}'
+        return f'Forge Image Pool -> Name: {self.name}, ID: {self._id}, Images: {self._images}'
+
+    def id(self) -> int:
+        """
+        Get the unique ID of the image pool.
+
+        :return: ID of the image pool.
+        :rtype: int
+        """
+        return self._id
 
     def images(self) -> list[Image]:
         """
@@ -222,121 +275,174 @@ class ImagePool(forge.core.utils.base.Renderable):
         :return: List of images stored within the image pool.
         :rtype: list[Image]
         """
-        return copy.copy(self._images)
+        return self._images.copy()
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
-        Add the image pool to a renderer.
-
-        :param renderer_name: Name of the renderer to which the image pool is to be added; defaults to the base object
-                              renderer.
-        :type renderer_name: str
+        Add the image pool to its renderer.
         """
-        forge.core.engine.renderer.get_renderer(renderer_name).image_pool += self._images
+        forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool += self._images
 
-    def _add_image_to_dictionary(self, image: Image) -> None:
+    def as_pygame_surfaces(self) -> list[pygame.surface.Surface]:
         """
-        Add the image to the global images dictionary with a prefix containing the name of the pool to which it belongs.
+        Return the image pool as a list Pygame surfaces. Beneficial for internal interoperability with Pygame.
 
-        :param image: Image to be added.
-        :type image: Image
+        :return: List of Pygame surfaces containing the image data without the position.
+        :rtype: list[pygame.surface.Surface]
         """
-        # Each image pool has a dedicated prefix so that it is easy to identify whether
-        # an image belongs to a specific pool within a single dictionary without excessive
-        # nesting or complication. This also allows for images with the same name to be saved
-        # in two different pools without any mental overhead.
-        dict_prefix = f'<{self.name}-image-pool>'
-
-        image_name = f'{dict_prefix}|{image.name}'
-        _IMAGES[image_name] = Image(image_name, image.filename, image.position)
+        return [pygame.image.load(image.filename).convert_alpha() for image in self._images]
 
 
-def get_image(image_name: str, pool_name: str = '') -> Image:
+# A no-inspection is used because all overloaded functions will be re-written from scratch.
+# noinspection DuplicatedCode
+def get_image_from_name(image_name: str) -> Image:
     """
-    Get a particular image which may either be a standalone image or part of a pool.
+    Retrieve a particular image from the internal dictionary storage using the image name.
 
-    :param image_name: Name of the image to retrieve.
+    :param image_name: Name of the image to be retrieved.
     :type image_name: str
-    :param pool_name: Name of the pool, if any; defaults to an empty string.
-    :type pool_name: str
 
-    :return: Forge image, if it exists.
+    :return: Forge image stored in the internal dictionary.
     :rtype: Image
 
     :raises KeyError: An image must be registered if it is to be retrieved.
     """
-    stored_image_name: str = image_name
+    if image_name not in IMAGE_IDS:
+        raise KeyError(f'Image named: {image_name} has not been registered as an image and cannot be retrieved.')
 
-    if pool_name:
-        stored_image_name = f'<{pool_name}-image-pool>|{image_name}'
-
-    if stored_image_name not in _IMAGES:
-        raise KeyError(f'Image named: {stored_image_name} has not been registered as an image and cannot be retrieved.')
-
-    return _IMAGES[stored_image_name]
+    return _IMAGES[IMAGE_IDS[image_name]]
 
 
-def delete_image(image_name: str, pool_name: str = '') -> None:
+def get_image_from_id(image_id: int) -> Image:
     """
-    Delete a particular image which may either be a standalone image or part of a pool.
+    Retrieve a particular image from the internal dictionary storage using the image ID.
 
-    :param image_name: Name of the image to delete.
+    :param image_id: ID of the image to be retrieved.
+    :type image_id: str
+
+    :return: Forge image stored in the internal dictionary.
+    :rtype: Image
+
+    :raises KeyError: An image must be registered if it is to be retrieved.
+    """
+    if image_id not in _IMAGES:
+        raise KeyError(f'Image with ID: {image_id} has not been registered as an image and cannot br retrieved.')
+
+    return _IMAGES[image_id]
+
+
+def delete_image_from_name(image_name: str) -> None:
+    """
+    Delete a particular image from the internal dictionary storage using the image name and free the ID of the image.
+
+    :param image_name: Name of the image to be deleted.
     :type image_name: str
-    :param pool_name: Name of the pool, if any; defaults to an empty string.
-    :type pool_name: str
 
     :raises KeyError: An image must be registered if it is to be deleted.
     """
-    stored_image_name: str = image_name
+    if image_name not in IMAGE_IDS:
+        raise KeyError(f'Image named: {image_name} has not been registered as an image and cannot be deleted.')
 
-    if pool_name:
-        stored_image_name = f'<{pool_name}-image-pool>|{image_name}'
-
-    if stored_image_name not in _IMAGES:
-        raise KeyError(f'Image named: {stored_image_name} has not been registered as an image and cannot be deleted.')
-
-    _IMAGES.pop(stored_image_name)
+    _IMAGES.pop(IMAGE_IDS[image_name])
+    forge.core.utils.id.delete_id(IMAGE_IDS[image_name])
+    IMAGE_IDS.pop(image_name)
 
 
-def get_images(pool_name: str) -> list[Image]:
+def delete_image_from_id(image_id: int) -> None:
     """
-    Get all the images from a particular image pool.
+    Delete a particular image from the internal dictionary storage using the image ID and free the ID of the image.
 
-    :param pool_name: Name of the pool to which the images belong.
-    :type pool_name: str
+    :param image_id: ID of the image to be deleted.
+    :type image_id: str
 
-    :return: List of images belonging to that pool.
-    :rtype: list[Image]
-
-    :raises ResourceWarning: A pool of the given name must ideally exist otherwise, the returned list will be empty.
+    :raises KeyError: An image must be registered if it is to be deleted.
+    :param image_id:
     """
-    images: list[Image] = []
+    if image_id not in _IMAGES:
+        raise KeyError(f'Image with ID: {image_id} has not been registered as an image and cannot be deleted.')
 
-    for image_name in _IMAGES:
-        if pool_name in image_name:
-            images.append(_IMAGES[image_name])
-
-    if not images:
-        raise ResourceWarning(f'A pool of the given name: {pool_name} does not exist.')
-
-    return images
+    image_name = _IMAGES.pop(image_id).name
+    forge.core.utils.id.delete_id(image_id)
+    IMAGE_IDS.pop(image_name)
 
 
-def delete_images(pool_name: str) -> None:
+# A no-inspection is used because all overloaded functions will be re-written from scratch.
+# noinspection DuplicatedCode
+def get_image_pool_from_name(image_pool_name: str) -> ImagePool:
     """
-    Delete all the images from a particular image pool.
+    Retrieve a particular image pool from the internal dictionary storage using the image pool name.
 
-    :param pool_name: Name of the pool to which the images belong.
-    :type pool_name: str
+    :param image_pool_name: Name of the image pool to be retrieved.
+    :type image_pool_name: str
 
-    :raises ResourceWarning: A pool of the given name must ideally exist otherwise in effect, no images will be deleted.
+    :return: Forge image pool stored in the internal dictionary.
+    :rtype: ImagePool
+
+    :raises KeyError: An image pool must be registered if it is to be retrieved.
     """
-    num_images_popped = 0
+    if image_pool_name not in IMAGE_POOL_IDS:
+        raise KeyError(
+            f'Image pool named: {image_pool_name} has not been registered as an image pool and cannot be retrieved.'
+        )
 
-    for image_name in _IMAGES:
-        if pool_name in image_name:
-            _IMAGES.pop(image_name)
-            num_images_popped += 1
+    return _IMAGE_POOLS[IMAGE_POOL_IDS[image_pool_name]]
 
-    if not num_images_popped:
-        raise ResourceWarning(f'A pool of the given name: {pool_name} does not exist.')
+
+def get_image_pool_from_id(image_pool_id: int) -> ImagePool:
+    """
+    Retrieve a particular image pool from the internal dictionary storage using the image pool ID.
+
+    :param image_pool_id: ID of the image pool to be retrieved.
+    :type image_pool_id: str
+
+    :return: Forge image pool stored in the internal dictionary.
+    :rtype: ImagePool
+
+    :raises KeyError: An image pool must be registered if it is to be retrieved.
+    """
+    if image_pool_id not in _IMAGE_POOLS:
+        raise KeyError(
+            f'Image pool with ID: {image_pool_id} has not been registered as an image pool and cannot be retrieved.'
+        )
+
+    return _IMAGE_POOLS[image_pool_id]
+
+
+def delete_image_pool_from_name(image_pool_name: str) -> None:
+    """
+    Delete a particular image pool from the internal dictionary storage using the image pool name and free the ID of
+    the image pool.
+
+    :param image_pool_name: Name of the image pool to be deleted.
+    :type image_pool_name: str
+
+    :raises KeyError: An image pool must be registered if it is to be deleted.
+    """
+    if image_pool_name not in IMAGE_POOL_IDS:
+        raise KeyError(
+            f'Image pool named: {image_pool_name} has not been registered as an image pool and cannot be deleted.'
+        )
+
+    _IMAGE_POOLS.pop(IMAGE_POOL_IDS[image_pool_name])
+    forge.core.utils.id.delete_id(IMAGE_POOL_IDS[image_pool_name])
+    IMAGE_POOL_IDS.pop(image_pool_name)
+
+
+def delete_image_pool_from_id(image_pool_id: int) -> None:
+    """
+    Delete a particular image pool from the internal dictionary storage using the image pool ID and free the ID of the
+    image pool.
+
+    :param image_pool_id: ID of the image pool to be deleted.
+    :type image_pool_id: str
+
+    :raises KeyError: An image pool must be registered if it is to be deleted.
+    """
+    if image_pool_id not in _IMAGE_POOLS:
+        raise KeyError(
+            f'Image pool with ID: {image_pool_id} has not been registered as an image pool and cannot be deleted.'
+        )
+
+    image_pool_name = _IMAGE_POOLS.pop(image_pool_id).name
+    forge.core.utils.id.delete_id(image_pool_id)
+    IMAGE_POOL_IDS.pop(image_pool_name)
