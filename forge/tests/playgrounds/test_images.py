@@ -2,7 +2,6 @@ import pygame
 
 import forge.core.engine.display as display
 import forge.core.engine.image as image
-import forge.core.engine.sprite as sprite
 import forge.core.managers.mouse as mouse
 import forge.core.physics.vector as vector
 
@@ -10,12 +9,12 @@ import forge.core.physics.vector as vector
 def main():
     window = display.Display(800, 800, 'Image Tests', 120)
 
-    flower = image.Image('flower', 'assets/flower.png', vector.Vector2D(200, 200))
-    flower.add_to_renderer()
-
-    flower_sprite = sprite.Sprite('assets/flower.png')
+    flower = image.Image('assets/flower.png', vector.Vector2D(200, 200), name='flower1')
+    image_pool = image.ImagePool('custom', _images=[flower])
+    image_pool.add_to_renderer()
 
     mouse_visible = True
+    current_idx = 2
     running = True
 
     while running:
@@ -30,12 +29,20 @@ def main():
             mouse.modify_visibility(mouse_visible)
 
         if mouse.is_pressed(mouse.MouseButton.LEFT):
-            flower.position = mouse.position() - vector.Vector2D(60, 60)
+            image_pool += image.Image('assets/flower.png', mouse.position(), name=f'flower{current_idx}')
+            current_idx += 1
+            print(len(image_pool.images()))
+
+        if mouse.is_pressed(mouse.MouseButton.RIGHT):
+            if current_idx == 1:
+                continue
+
+            image_pool -= image.get_image_from_name(f'flower{current_idx - 1}')
+            image.delete_image_from_name(f'flower{current_idx - 1}')
+            current_idx -= 1
 
         window.update()
         window.render()
-
-        flower_sprite.render(window._surface, vector.Vector2D(500, 500))
 
 
 if __name__ == '__main__':
