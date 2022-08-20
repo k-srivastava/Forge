@@ -297,12 +297,12 @@ class ImagePool:
 # noinspection DuplicatedCode
 def get_image_from_name(image_name: str) -> Image:
     """
-    Retrieve a particular image from the internal dictionary storage using the image name.
+    Retrieve a particular image from the image dictionary using the image name.
 
     :param image_name: Name of the image to be retrieved.
     :type image_name: str
 
-    :return: Forge image stored in the internal dictionary.
+    :return: Image stored in the image dictionary.
     :rtype: Image
 
     :raises KeyError: An image must be registered if it is to be retrieved.
@@ -315,12 +315,12 @@ def get_image_from_name(image_name: str) -> Image:
 
 def get_image_from_id(image_id: int) -> Image:
     """
-    Retrieve a particular image from the internal dictionary storage using the image ID.
+    Retrieve a registered image from the image dictionary using the image ID.
 
     :param image_id: ID of the image to be retrieved.
-    :type image_id: str
+    :type image_id: int
 
-    :return: Forge image stored in the internal dictionary.
+    :return: Image stored in the image dictionary.
     :rtype: Image
 
     :raises KeyError: An image must be registered if it is to be retrieved.
@@ -333,7 +333,7 @@ def get_image_from_id(image_id: int) -> Image:
 
 def delete_image_from_name(image_name: str) -> None:
     """
-    Delete a particular image from the internal dictionary storage using the image name and free the ID of the image.
+    Delete a registered image from the image dictionary using the image name and free the ID of the image.
 
     :param image_name: Name of the image to be deleted.
     :type image_name: str
@@ -350,10 +350,10 @@ def delete_image_from_name(image_name: str) -> None:
 
 def delete_image_from_id(image_id: int) -> None:
     """
-    Delete a particular image from the internal dictionary storage using the image ID and free the ID of the image.
+    Delete a registered image from the image dictionary using the image ID and free the ID of the image.
 
     :param image_id: ID of the image to be deleted.
-    :type image_id: str
+    :type image_id: int
 
     :raises KeyError: An image must be registered if it is to be deleted.
     :param image_id:
@@ -370,12 +370,12 @@ def delete_image_from_id(image_id: int) -> None:
 # noinspection DuplicatedCode
 def get_image_pool_from_name(image_pool_name: str) -> ImagePool:
     """
-    Retrieve a particular image pool from the internal dictionary storage using the image pool name.
+    Retrieve a registered image pool from the image pool dictionary using the image pool name.
 
     :param image_pool_name: Name of the image pool to be retrieved.
     :type image_pool_name: str
 
-    :return: Forge image pool stored in the internal dictionary.
+    :return: Image pool stored in the internal dictionary.
     :rtype: ImagePool
 
     :raises KeyError: An image pool must be registered if it is to be retrieved.
@@ -390,10 +390,10 @@ def get_image_pool_from_name(image_pool_name: str) -> ImagePool:
 
 def get_image_pool_from_id(image_pool_id: int) -> ImagePool:
     """
-    Retrieve a particular image pool from the internal dictionary storage using the image pool ID.
+    Retrieve a registered image pool from the image pool dictionary using the image pool ID.
 
     :param image_pool_id: ID of the image pool to be retrieved.
-    :type image_pool_id: str
+    :type image_pool_id: int
 
     :return: Forge image pool stored in the internal dictionary.
     :rtype: ImagePool
@@ -410,8 +410,8 @@ def get_image_pool_from_id(image_pool_id: int) -> ImagePool:
 
 def delete_image_pool_from_name(image_pool_name: str) -> None:
     """
-    Delete a particular image pool from the internal dictionary storage using the image pool name and free the ID of
-    the image pool.
+    Delete a registered image pool from the image pool dictionary using the image pool name and free the ID of the
+    image pool.
 
     :param image_pool_name: Name of the image pool to be deleted.
     :type image_pool_name: str
@@ -430,11 +430,11 @@ def delete_image_pool_from_name(image_pool_name: str) -> None:
 
 def delete_image_pool_from_id(image_pool_id: int) -> None:
     """
-    Delete a particular image pool from the internal dictionary storage using the image pool ID and free the ID of the
-    image pool.
+    Delete a registered image pool from the image pool dictionary using the image pool ID and free the ID of the image
+    pool.
 
     :param image_pool_id: ID of the image pool to be deleted.
-    :type image_pool_id: str
+    :type image_pool_id: int
 
     :raises KeyError: An image pool must be registered if it is to be deleted.
     """
