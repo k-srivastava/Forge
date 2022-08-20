@@ -3,7 +3,8 @@ from unittest import TestCase
 from unittest.mock import patch
 
 from forge.core.managers.event import Event
-from forge.core.managers.event import get_event, delete_event
+from forge.core.managers.event import delete_event_from_id, delete_event_from_name
+from forge.core.managers.event import get_event_from_id, get_event_from_name
 
 
 class TestEvent(TestCase):
@@ -38,21 +39,42 @@ class TestEvent(TestCase):
 
         self.assertStdout(event, 'You hit alien for 10 HP of damage.\nReloading!\n')
 
-    def test_get_event(self):
-        event1 = Event('<event-1>')
-        event2 = Event('<event-2>')
+    def test_get_event_from_name(self):
+        event1 = Event('<event-name-1>')
+        event2 = Event('<event-name-2>')
 
-        self.assertEqual(event1, get_event('<event-1>'))
+        self.assertEqual(event1, get_event_from_name('<event-name-1>'))
 
-    def test_get_event_raises(self):
-        self.assertRaises(KeyError, get_event, '<non-existent-event>')
+    def test_get_event_from_name_raises(self):
+        self.assertRaises(KeyError, get_event_from_name, '<non-existent-event>')
 
-    def test_delete_event(self):
-        event = Event('<deletion-event>')
-        delete_event('<deletion-event>')
+    def test_get_event_from_id(self):
+        event1 = Event('<event-id-1>')
+        event1_id = event1.id()
+        event2 = Event('<event-id-2>')
+
+        self.assertEqual(event1, get_event_from_id(event1_id))
+
+    def test_get_event_from_id_raises(self):
+        self.assertRaises(KeyError, get_event_from_id, 0)
+
+    def test_delete_event_from_name(self):
+        event = Event('<deletion-name-event>')
+        delete_event_from_name('<deletion-name-event>')
 
         # Deleting the event should remove it from the event dictionary causing a KeyError to be raised.
-        self.assertRaises(KeyError, get_event, '<deletion-event>')
+        self.assertRaises(KeyError, get_event_from_name, '<deletion-name-event>')
 
-    def test_delete_event_raises(self):
-        self.assertRaises(KeyError, delete_event, '<non-existent-event>')
+    def test_delete_event_from_name_raises(self):
+        self.assertRaises(KeyError, delete_event_from_name, '<non-existent-event>')
+
+    def test_delete_event_from_id(self):
+        event = Event('<deletion-id-event>')
+        event_id = event.id()
+        delete_event_from_id(event_id)
+
+        # Deleting the event should remove it from the event dictionary causing a KeyError to be raised.
+        self.assertRaises(KeyError, get_event_from_id, event_id)
+
+    def test_delete_event_from_id_raises(self):
+        self.assertRaises(KeyError, delete_event_from_id, 0)

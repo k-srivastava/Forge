@@ -7,8 +7,13 @@ import dataclasses
 import typing
 import warnings
 
+import attrs
+
+import forge.core.utils.id
+
 _INTERNAL_EVENT_NAMES: list[str] = []
-_EVENTS: dict[str, Event] = {}
+_EVENTS: dict[int, Event] = {}
+EVENT_IDS: dict[str, int] = {}
 
 
 @dataclasses.dataclass(slots=True)
@@ -16,9 +21,10 @@ class Event:
     """
     Forge's basic but sufficient event system for both internal and developer use.
     """
-    name: str
+    name: str = attrs.field(on_setattr=attrs.setters.frozen)
     _subscribers: dict[typing.Callable[[typing.Any, ...], None],
                        tuple[typing.Any, ...]] = dataclasses.field(default_factory=dict)
+    _id: int = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
         """
@@ -30,10 +36,13 @@ class Event:
         if self.name in _INTERNAL_EVENT_NAMES:
             raise ValueError(f'Cannot create event: {self.name}. An internal event of the same name already exists.')
 
-        if self.name in _EVENTS:
+        if self.name in EVENT_IDS:
             raise ValueError(f'Cannot create two events of the same name: {self.name}.')
 
-        _EVENTS[self.name] = self
+        self._id = forge.core.utils.id.generate_random_id()
+
+        _EVENTS[self._id] = self
+        EVENT_IDS[self.name] = self._id
 
     def __iadd__(self, subscriber: tuple[typing.Callable[[typing.Any], None], tuple[typing.Any, ...]]) -> Event:
         """
@@ -90,7 +99,16 @@ class Event:
         :return: Detailed string with event information.
         :rtype: str
         """
-        return f'Forge Event -> Name {self.name}, Subscribers: {self._subscribers.keys()}'
+        return f'Forge Event -> Name {self.name}, ID: {self._id}, Subscribers: {self._subscribers.keys()}'
+
+    def id(self) -> int:
+        """
+        Get the unique ID of the event.
+
+        :return: ID of the event.
+        :rtype: int
+        """
+        return self._id
 
     def post(self) -> None:
         """
@@ -108,44 +126,82 @@ class Event:
                 warnings.warn(f'Execution of {function.__name__} led to an exception.\n{e}')
 
 
-def get_event(event_name: str) -> Event:
+def get_event_from_name(event_name: str) -> Event:
     """
-    Get a registered event from the event dictionary. Acts as an abstraction over the package-protected dictionary.
-    Also does not allow getting an internal event.
+    Retrieve a registered event from the event dictionary using the event name. Also does not allow the retrieval an
+    internal event.
 
-    :param event_name: Name of the event to retrieve.
+    :param event_name: Name of the event to be retrieved.
     :type event_name: str
 
-    :return: Event from the dictionary with the same name.
+    :return: Event stored in the event dictionary.
     :rtype: Event
 
-    :raises ValueError: Internal events cannot be retrieved.
-    :raises KeyError: Event must be present in the event dictionary to retrieve.
+    :raises ValueError: Internal events cannot be retrieved using their names.
+    :raises KeyError: An event must be registered if it is to be retrieved.
     """
     if event_name in _INTERNAL_EVENT_NAMES:
         raise ValueError(f'Event named: {event_name} is an internal event and cannot be retrieved.')
 
-    if event_name not in _EVENTS:
+    if event_name not in EVENT_IDS:
         raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be retrieved.')
 
-    return _EVENTS[event_name]
+    return _EVENTS[EVENT_IDS[event_name]]
 
 
-def delete_event(event_name: str) -> None:
+def get_event_from_id(event_id: int) -> Event:
     """
-    Delete a registered event from the event dictionary. Acts as an abstraction over the package-protected dictionary.
-    Also does not allow deletion of an internal event.
+    Retrieve a registered event from the event dictionary using the event ID. Allows the retrieval of an internal event.
 
-    :param event_name: Name of the event to delete.
+    :param event_id: ID of the event to be retrieved.
+    :type event_id: int
+
+    :return: Event stored in the event dictionary.
+    :rtype: Event
+
+    :raises KeyError: An event must be registered if it is to be retrieved.
+    """
+    if event_id not in _EVENTS:
+        raise KeyError(f'Event with ID: {event_id} has not been registered as an event and cannot be retrieved.')
+
+    return _EVENTS[event_id]
+
+
+def delete_event_from_name(event_name: str) -> None:
+    """
+    Delete a registered event from the event dictionary using the event name and free the ID of the event. Also does
+    not allow the deletion of an internal event.
+
+    :param event_name: Name of the event to be deleted.
     :type event_name: str
 
-    :raises ValueError: Internal events cannot be deleted.
-    :raises KeyError: Event must be present in the event dictionary to delete.
+    :raises ValueError: Internal events cannot be deleted using their names.
+    :raises KeyError: An event must be registered if it is to be deleted.
     """
     if event_name in _INTERNAL_EVENT_NAMES:
         raise ValueError(f'Event named: {event_name} is an internal event and cannot be deleted.')
 
-    if event_name not in _EVENTS:
+    if event_name not in EVENT_IDS:
         raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be deleted.')
 
-    _EVENTS.pop(event_name)
+    _EVENTS.pop(EVENT_IDS[event_name])
+    forge.core.utils.id.delete_id(EVENT_IDS[event_name])
+    EVENT_IDS.pop(event_name)
+
+
+def delete_event_from_id(event_id: int) -> None:
+    """
+    Delete a registered event from the event dictionary using the event ID and free the ID of the image. Allows the
+    deletion of an internal event.
+
+    :param event_id: ID of the event to be deleted.
+    :type event_id: int
+
+    :raises KeyError: An event must be registered if it to be deleted.
+    """
+    if event_id not in _EVENTS:
+        raise KeyError(f'Event with ID: {event_id} has not been registered an an event and cannot be deleted.')
+
+    event_name = _EVENTS.pop(event_id).name
+    forge.core.utils.id.delete_id(event_id)
+    EVENT_IDS.pop(event_name)
