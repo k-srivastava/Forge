@@ -2,19 +2,28 @@ import pygame
 
 import forge.core.engine.display as display
 import forge.core.engine.image as image
+import forge.core.managers.event
 import forge.core.managers.mouse as mouse
 import forge.core.physics.vector as vector
+
+
+def create_image_function():
+    print('Image created.')
 
 
 def main():
     window = display.Display(800, 800, 'Image Tests', 120)
 
+    create_image = forge.core.managers.event.Event('create-image')
+
     flower = image.Image('assets/flower.png', vector.Vector2D(200, 200), name='flower1')
     image_pool = image.ImagePool('custom', _images=[flower])
     image_pool.add_to_renderer()
 
-    mouse_visible = True
     current_idx = 2
+    create_image += (create_image_function, tuple())
+
+    mouse_visible = True
     running = True
 
     while running:
@@ -31,7 +40,7 @@ def main():
         if mouse.is_pressed(mouse.MouseButton.LEFT):
             image_pool += image.Image('assets/flower.png', mouse.position(), name=f'flower{current_idx}')
             current_idx += 1
-            print(len(image_pool.images()))
+            create_image.post()
 
         if mouse.is_pressed(mouse.MouseButton.RIGHT):
             if current_idx == 1:
@@ -46,4 +55,5 @@ def main():
 
 
 if __name__ == '__main__':
+    pygame.init()
     main()
