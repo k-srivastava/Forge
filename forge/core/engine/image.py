@@ -1,4 +1,3 @@
-# TODO: Add tests.
 """
 Images in Forge.
 """
@@ -87,7 +86,7 @@ class Image(forge.core.utils.base.Renderable):
                               renderer.
         :type renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer(renderer_name).image_pool += self
+        forge.core.engine.renderer.get_renderer_from_name(renderer_name).image_pool += self
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
@@ -157,7 +156,7 @@ class ImagePool:
 
         if not self._belongs_to_renderer:
             image.parent = self
-            forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool += image
+            forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += image
 
         self._images.append(image)
         return self
@@ -182,7 +181,7 @@ class ImagePool:
 
             if not self._belongs_to_renderer:
                 image.parent = self
-                forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool += image
+                forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += image
 
             self._images.append(image)
 
@@ -213,7 +212,7 @@ class ImagePool:
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool -= image
+        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool -= image
 
         return self
 
@@ -237,7 +236,7 @@ class ImagePool:
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool -= image
+        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool -= image
 
         return self
 
@@ -281,7 +280,17 @@ class ImagePool:
         """
         Add the image pool to its renderer.
         """
-        forge.core.engine.renderer.get_renderer(self.renderer_name).image_pool += self._images
+        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += self._images
+
+    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+        """
+        For each Forge image in the pool, render it as a Pygame surface to the display at its given position.
+
+        :param display: Display to which the image pool is to be rendered.
+        :type display: core.utils.aliases.Surface
+        """
+        for image in self._images:
+            image.render(display)
 
     def as_pygame_surfaces(self) -> list[pygame.surface.Surface]:
         """
@@ -297,7 +306,7 @@ class ImagePool:
 # noinspection DuplicatedCode
 def get_image_from_name(image_name: str) -> Image:
     """
-    Retrieve a particular image from the image dictionary using the image name.
+    Retrieve a registered image from the image dictionary using the image name.
 
     :param image_name: Name of the image to be retrieved.
     :type image_name: str
@@ -356,7 +365,6 @@ def delete_image_from_id(image_id: int) -> None:
     :type image_id: int
 
     :raises KeyError: An image must be registered if it is to be deleted.
-    :param image_id:
     """
     if image_id not in _IMAGES:
         raise KeyError(f'Image with ID: {image_id} has not been registered as an image and cannot be deleted.')
