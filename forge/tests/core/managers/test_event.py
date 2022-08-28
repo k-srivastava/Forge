@@ -29,9 +29,9 @@ class TestEvent(TestCase):
         def reload_gun() -> None:
             print('Reloading!')
 
-        event += enemy_status, ('alien',)
-        event += announce_hit, (),
-        event += reload_gun, (),
+        event += lambda: enemy_status('alien')
+        event += announce_hit
+        event += reload_gun
 
         self.assertStdout(event, 'You hit alien for 10 HP of damage.\nENEMY HIT!\nReloading!\n')
 
@@ -50,8 +50,9 @@ class TestEvent(TestCase):
 
     def test_get_event_from_id(self):
         event1 = Event('<event-id-1>')
-        event1_id = event1.id()
         event2 = Event('<event-id-2>')
+
+        event1_id = event1.id()
 
         self.assertEqual(event1, get_event_from_id(event1_id))
 

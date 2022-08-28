@@ -21,7 +21,7 @@ def main():
     image_pool.add_to_renderer()
 
     current_idx = 2
-    create_image += (create_image_function, tuple())
+    create_image += create_image_function
 
     mouse_visible = True
     running = True

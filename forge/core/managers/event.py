@@ -22,8 +22,7 @@ class Event:
     Forge's basic but sufficient event system for both internal and developer use.
     """
     name: str = attrs.field(on_setattr=attrs.setters.frozen)
-    _subscribers: dict[typing.Callable[[typing.Any, ...], None],
-                       tuple[typing.Any, ...]] = dataclasses.field(default_factory=dict)
+    _subscribers: list[typing.Callable[[], None]] = dataclasses.field(default_factory=list)
     _id: int = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
@@ -44,43 +43,40 @@ class Event:
         _EVENTS[self._id] = self
         EVENT_IDS[self.name] = self._id
 
-    def __iadd__(self, subscriber: tuple[typing.Callable[[typing.Any], None], tuple[typing.Any, ...]]) -> Event:
+    def __iadd__(self, subscriber: typing.Callable[[], None]) -> Event:
         """
-        Register a new function to the event as a tuple of a callable and its arguments using the '+=' operator.
+        Register a new function to the event using the '+=' operator.
 
-        :param subscriber: Function and its arguments to be registered to the event.
-        :type subscriber: tuple[Callable[Any, None], tuple[Any, ...]]
+        :param subscriber: Function to be registered to the event.
+        :type subscriber: typing.Callable[[], None]
 
-        :return: The event to which the function is registered; used internally by Python.
+        :return: The event to which the function is registered.
         :rtype: Event
 
         :raises ValueError: All functions registered to the event must be unique.
         """
-        function: typing.Callable[[typing.Any], None] = subscriber[0]
-        arguments: tuple[typing.Any, ...] = subscriber[1]
+        if subscriber in self._subscribers:
+            raise ValueError(f'Function {subscriber.__name__} is already subscribed to the event.')
 
-        if function in self._subscribers:
-            raise ValueError(f'Function {function.__name__} is already subscribed to the event.')
-
-        self._subscribers[function] = arguments
+        self._subscribers.append(subscriber)
         return self
 
-    def __isub__(self, function: typing.Callable) -> Event:
+    def __isub__(self, subscriber: typing.Callable[[], None]) -> Event:
         """
         Deregister an existing function to the event using the '-=' operator.
 
-        :param function: Function to be deregistered from the event.
-        :type function: Callable
+        :param subscriber: Function to be deregistered from the event.
+        :type subscriber: typing.Callable[[], None]
 
-        :return: THe event to which the function was registered; used internally by Python.
+        :return: THe event to which the function was registered.
         :rtype: Event
 
         :raises ValueError: A function that was never registered cannot be deregistered.
         """
-        if function not in self._subscribers:
-            raise ValueError(f'Function {function.__name__} never subscribed to the event; cannot be removed.')
+        if subscriber not in self._subscribers:
+            raise ValueError(f'Function {subscriber.__name__} never subscribed to the event.')
 
-        self._subscribers.pop(function)
+        self._subscribers.remove(subscriber)
         return self
 
     def __repr__(self) -> str:
@@ -99,7 +95,7 @@ class Event:
         :return: Detailed string with event information.
         :rtype: str
         """
-        return f'Forge Event -> Name {self.name}, ID: {self._id}, Subscribers: {self._subscribers.keys()}'
+        return f'Forge Event -> Name {self.name}, ID: {self._id}, Subscribers: {self._subscribers}'
 
     def id(self) -> int:
         """
@@ -112,15 +108,12 @@ class Event:
 
     def post(self) -> None:
         """
-        Post the event that calls all of its subscriber functions with their respective arguments. If an exception
-        occurs when calling a subscriber function, it is raised as a warning instead.
-
-        :raises RuntimeWarning: A subscribed function had an error during its execution. The severity is bumped down to
-                                a warning instead.
+        Post the event that calls all of its subscriber functions. If an exception occurs when calling a subscriber
+        function, it is logged as a warning instead.
         """
-        for function, arguments in self._subscribers.items():
+        for function in self._subscribers:
             try:
-                function(*arguments)
+                function()
 
             except Exception as e:
                 warnings.warn(f'Execution of {function.__name__} led to an exception.\n{e}')
