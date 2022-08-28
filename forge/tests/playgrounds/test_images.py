@@ -1,35 +1,36 @@
+import sys
+
 import pygame
 
-import forge.core.engine.display as display
-import forge.core.engine.image as image
-import forge.core.managers.event
-import forge.core.managers.mouse as mouse
-import forge.core.physics.vector as vector
+from forge.core.engine import display, image
+from forge.core.managers import event as f_event, mouse
+from forge.core.physics import vector
 
 
-def create_image_function():
+def create_image_function() -> None:
     print('Image created.')
 
 
-def main():
+def main() -> None:
     window = display.Display(800, 800, 'Image Tests', 120)
 
-    create_image = forge.core.managers.event.Event('create-image')
+    create_image = f_event.Event('create-image')
+    create_image += create_image_function
 
     flower = image.Image('assets/flower.png', vector.Vector2D(200, 200), name='flower1')
+
     image_pool = image.ImagePool('custom', _images=[flower])
     image_pool.add_to_renderer()
 
     current_idx = 2
-    create_image += create_image_function
 
     mouse_visible = True
-    running = True
 
-    while running:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                sys.exit(0)
 
         keys = pygame.key.get_pressed()
 
