@@ -11,7 +11,7 @@ import attrs
 
 import forge.core.utils.id
 
-_INTERNAL_EVENT_NAMES: list[str] = []
+_INTERNAL_EVENT_NAMES: list[str] = ['<MOUSE-CLICKED>', '<MOUSE-DEPRESSED>']
 _EVENTS: dict[int, Event] = {}
 EVENT_IDS: dict[str, int] = {}
 
@@ -121,8 +121,7 @@ class Event:
 
 def get_event_from_name(event_name: str) -> Event:
     """
-    Retrieve a registered event from the event dictionary using the event name. Also does not allow the retrieval an
-    internal event.
+    Retrieve a registered event from the event dictionary using the event name.
 
     :param event_name: Name of the event to be retrieved.
     :type event_name: str
@@ -130,12 +129,8 @@ def get_event_from_name(event_name: str) -> Event:
     :return: Event stored in the event dictionary.
     :rtype: Event
 
-    :raises ValueError: Internal events cannot be retrieved using their names.
     :raises KeyError: An event must be registered if it is to be retrieved.
     """
-    if event_name in _INTERNAL_EVENT_NAMES:
-        raise ValueError(f'Event named: {event_name} is an internal event and cannot be retrieved.')
-
     if event_name not in EVENT_IDS:
         raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be retrieved.')
 
@@ -144,7 +139,7 @@ def get_event_from_name(event_name: str) -> Event:
 
 def get_event_from_id(event_id: int) -> Event:
     """
-    Retrieve a registered event from the event dictionary using the event ID. Allows the retrieval of an internal event.
+    Retrieve a registered event from the event dictionary using the event ID.
 
     :param event_id: ID of the event to be retrieved.
     :type event_id: int
