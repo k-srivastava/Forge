@@ -5,6 +5,7 @@ import enum
 
 import pygame
 
+import forge.core.engine.game
 import forge.core.physics.vector
 
 
@@ -17,14 +18,38 @@ class MouseButton(enum.Enum):
     RIGHT = 2
 
 
-def is_pressed(mouse_button: MouseButton) -> bool:
+def is_clicked(mouse_button: MouseButton) -> bool:
     """
-    Check if a certain mouse button of a three-buttoned mouse is pressed.
+    Check if a certain mouse button of a three-buttoned mouse is pressed once.
 
     :param mouse_button: Enum value of the mouse button to check.
     :type mouse_button: MouseButton
 
-    :return: True if the mouse button passed is pressed; else False.
+    :return: True if the mouse button passed is pressed once; else False.
+    :rtype: bool
+    """
+    game = forge.core.engine.game.get_game()
+
+    if game is not None:
+        for event in game.event_list:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Disabling the type-checker because the MouseButton enum will only have integer values that are
+                # tuple-compatible.
+                # noinspection PyTypeChecker
+                if pygame.mouse.get_pressed()[mouse_button.value]:
+                    return True
+
+    return False
+
+
+def is_pressed(mouse_button: MouseButton) -> bool:
+    """
+    Check if a certain mouse button of a three-buttoned mouse is pressed continuously.
+
+    :param mouse_button: Enum value of the mouse button to check.
+    :type mouse_button: MouseButton
+
+    :return: True if the mouse button passed is pressed continuously; else False.
     :rtype: bool
     """
     # Disabling the type-checker because the MouseButton enum will only have integer values that are tuple-compatible.
