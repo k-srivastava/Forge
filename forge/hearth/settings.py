@@ -1,0 +1,12 @@
+"""
+Basic settings for UI described using Hearth.
+"""
+AUTO_RENDER_CHILDREN = True
+AUTO_UPDATE_CHILDREN = True
+
+NON_CONSTRAINED_CHILDREN_USE_RELATIVE_POSITIONING = False
+
+DEFAULT_FONT = 'freesansbold.ttf'
+DEFAULT_FONT_SIZE = 16
+
+PADDING = 10
