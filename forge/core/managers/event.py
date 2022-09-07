@@ -4,6 +4,7 @@ Creation, retrieval, posting and deletion of events using Forge's custom event m
 from __future__ import annotations
 
 import dataclasses
+import enum
 import typing
 import warnings
 
@@ -11,9 +12,15 @@ import attrs
 
 import forge.core.utils.id
 
-_INTERNAL_EVENT_NAMES: list[str] = ['<MOUSE-CLICKED>', '<MOUSE-DEPRESSED>']
 _EVENTS: dict[int, Event] = {}
 EVENT_IDS: dict[str, int] = {}
+INTERNAL_EVENT_NAMES: list[str] = []
+
+
+class InternalEvent(enum.Enum):
+    MOUSE_CLICKED = '<MOUSE-CLICKED>'
+    MOUSE_DEPRESSED = '<MOUSE-DEPRESSED>'
+    KEY_PRESSED = '<KEY-PRESSED>'
 
 
 @dataclasses.dataclass(slots=True)
@@ -32,7 +39,7 @@ class Event:
 
         :raises ValueError: All event names must be unique.
         """
-        if self.name in _INTERNAL_EVENT_NAMES:
+        if self.name in INTERNAL_EVENT_NAMES:
             raise ValueError(f'Cannot create event: {self.name}. An internal event of the same name already exists.')
 
         if self.name in EVENT_IDS:
@@ -121,7 +128,8 @@ class Event:
 
 def get_event_from_name(event_name: str) -> Event:
     """
-    Retrieve a registered event from the event dictionary using the event name.
+    Retrieve a registered event from the event dictionary using the event name. Also does not allow the retrieval an
+    internal event.
 
     :param event_name: Name of the event to be retrieved.
     :type event_name: str
@@ -129,12 +137,38 @@ def get_event_from_name(event_name: str) -> Event:
     :return: Event stored in the event dictionary.
     :rtype: Event
 
+    :raises ValueError: Internal events cannot be retrieved using their names.
     :raises KeyError: An event must be registered if it is to be retrieved.
     """
+    if event_name in INTERNAL_EVENT_NAMES:
+        raise ValueError(f'Event named: {event_name} is an internal event and cannot be retrieved.')
+
     if event_name not in EVENT_IDS:
         raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be retrieved.')
 
     return _EVENTS[EVENT_IDS[event_name]]
+
+
+def get_internal_event(event: InternalEvent) -> Event:
+    """
+    Retrieve a registered internal event from the event dictionary using the event enum.
+
+    :param event: Enum name of the internal event to be retrieved.
+    :type event: InternalEvent
+
+    :return: Internal event stored in the event dictionary.
+    :rtype: Event
+
+    :raises KeyError: An internal event must be registered if it is to be retrieved.
+    """
+    # The corresponding value for the enum will always be a string.
+    # noinspection PyTypeHints
+    event.value: str
+
+    if event.value not in INTERNAL_EVENT_NAMES:
+        raise KeyError(f'Event named: {event.value} has not been registered as an internal event and cannot retrieved.')
+
+    return _EVENTS[EVENT_IDS[event.value]]
 
 
 def get_event_from_id(event_id: int) -> Event:
@@ -166,7 +200,7 @@ def delete_event_from_name(event_name: str) -> None:
     :raises ValueError: Internal events cannot be deleted using their names.
     :raises KeyError: An event must be registered if it is to be deleted.
     """
-    if event_name in _INTERNAL_EVENT_NAMES:
+    if event_name in INTERNAL_EVENT_NAMES:
         raise ValueError(f'Event named: {event_name} is an internal event and cannot be deleted.')
 
     if event_name not in EVENT_IDS:
