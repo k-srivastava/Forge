@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "game-forge"
-version = "0.2.1"
+version = "0.4.0"
 authors = [
     { name = "Kshitij Srivastava", email = "kshitijsrivastava2312@gmail.com" }
 ]

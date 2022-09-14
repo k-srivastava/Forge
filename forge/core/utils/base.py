@@ -16,8 +16,8 @@ class Renderable(typing.Protocol):
         """
         Add the object to a renderer.
 
-        :param renderer_name: Name of the renderer to which the object is to be added; defaults to
-                              'display-object-renderer'.
+        :param renderer_name: Name of the renderer to which the object is to be added; defaults to the base object
+                              renderer.
         :type renderer_name: str
         """
 
