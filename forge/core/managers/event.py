@@ -18,6 +18,9 @@ INTERNAL_EVENT_NAMES: list[str] = []
 
 
 class InternalEvent(enum.Enum):
+    """
+    Enumeration of all internal events used by Forge.
+    """
     MOUSE_CLICKED = '<MOUSE-CLICKED>'
     MOUSE_DEPRESSED = '<MOUSE-DEPRESSED>'
     KEY_PRESSED = '<KEY-PRESSED>'
@@ -126,6 +129,28 @@ class Event:
                 warnings.warn(f'Execution of {function.__name__} led to an exception.\n{e}')
 
 
+def get_internal_event(event: InternalEvent) -> Event:
+    """
+    Retrieve a registered internal event from the event dictionary using the event enum.
+
+    :param event: Enum name of the internal event to be retrieved.
+    :type event: InternalEvent
+
+    :return: Internal event stored in the event dictionary.
+    :rtype: Event
+
+    :raises KeyError: An internal event must be registered if it is to be retrieved.
+    """
+    # The corresponding value for the enum will always be a string.
+    # noinspection PyTypeHints
+    event.value: str
+
+    if event.value not in INTERNAL_EVENT_NAMES:
+        raise KeyError(f'Event named: {event.value} has not been registered as an internal event and cannot retrieved.')
+
+    return _EVENTS[EVENT_IDS[event.value]]
+
+
 def get_event_from_name(event_name: str) -> Event:
     """
     Retrieve a registered event from the event dictionary using the event name. Also does not allow the retrieval an
@@ -147,28 +172,6 @@ def get_event_from_name(event_name: str) -> Event:
         raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be retrieved.')
 
     return _EVENTS[EVENT_IDS[event_name]]
-
-
-def get_internal_event(event: InternalEvent) -> Event:
-    """
-    Retrieve a registered internal event from the event dictionary using the event enum.
-
-    :param event: Enum name of the internal event to be retrieved.
-    :type event: InternalEvent
-
-    :return: Internal event stored in the event dictionary.
-    :rtype: Event
-
-    :raises KeyError: An internal event must be registered if it is to be retrieved.
-    """
-    # The corresponding value for the enum will always be a string.
-    # noinspection PyTypeHints
-    event.value: str
-
-    if event.value not in INTERNAL_EVENT_NAMES:
-        raise KeyError(f'Event named: {event.value} has not been registered as an internal event and cannot retrieved.')
-
-    return _EVENTS[EVENT_IDS[event.value]]
 
 
 def get_event_from_id(event_id: int) -> Event:
