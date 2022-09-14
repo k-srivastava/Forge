@@ -4,14 +4,18 @@ Renderers for Forge.
 from __future__ import annotations
 
 import dataclasses
+import typing
 
 import attrs
 
-import forge.core.engine.color
 import forge.core.engine.image
 import forge.core.utils.aliases
-import forge.core.utils.base
 import forge.core.utils.id
+import forge.hearth.settings
+
+if typing.TYPE_CHECKING:
+    import forge.hearth.elements.base
+    import forge.hearth.components.base
 
 _RENDERERS: dict[int, Renderer] = {}
 RENDERER_IDS: dict[str, int] = {}
@@ -67,17 +71,66 @@ class Renderer:
         pass
 
 
-@dataclasses.dataclass(slots=True)
+@dataclasses.dataclass
 class ObjectRenderer(Renderer):
     ...
 
 
-@dataclasses.dataclass(slots=True)
+@dataclasses.dataclass
 class UIRenderer(Renderer):
-    ...
+    elements: list['forge.hearth.elements.base.UIElement'] = dataclasses.field(default_factory=list)
+
+    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+        super().render(display)
+
+        rendered_element_ids: set[int] = set()
+
+        for element in self.elements:
+            if element.id() in rendered_element_ids:
+                continue
+
+            element.render(display)
+            rendered_element_ids.add(element.id())
+
+            if forge.hearth.settings.AUTO_RENDER_CHILDREN:
+                for child in element.children:
+                    rendered_element_ids.add(child.id())
+
+    def update(self, delta_time: float) -> None:
+        super().update(delta_time)
+
+        updated_element_ids: set[int] = set()
+
+        for element in self.elements:
+            if element.id() in updated_element_ids:
+                continue
+
+            element.update()
+            updated_element_ids.add(element.id())
+
+            if forge.hearth.settings.AUTO_UPDATE_CHILDREN:
+                for child in element.children:
+                    updated_element_ids.add(child.id())
 
 
-def get_renderer_from_name(renderer_name: str) -> Renderer | ObjectRenderer | UIRenderer:
+@dataclasses.dataclass
+class ComponentRenderer(Renderer):
+    components: list['forge.hearth.components.base.UIComponent'] = dataclasses.field(default_factory=list)
+
+    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+        super().render(display)
+
+        for component in self.components:
+            component.render(display)
+
+    def update(self, delta_time: float) -> None:
+        super().update(delta_time)
+
+        for component in self.components:
+            component.update()
+
+
+def get_renderer_from_name(renderer_name: str) -> Renderer | ObjectRenderer | UIRenderer | ComponentRenderer:
     """
     Retrieve a particular renderer from the renderer dictionary using the renderer name.
 
@@ -85,7 +138,7 @@ def get_renderer_from_name(renderer_name: str) -> Renderer | ObjectRenderer | UI
     :type renderer_name: str
 
     :return: Renderer stored in the renderer dictionary.
-    :rtype: Renderer | ObjectRenderer | UIRenderer
+    :rtype: Renderer | ObjectRenderer | UIRenderer | ComponentRenderer
 
     :raises KeyError: A renderer must be registered if it is to be retrieved.
     """
@@ -97,7 +150,7 @@ def get_renderer_from_name(renderer_name: str) -> Renderer | ObjectRenderer | UI
     return _RENDERERS[RENDERER_IDS[renderer_name]]
 
 
-def get_renderer_from_id(renderer_id: int) -> Renderer | ObjectRenderer | UIRenderer:
+def get_renderer_from_id(renderer_id: int) -> Renderer | ObjectRenderer | UIRenderer | ComponentRenderer:
     """
     Retrieve a registered renderer from the renderer dictionary using the renderer ID.
 
@@ -105,7 +158,7 @@ def get_renderer_from_id(renderer_id: int) -> Renderer | ObjectRenderer | UIRend
     :type renderer_id: int
 
     :return: Renderer stored in the renderer dictionary.
-    :rtype: Renderer | ObjectRenderer | UIRenderer
+    :rtype: Renderer | ObjectRenderer | UIRenderer | ComponentRenderer
     """
     if renderer_id not in _RENDERERS:
         raise KeyError(
