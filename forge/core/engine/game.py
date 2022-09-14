@@ -8,6 +8,8 @@ import sys
 import pygame
 
 import forge.core.engine.display
+import forge.core.managers.event
+import forge.core.utils.loaders
 
 # Store the current game in a list of length one.
 # A list has to be used because a global variable becomes lengthy to implement.
@@ -36,6 +38,8 @@ class Game:
         self.display = display
         self.event_list: list[pygame.event.Event] | None = None
 
+        forge.core.utils.loaders.load_internal_events()
+
         _GAME[0] = self
 
     def mainloop(self) -> None:
@@ -54,6 +58,17 @@ class Game:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit(0)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                forge.core.managers.event.get_internal_event(
+                    forge.core.managers.event.InternalEvent.MOUSE_CLICKED
+                ).post()
+
+        if any(pygame.mouse.get_pressed()):
+            forge.core.managers.event.get_internal_event(forge.core.managers.event.InternalEvent.MOUSE_DEPRESSED).post()
+
+        if any(pygame.key.get_pressed()):
+            forge.core.managers.event.get_internal_event(forge.core.managers.event.InternalEvent.KEY_PRESSED).post()
 
         self.update()
         self.render()
