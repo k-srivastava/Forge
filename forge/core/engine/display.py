@@ -25,17 +25,17 @@ class Display:
     )
 
     def __init__(
-            self, width: int, height: int, title: str, max_fps: int = 0,
+            self, width: int = 1280, height: int = 720, title: str = 'Forge', max_fps: int = 0,
             background_color: forge.core.engine.color.Color = forge.core.engine.color.Color(0, 0, 0)
     ) -> None:
         """
         Initialize the Forge display.
 
-        :param width: Width of the display.
+        :param width: Width of the display; defaults to 1280.
         :type width: int
-        :param height: Height of the display.
+        :param height: Height of the display; defaults to 720.
         :type height: int
-        :param title: Title of the display.
+        :param title: Title of the display; defaults to 'Forge'.
         :param max_fps: Maximum FPS of the display; defaults to 0.
         :type max_fps: int
         :param background_color: Background color of the display.
