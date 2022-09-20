@@ -1,5 +1,5 @@
 from forge.core.engine import display, game, image
-from forge.core.managers import mouse
+from forge.core.managers import keyboard, mouse
 from forge.core.physics import vector
 
 
@@ -17,6 +17,9 @@ class ImageTest(game.Game):
 
         if mouse.is_pressed(mouse.MouseButton.RIGHT):
             self.delete_image()
+
+        if keyboard.is_any_clicked():
+            self.spawn_image(mouse.position())
 
         super().update()
 
@@ -40,7 +43,7 @@ class ImageTest(game.Game):
 
 
 def main() -> None:
-    image_tests = ImageTest(display.Display(800, 800, 'Image Tests', 120))
+    image_tests = ImageTest(display.Display(title='Image Tests'))
     image_tests.mainloop()
 
 
