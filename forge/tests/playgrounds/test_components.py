@@ -8,7 +8,7 @@ from forge.hearth.elements import text
 class CustomCheckBox:
     __slots__ = 'check_box', 'text_box'
 
-    def __init__(self, check_box: checkbox._Checkbox, text_box: text.Text) -> None:
+    def __init__(self, check_box: checkbox.Checkbox, text_box: text.Text) -> None:
         self.check_box = check_box
         self.text_box = text_box
 

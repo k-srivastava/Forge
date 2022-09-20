@@ -25,7 +25,7 @@ class CheckboxStyle(enum.Enum):
     CHECKED = enum.auto()
 
 
-class _Checkbox(forge.hearth.components.base.UIComponent):
+class Checkbox(forge.hearth.components.base.UIComponent):
     __slots__ = 'click_event', 'value', 'style', '_id'
 
     def __init__(
@@ -60,7 +60,7 @@ class _Checkbox(forge.hearth.components.base.UIComponent):
             self.click_event.post()
 
 
-class SquareCheckbox(_Checkbox):
+class SquareCheckbox(Checkbox):
     def __init__(
             self,
             top_left: forge.core.physics.vector.Vector2D, size: int,
@@ -144,7 +144,7 @@ class SquareCheckbox(_Checkbox):
         super().update()
 
 
-class CircleCheckbox(_Checkbox):
+class CircleCheckbox(Checkbox):
     def __init__(
             self,
             center: forge.core.physics.vector.Vector2D, radius: int,

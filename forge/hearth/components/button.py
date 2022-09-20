@@ -19,7 +19,7 @@ import forge.hearth.settings
 import forge.hearth.utils.bounds
 
 
-class _Button(forge.hearth.components.base.UIComponent):
+class Button(forge.hearth.components.base.UIComponent):
     """
     Base button class for Hearth.
     """
@@ -105,7 +105,7 @@ class _Button(forge.hearth.components.base.UIComponent):
         self.text.update()
 
 
-class RectangularButton(_Button):
+class RectangularButton(Button):
     """
     Rectangular button class in Hearth.
     """
@@ -233,7 +233,7 @@ class RectangularButton(_Button):
             _center_text(self.rectangle.center, self.text)
 
 
-class CircularButton(_Button):
+class CircularButton(Button):
     """
     Circular button class in Hearth.
     """
@@ -349,7 +349,7 @@ class CircularButton(_Button):
             _center_text(self.circle.center, self.text)
 
 
-class PolygonalButton(_Button):
+class PolygonalButton(Button):
     """
     Polygonal button class in Hearth.
     """
