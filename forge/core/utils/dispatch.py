@@ -6,6 +6,7 @@ import functools
 import typing
 
 
+# Code Source: https://stackoverflow.com/questions/25343981/method-overloading-for-different-argument-type-in-python
 def multidispatch(*types: typing.Type):
     """
     Decorator for class methods using type-hints enabling, function-overloading using dynamic dispatch.

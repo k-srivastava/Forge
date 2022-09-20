@@ -3,6 +3,12 @@ Keyboard management in Forge.
 """
 import enum
 
+import pygame
+
+import forge.core.engine.game
+
+DISABLED = False
+
 
 class Key(enum.Enum):
     """
@@ -158,3 +164,46 @@ class Key(enum.Enum):
     UNDERSCORE = 95
 
     UNKNOWN = 0
+
+
+def is_clicked(key: Key) -> bool:
+    """
+    Check if a certain keyboard key is pressed once.
+
+    :param key: Enum value of the key to check.
+    :type key: Key
+
+    :return: True if the keyboard key is pressed once; else False.
+    """
+    if DISABLED:
+        return False
+
+    game = forge.core.engine.game.get_game()
+
+    if game is not None:
+        for event in game.event_list:
+            if event.type == pygame.KEYDOWN:
+                if event.key == key.value:
+                    return True
+
+    return False
+
+
+def is_any_clicked() -> bool:
+    """
+    Check if any keyboard key is pressed once.
+
+    :return: True if any keyboard key is pressed once; else False.
+    :rtype: bool
+    """
+    if DISABLED:
+        return False
+
+    game = forge.core.engine.game.get_game()
+
+    if game is not None:
+        for event in game.event_list:
+            if event.type == pygame.KEYDOWN:
+                return True
+
+    return False

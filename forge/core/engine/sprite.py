@@ -5,8 +5,8 @@ import dataclasses
 
 import pygame
 
-import forge.core.utils.aliases
 import forge.core.physics.vector
+import forge.core.utils.aliases
 
 
 @dataclasses.dataclass(slots=True)

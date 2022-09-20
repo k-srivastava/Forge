@@ -4,10 +4,26 @@ Creation, retrieval, posting and deletion of events using Forge's custom event m
 from __future__ import annotations
 
 import dataclasses
+import enum
 import typing
+import warnings
 
-_INTERNAL_EVENT_NAMES: list[str] = []
-_EVENTS: dict[str, Event] = {}
+import attrs
+
+import forge.core.utils.id
+
+_EVENTS: dict[int, Event] = {}
+EVENT_IDS: dict[str, int] = {}
+INTERNAL_EVENT_NAMES: list[str] = []
+
+
+class InternalEvent(enum.Enum):
+    """
+    Enumeration of all internal events used by Forge.
+    """
+    MOUSE_CLICKED = '<MOUSE-CLICKED>'
+    MOUSE_DEPRESSED = '<MOUSE-DEPRESSED>'
+    KEY_PRESSED = '<KEY-PRESSED>'
 
 
 @dataclasses.dataclass(slots=True)
@@ -15,9 +31,9 @@ class Event:
     """
     Forge's basic but sufficient event system for both internal and developer use.
     """
-    name: str
-    _subscribers: dict[typing.Callable[[typing.Any, ...], None],
-                       tuple[typing.Any, ...]] = dataclasses.field(default_factory=dict)
+    name: str = attrs.field(on_setattr=attrs.setters.frozen)
+    _subscribers: list[typing.Callable[[], None]] = dataclasses.field(default_factory=list)
+    _id: int = dataclasses.field(init=False)
 
     def __post_init__(self) -> None:
         """
@@ -26,51 +42,51 @@ class Event:
 
         :raises ValueError: All event names must be unique.
         """
-        if self.name in _INTERNAL_EVENT_NAMES:
+        if self.name in INTERNAL_EVENT_NAMES:
             raise ValueError(f'Cannot create event: {self.name}. An internal event of the same name already exists.')
 
-        if self.name in _EVENTS:
+        if self.name in EVENT_IDS:
             raise ValueError(f'Cannot create two events of the same name: {self.name}.')
 
-        _EVENTS[self.name] = self
+        self._id = forge.core.utils.id.generate_random_id()
 
-    def __iadd__(self, subscriber: tuple[typing.Callable[[typing.Any], None], tuple[typing.Any, ...]]) -> Event:
+        _EVENTS[self._id] = self
+        EVENT_IDS[self.name] = self._id
+
+    def __iadd__(self, subscriber: typing.Callable[[], None]) -> Event:
         """
-        Register a new function to the event as a tuple of a callable and its arguments using the '+=' operator.
+        Register a new function to the event using the '+=' operator.
 
-        :param subscriber: Function and its arguments to be registered to the event.
-        :type subscriber: tuple[Callable[Any, None], tuple[Any, ...]]
+        :param subscriber: Function to be registered to the event.
+        :type subscriber: typing.Callable[[], None]
 
-        :return: The event to which the function is registered; used internally by Python.
+        :return: The event to which the function is registered.
         :rtype: Event
 
         :raises ValueError: All functions registered to the event must be unique.
         """
-        function: typing.Callable[[typing.Any], None] = subscriber[0]
-        arguments: tuple[typing.Any, ...] = subscriber[1]
+        if subscriber in self._subscribers:
+            raise ValueError(f'Function {subscriber.__name__} is already subscribed to the event.')
 
-        if function in self._subscribers:
-            raise ValueError(f'Function {function.__name__} is already subscribed to the event.')
-
-        self._subscribers[function] = arguments
+        self._subscribers.append(subscriber)
         return self
 
-    def __isub__(self, function: typing.Callable) -> Event:
+    def __isub__(self, subscriber: typing.Callable[[], None]) -> Event:
         """
         Deregister an existing function to the event using the '-=' operator.
 
-        :param function: Function to be deregistered from the event.
-        :type function: Callable
+        :param subscriber: Function to be deregistered from the event.
+        :type subscriber: typing.Callable[[], None]
 
-        :return: THe event to which the function was registered; used internally by Python.
+        :return: THe event to which the function was registered.
         :rtype: Event
 
         :raises ValueError: A function that was never registered cannot be deregistered.
         """
-        if function not in self._subscribers:
-            raise ValueError(f'Function {function.__name__} never subscribed to the event; cannot be removed.')
+        if subscriber not in self._subscribers:
+            raise ValueError(f'Function {subscriber.__name__} never subscribed to the event.')
 
-        self._subscribers.pop(function)
+        self._subscribers.remove(subscriber)
         return self
 
     def __repr__(self) -> str:
@@ -89,62 +105,128 @@ class Event:
         :return: Detailed string with event information.
         :rtype: str
         """
-        return f'Forge Event -> Name {self.name}, Subscribers: {self._subscribers.keys()}'
+        return f'Forge Event -> Name {self.name}, ID: {self._id}, Subscribers: {self._subscribers}'
+
+    def id(self) -> int:
+        """
+        Get the unique ID of the event.
+
+        :return: ID of the event.
+        :rtype: int
+        """
+        return self._id
 
     def post(self) -> None:
         """
-        Post the event that calls all of its subscriber functions with their respective arguments. If an exception
-        occurs when calling a subscriber function, it is raised as a warning instead.
-
-        :raises RuntimeWarning: A subscribed function had an error during its execution. The severity is bumped down to
-                                a warning instead.
+        Post the event that calls all of its subscriber functions. If an exception occurs when calling a subscriber
+        function, it is logged as a warning instead.
         """
-        for function, arguments in self._subscribers.items():
+        for function in self._subscribers:
             try:
-                function(*arguments)
+                function()
 
             except Exception as e:
-                raise RuntimeWarning(f'Execution of {function.__name__} led to an exception.\n{e}')
+                warnings.warn(f'Execution of {function.__name__} led to an exception.\n{e}')
 
 
-def get_event(event_name: str) -> Event:
+def get_internal_event(event: InternalEvent) -> Event:
     """
-    Get a registered event from the event dictionary. Acts as an abstraction over the package-protected dictionary.
-    Also does not allow getting an internal event.
+    Retrieve a registered internal event from the event dictionary using the event enum.
 
-    :param event_name: Name of the event to retrieve.
-    :type event_name: str
+    :param event: Enum name of the internal event to be retrieved.
+    :type event: InternalEvent
 
-    :return: Event from the dictionary with the same name.
+    :return: Internal event stored in the event dictionary.
     :rtype: Event
 
-    :raises ValueError: Internal events cannot be retrieved.
-    :raises KeyError: Event must be present in the event dictionary to retrieve.
+    :raises KeyError: An internal event must be registered if it is to be retrieved.
     """
-    if event_name in _INTERNAL_EVENT_NAMES:
-        raise ValueError(f'Event named: {event_name} is an internal event and cannot be retrieved.')
+    # The corresponding value for the enum will always be a string.
+    # noinspection PyTypeHints
+    event.value: str
 
-    if event_name not in _EVENTS:
-        raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be retrieved.')
+    if event.value not in INTERNAL_EVENT_NAMES:
+        raise KeyError(f'Event named: {event.value} has not been registered as an internal event and cannot retrieved.')
 
-    return _EVENTS[event_name]
+    return _EVENTS[EVENT_IDS[event.value]]
 
 
-def delete_event(event_name: str) -> None:
+def get_event_from_name(event_name: str) -> Event:
     """
-    Delete a registered event from the event dictionary. Acts as an abstraction over the package-protected dictionary.
-    Also does not allow deletion of an internal event.
+    Retrieve a registered event from the event dictionary using the event name. Also does not allow the retrieval an
+    internal event.
 
-    :param event_name: Name of the event to delete.
+    :param event_name: Name of the event to be retrieved.
     :type event_name: str
 
-    :raises ValueError: Internal events cannot be deleted.
-    :raises KeyError: Event must be present in the event dictionary to delete.
+    :return: Event stored in the event dictionary.
+    :rtype: Event
+
+    :raises ValueError: Internal events cannot be retrieved using their names.
+    :raises KeyError: An event must be registered if it is to be retrieved.
     """
-    if event_name in _INTERNAL_EVENT_NAMES:
+    if event_name in INTERNAL_EVENT_NAMES:
+        raise ValueError(f'Event named: {event_name} is an internal event and cannot be retrieved.')
+
+    if event_name not in EVENT_IDS:
+        raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be retrieved.')
+
+    return _EVENTS[EVENT_IDS[event_name]]
+
+
+def get_event_from_id(event_id: int) -> Event:
+    """
+    Retrieve a registered event from the event dictionary using the event ID.
+
+    :param event_id: ID of the event to be retrieved.
+    :type event_id: int
+
+    :return: Event stored in the event dictionary.
+    :rtype: Event
+
+    :raises KeyError: An event must be registered if it is to be retrieved.
+    """
+    if event_id not in _EVENTS:
+        raise KeyError(f'Event with ID: {event_id} has not been registered as an event and cannot be retrieved.')
+
+    return _EVENTS[event_id]
+
+
+def delete_event_from_name(event_name: str) -> None:
+    """
+    Delete a registered event from the event dictionary using the event name and free the ID of the event. Also does
+    not allow the deletion of an internal event.
+
+    :param event_name: Name of the event to be deleted.
+    :type event_name: str
+
+    :raises ValueError: Internal events cannot be deleted using their names.
+    :raises KeyError: An event must be registered if it is to be deleted.
+    """
+    if event_name in INTERNAL_EVENT_NAMES:
         raise ValueError(f'Event named: {event_name} is an internal event and cannot be deleted.')
 
-    if event_name not in _EVENTS:
+    if event_name not in EVENT_IDS:
         raise KeyError(f'Event named: {event_name} has not been registered as an event and cannot be deleted.')
 
-    _EVENTS.pop(event_name)
+    _EVENTS.pop(EVENT_IDS[event_name])
+    forge.core.utils.id.delete_id(EVENT_IDS[event_name])
+    EVENT_IDS.pop(event_name)
+
+
+def delete_event_from_id(event_id: int) -> None:
+    """
+    Delete a registered event from the event dictionary using the event ID and free the ID of the image. Allows the
+    deletion of an internal event.
+
+    :param event_id: ID of the event to be deleted.
+    :type event_id: int
+
+    :raises KeyError: An event must be registered if it to be deleted.
+    """
+    if event_id not in _EVENTS:
+        raise KeyError(f'Event with ID: {event_id} has not been registered an an event and cannot be deleted.')
+
+    event_name = _EVENTS.pop(event_id).name
+    forge.core.utils.id.delete_id(event_id)
+    EVENT_IDS.pop(event_name)
