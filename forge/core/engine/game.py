@@ -9,6 +9,8 @@ import pygame
 
 import forge.core.engine.display
 import forge.core.managers.event
+import forge.core.managers.keyboard
+import forge.core.managers.mouse
 import forge.core.utils.loaders
 
 # Store the current game in a list of length one.
@@ -59,15 +61,20 @@ class Game:
                 pygame.quit()
                 sys.exit(0)
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN and not forge.core.managers.mouse.DISABLED:
                 forge.core.managers.event.get_internal_event(
                     forge.core.managers.event.InternalEvent.MOUSE_CLICKED
                 ).post()
 
-        if any(pygame.mouse.get_pressed()):
+            elif event.type == pygame.KEYDOWN and not forge.core.managers.keyboard.DISABLED:
+                forge.core.managers.event.get_internal_event(
+                    forge.core.managers.event.InternalEvent.KEY_PRESSED
+                ).post()
+
+        if any(pygame.mouse.get_pressed()) and not forge.core.managers.mouse.DISABLED:
             forge.core.managers.event.get_internal_event(forge.core.managers.event.InternalEvent.MOUSE_DEPRESSED).post()
 
-        if any(pygame.key.get_pressed()):
+        if any(pygame.key.get_pressed()) and not forge.core.managers.keyboard.DISABLED:
             forge.core.managers.event.get_internal_event(forge.core.managers.event.InternalEvent.KEY_PRESSED).post()
 
         self.update()

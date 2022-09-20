@@ -8,6 +8,8 @@ import pygame
 import forge.core.engine.game
 import forge.core.physics.vector
 
+DISABLED = False
+
 
 class MouseButton(enum.Enum):
     """
@@ -28,6 +30,9 @@ def is_clicked(mouse_button: MouseButton) -> bool:
     :return: True if the mouse button passed is pressed once; else False.
     :rtype: bool
     """
+    if DISABLED:
+        return False
+
     game = forge.core.engine.game.get_game()
 
     if game is not None:
@@ -42,6 +47,26 @@ def is_clicked(mouse_button: MouseButton) -> bool:
     return False
 
 
+def is_any_clicked() -> bool:
+    """
+    Check if any mouse button of a three-buttoned mouse is pressed once.
+
+    :return: True if any mouse button passed is pressed once; else False.
+    :rtype: bool
+    """
+    if DISABLED:
+        return False
+
+    game = forge.core.engine.game.get_game()
+
+    if game is not None:
+        for event in game.event_list:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                return True
+
+    return False
+
+
 def is_pressed(mouse_button: MouseButton) -> bool:
     """
     Check if a certain mouse button of a three-buttoned mouse is pressed continuously.
@@ -52,6 +77,9 @@ def is_pressed(mouse_button: MouseButton) -> bool:
     :return: True if the mouse button passed is pressed continuously; else False.
     :rtype: bool
     """
+    if DISABLED:
+        return False
+
     # Disabling the type-checker because the MouseButton enum will only have integer values that are tuple-compatible.
     # noinspection PyTypeChecker
     return pygame.mouse.get_pressed()[mouse_button.value]
@@ -64,6 +92,9 @@ def is_any_pressed() -> bool:
     :return: True if any mouse button is pressed; else False.
     :rtype: bool
     """
+    if DISABLED:
+        return False
+
     return any(pygame.mouse.get_pressed())
 
 
@@ -74,6 +105,9 @@ def position() -> forge.core.physics.vector.Vector2D:
     :return: Current mouse position.
     :rtype: core.physics.vector.Vector2D
     """
+    if DISABLED:
+        return forge.core.physics.vector.zero()
+
     return forge.core.physics.vector.from_tuple(pygame.mouse.get_pos())
 
 
@@ -84,6 +118,9 @@ def movement() -> forge.core.physics.vector.Vector2D:
     :return: Relative mouse position.
     :rtype: core.physics.vector.Vector2D
     """
+    if DISABLED:
+        return forge.core.physics.vector.zero()
+
     return forge.core.physics.vector.from_tuple(pygame.mouse.get_rel())
 
 
@@ -94,4 +131,5 @@ def modify_visibility(visible: bool) -> None:
     :param visible: Whether the mouse should be made visible or not.
     :type visible: bool
     """
-    pygame.mouse.set_visible(visible)
+    if not DISABLED:
+        pygame.mouse.set_visible(visible)
