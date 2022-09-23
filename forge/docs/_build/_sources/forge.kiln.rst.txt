@@ -7,9 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   forge.kiln.engine
-   forge.kiln.managers
-
 Module contents
 ---------------
 

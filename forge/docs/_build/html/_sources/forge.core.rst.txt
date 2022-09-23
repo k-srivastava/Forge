@@ -1,5 +1,5 @@
-tests.core package
-==================
+core package
+============
 
 Subpackages
 -----------
@@ -7,13 +7,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   forge.tests.core.events
-   forge.tests.core.physics
+   forge.core.engine
+   forge.core.managers
+   forge.core.physics
+   forge.core.utils
 
 Module contents
 ---------------
 
-.. automodule:: forge.tests.core
+.. automodule:: forge.core
    :members:
    :undoc-members:
    :show-inheritance:

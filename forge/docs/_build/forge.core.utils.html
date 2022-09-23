@@ -103,6 +103,18 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
 <p>Base renderable class for Forge.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="forge.core.utils.base.Renderable.add_to_renderer">
+<span class="sig-name descname"><span class="pre">add_to_renderer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">renderer_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'display-object-renderer'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#forge.core.utils.base.Renderable.add_to_renderer" title="Permalink to this definition"></a></dt>
+<dd><p>Add the object to a renderer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>renderer_name</strong> (<em>str</em>) – Name of the renderer to which the object is to be added; defaults to the base object
+renderer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="forge.core.utils.base.Renderable.render">
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">display</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Surface</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#forge.core.utils.base.Renderable.render" title="Permalink to this definition"></a></dt>
 <dd><p>Render the object to the display.</p>
@@ -131,9 +143,26 @@
 </dd></dl>
 
 </section>
+<section id="forge-core-utils-id-module">
+<h2>forge.core.utils.id module<a class="headerlink" href="#forge-core-utils-id-module" title="Permalink to this heading"></a></h2>
+</section>
 <section id="module-forge.core.utils.loaders">
 <span id="forge-core-utils-loaders-module"></span><h2>forge.core.utils.loaders module<a class="headerlink" href="#module-forge.core.utils.loaders" title="Permalink to this heading"></a></h2>
 <p>Loaders for various assets in Forge.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="forge.core.utils.loaders.load_internal_events">
+<span class="sig-prename descclassname"><span class="pre">forge.core.utils.loaders.</span></span><span class="sig-name descname"><span class="pre">load_internal_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">skip_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forge.core.managers.html#forge.core.managers.event.InternalEvent" title="forge.core.managers.event.InternalEvent"><span class="pre">InternalEvent</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#forge.core.utils.loaders.load_internal_events" title="Permalink to this definition"></a></dt>
+<dd><p>Load all internal Forge events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>skip_events</strong> – Enum names of internal events to be skipped during the loading.</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><a class="reference internal" href="forge.core.managers.html#forge.core.managers.event.InternalEvent" title="forge.core.managers.event.InternalEvent">forge.core.managers.event.InternalEvent</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="forge.core.utils.loaders.load_sprites_from_folders">
 <span class="sig-prename descclassname"><span class="pre">forge.core.utils.loaders.</span></span><span class="sig-name descname"><span class="pre">load_sprites_from_folders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="forge.core.engine.html#forge.core.engine.sprite.Sprite" title="forge.core.engine.sprite.Sprite"><span class="pre">forge.core.engine.sprite.Sprite</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#forge.core.utils.loaders.load_sprites_from_folders" title="Permalink to this definition"></a></dt>
@@ -147,6 +176,34 @@
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list[<a class="reference internal" href="forge.core.engine.html#forge.core.engine.sprite.Sprite" title="forge.core.engine.sprite.Sprite">forge.core.engine.sprite.Sprite</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-forge.core.utils.math">
+<span id="forge-core-utils-math-module"></span><h2>forge.core.utils.math module<a class="headerlink" href="#module-forge.core.utils.math" title="Permalink to this heading"></a></h2>
+<p>Core mathematical functions for Forge.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="forge.core.utils.math.clamp">
+<span class="sig-prename descclassname"><span class="pre">forge.core.utils.math.</span></span><span class="sig-name descname"><span class="pre">clamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span></span></span><a class="headerlink" href="#forge.core.utils.math.clamp" title="Permalink to this definition"></a></dt>
+<dd><p>Clamp a value between a specified minimum and maximum bound.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>int</em><em> | </em><em>float</em>) – Value to be clamped.</p></li>
+<li><p><strong>min</strong> (<em>int</em><em> | </em><em>float</em>) – Minimum bound of the clamp.</p></li>
+<li><p><strong>max</strong> (<em>int</em><em> | </em><em>float</em>) – Maximum bound of the clamp.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Value to be clamped to the minimum and maximum bound.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int | float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The maximum bound cannot be greater than the minimum bound.</p>
 </dd>
 </dl>
 </dd></dl>

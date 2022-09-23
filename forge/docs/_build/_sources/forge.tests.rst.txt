@@ -7,9 +7,6 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   forge.tests.core
-   forge.tests.playgrounds
-
 Module contents
 ---------------
 

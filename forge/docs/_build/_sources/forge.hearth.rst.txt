@@ -7,10 +7,9 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   forge.hearth.animation
-   forge.hearth.constraints
+   forge.hearth.components
    forge.hearth.elements
-   forge.hearth.text
+   forge.hearth.utils
 
 Module contents
 ---------------

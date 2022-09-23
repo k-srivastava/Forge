@@ -1,6 +1,41 @@
 hearth.elements package
 =======================
 
+Submodules
+----------
+
+forge.hearth.elements.base module
+---------------------------------
+
+.. automodule:: forge.hearth.elements.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.hearth.elements.debug module
+----------------------------------
+
+.. automodule:: forge.hearth.elements.debug
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.hearth.elements.shapes module
+-----------------------------------
+
+.. automodule:: forge.hearth.elements.shapes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.hearth.elements.text module
+---------------------------------
+
+.. automodule:: forge.hearth.elements.text
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

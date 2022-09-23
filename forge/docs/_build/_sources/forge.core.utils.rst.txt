@@ -28,10 +28,26 @@ forge.core.utils.dispatch module
    :undoc-members:
    :show-inheritance:
 
+forge.core.utils.id module
+--------------------------
+
+.. automodule:: forge.core.utils.id
+   :members:
+   :undoc-members:
+   :show-inhertitance:
+
 forge.core.utils.loaders module
 --------------------------------
 
 .. automodule:: forge.core.utils.loaders
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.core.utils.math module
+----------------------------
+
+.. automodule:: forge.core.utils.math
    :members:
    :undoc-members:
    :show-inheritance:

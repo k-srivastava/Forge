@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hearth.utils package &mdash; Forge 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="kiln package" href="forge.kiln.html" />
+    <link rel="prev" title="hearth.elements package" href="forge.hearth.elements.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Forge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Forge</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="forge.core.html">core package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="forge.hearth.html">hearth package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="forge.hearth.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="forge.hearth.components.html">hearth.components package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="forge.hearth.elements.html">hearth.elements package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">hearth.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="forge.hearth.html#module-forge.hearth">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="forge.kiln.html">kiln package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="forge.tests.html">tests package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Forge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Forge</a> &raquo;</li>
+          <li><a href="forge.hearth.html">hearth package</a> &raquo;</li>
+      <li>hearth.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/forge.hearth.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hearth-utils-package">
+<h1>hearth.utils package<a class="headerlink" href="#hearth-utils-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-forge.hearth.utils.bounds">
+<span id="forge-hearth-utils-bounds-module"></span><h2>forge.hearth.utils.bounds module<a class="headerlink" href="#module-forge.hearth.utils.bounds" title="Permalink to this heading"></a></h2>
+<p>Functions to check if a point is within particular bounds.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="forge.hearth.utils.bounds.point_within_circle">
+<span class="sig-prename descclassname"><span class="pre">forge.hearth.utils.bounds.</span></span><span class="sig-name descname"><span class="pre">point_within_circle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#forge.hearth.utils.bounds.point_within_circle" title="Permalink to this definition"></a></dt>
+<dd><p>Check if a point lies within the bounds of a circle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>forge.core.physics.vector.Vector2D</em></a>) – Point to check for bounds.</p></li>
+<li><p><strong>center</strong> (<a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>forge.core.physics.vector.Vector2D</em></a>) – Center of the circle.</p></li>
+<li><p><strong>radius</strong> (<em>int</em>) – Radius of the circle.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the point lies within the bounds of the circle; else False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="forge.hearth.utils.bounds.point_within_polygon">
+<span class="sig-prename descclassname"><span class="pre">forge.hearth.utils.bounds.</span></span><span class="sig-name descname"><span class="pre">point_within_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">forge.core.physics.vector.Vector2D</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#forge.hearth.utils.bounds.point_within_polygon" title="Permalink to this definition"></a></dt>
+<dd><p>Check of a point lies within the bounds of a polygon.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>forge.core.physics.vector.Vector2D</em></a>) – Point to check for bounds.</p></li>
+<li><p><strong>vertices</strong> (<em>list</em><em>[</em><a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>forge.core.physics.vector.Vector2D</em></a><em>]</em>) – List of vertices describing the polygon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the point lies within the bounds of the polygon; else False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="forge.hearth.utils.bounds.point_within_rectangle">
+<span class="sig-prename descclassname"><span class="pre">forge.hearth.utils.bounds.</span></span><span class="sig-name descname"><span class="pre">point_within_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_left</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#forge.hearth.utils.bounds.point_within_rectangle" title="Permalink to this definition"></a></dt>
+<dd><p>Check if a point lies within the bounds of a rectangle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>forge.core.physics.vector.Vector2D</em></a>) – Point to check for bounds.</p></li>
+<li><p><strong>top_left</strong> (<a class="reference internal" href="forge.core.physics.html#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>forge.core.physics.vector.Vector2D</em></a>) – Top-left of the rectangle.</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – Width of the rectangle.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – Height of the rectangle.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the point lies within the bounds of the rectangle; else False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-forge.hearth.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-forge.hearth.utils" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="forge.hearth.elements.html" class="btn btn-neutral float-left" title="hearth.elements package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="forge.kiln.html" class="btn btn-neutral float-right" title="kiln package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Kshitij Srivastava.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

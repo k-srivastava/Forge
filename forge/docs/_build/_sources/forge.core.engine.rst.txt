@@ -28,6 +28,14 @@ forge.core.engine.display module
    :undoc-members:
    :show-inheritance:
 
+forge.core.engine.game module
+-----------------------------
+
+.. automodule:: forge.core.engine.game
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 forge.core.engine.image module
 ------------------------------
 
