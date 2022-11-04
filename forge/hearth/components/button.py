@@ -116,7 +116,7 @@ class Button(forge.hearth.components.base.UIComponent):
         """
         Render the button and its text to the display.
 
-        :param display: Display to which the UI component and its elements are to be rendered.
+        :param display: Display to which the button and its elements are to be rendered.
         :type display: forge.core.utils.aliases.Surface
         """
         self.text.render(display)
@@ -126,8 +126,11 @@ class Button(forge.hearth.components.base.UIComponent):
         Update the button.
         """
         if self.is_clicked():
-            self.click_function()
-            self.click_event.post()
+            if self.click_function is not None:
+                self.click_function()
+
+            if self.click_event is not None:
+                self.click_event.post()
 
         self.text.update()
 
@@ -137,7 +140,7 @@ class RectangularButton(Button):
     Rectangular button class in Hearth.
     """
 
-    __slots__ = 'children', 'rectangle'
+    __slots__ = 'rectangle'
 
     def __init__(
             self,
@@ -166,10 +169,10 @@ class RectangularButton(Button):
         :type height: int
         :param color: Color of the button.
         :type color: forge.core.engine.color.Color
-        :param click_function: Function to call when the button is clicked.:
+        :param click_function: Function to call when the button is clicked.
         :type click_function: typing.Callable[[], None] | None
         :param click_event: Event to post when the button is clicked.
-        :type click_event: forge.core.managers.event.Event
+        :type click_event: forge.core.managers.event.Event | None
         :param parent: Parent of the button; defaults to None.
         :type parent: forge.hearth.elements.base.UIElement | None
         :param line_width: Width of the button line; defaults to 0.
@@ -290,7 +293,7 @@ class CircularButton(Button):
     Circular button class in Hearth.
     """
 
-    __slots__ = 'children', 'circle'
+    __slots__ = 'circle'
 
     def __init__(
             self,
@@ -431,7 +434,7 @@ class PolygonalButton(Button):
     Polygonal button class in Hearth.
     """
 
-    __slots__ = 'children', 'polygon'
+    __slots__ = 'polygon'
 
     def __init__(
             self,
