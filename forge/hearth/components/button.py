@@ -24,24 +24,28 @@ class Button(forge.hearth.components.base.UIComponent):
     Base button class for Hearth.
     """
 
-    __slots__ = 'click_event', 'text', 'text_centered', '_id'
+    __slots__ = 'click_function', 'click_event', 'text', 'text_centered', '_id'
 
     def __init__(
             self,
-            click_event: forge.core.managers.event.Event,
+            click_function: typing.Callable[[], None] | None,
+            click_event: forge.core.managers.event.Event | None,
             text: forge.hearth.elements.text.Text,
             text_centered: bool = True,
     ) -> None:
         """
         Initialize the button.
 
+        :param click_function: Function to call when the button is clicked.
+        :type click_function: typing.Callable[[], None] | None
         :param click_event: Event to post when the button is clicked.
-        :type click_event: forge.core.managers.event.Event
+        :type click_event: forge.core.managers.event.Event | None
         :param text: Text to be rendered onto the button.
         :type text: forge.hearth.elements.text.Text
         :param text_centered: Whether the button text is to be centered on the button; defaults to True.
         :type text_centered: bool
         """
+        self.click_function = click_function
         self.click_event = click_event
         self.text = text
         self.text_centered = text_centered
@@ -50,6 +54,28 @@ class Button(forge.hearth.components.base.UIComponent):
 
         if not text_centered:
             forge.hearth.elements.shapes.calculate_relative_positions(self, [self.text.top_left])
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the button.
+
+        :return: Simple string with button data.
+        :rtype: str
+        """
+        return f'Button -> Text: ({self.text.__repr__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
+               f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
+
+    def __str__(self) -> str:
+        """
+        String representation of the button.
+
+        :return: Detailed string with button data.
+        :rtype: str
+        """
+        return f'Forge Button -> Text: ({self.text.__str__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None} ' \
+               f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def id(self) -> int:
         """
@@ -100,6 +126,7 @@ class Button(forge.hearth.components.base.UIComponent):
         Update the button.
         """
         if self.is_clicked():
+            self.click_function()
             self.click_event.post()
 
         self.text.update()
@@ -110,18 +137,19 @@ class RectangularButton(Button):
     Rectangular button class in Hearth.
     """
 
-    __slots__ = 'children', 'rectangle', 'click_event', 'text', '_id'
+    __slots__ = 'children', 'rectangle'
 
     def __init__(
             self,
             top_left: forge.core.physics.vector.Vector2D, width: int, height: int,
             color: forge.core.engine.color.Color,
-            click_event: forge.core.managers.event.Event,
+            click_function: typing.Callable[[], None] | None,
+            click_event: forge.core.managers.event.Event | None,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
             corner_radius: int | None = None,
             border: forge.hearth.elements.shapes.Border | None = None,
-            text: str = '', font_size: int = forge.hearth.settings.DEFAULT_FONT_SIZE,
+            text_: str = '', font_size: int = forge.hearth.settings.DEFAULT_FONT_SIZE,
             font_face: str = forge.hearth.settings.DEFAULT_FONT_FACE,
             text_color: forge.core.engine.color.Color = forge.core.engine.color.Color(255, 255, 255),
             text_background_color: forge.core.engine.color.Color | None = None,
@@ -138,6 +166,8 @@ class RectangularButton(Button):
         :type height: int
         :param color: Color of the button.
         :type color: forge.core.engine.color.Color
+        :param click_function: Function to call when the button is clicked.:
+        :type click_function: typing.Callable[[], None] | None
         :param click_event: Event to post when the button is clicked.
         :type click_event: forge.core.managers.event.Event
         :param parent: Parent of the button; defaults to None.
@@ -148,8 +178,8 @@ class RectangularButton(Button):
         :type corner_radius: int | None
         :param border: Border of the button; defaults to None.
         :type border: forge.hearth.elements.shapes.Border | None
-        :param text: Text to be rendered onto the button; defaults to an empty string.
-        :type text: str
+        :param text_: Text to be rendered onto the button; defaults to an empty string.
+        :type text_: str
         :param font_size: Font size of the text; defaults to forge.hearth.settings.DEFAULT_FONT_SIZE.
         :type font_size: int
         :param font_face: Font face of the text; defaults to forge.hearth.settings.DEFAULT_FONT_FACE.
@@ -168,14 +198,36 @@ class RectangularButton(Button):
             top_left, width, height, color, parent, line_width, corner_radius, border
         )
 
-        text = forge.hearth.elements.text.Text(
-            text, font_size, top_left, font_face, text_color, text_background_color, self, anti_aliasing
+        text_ = forge.hearth.elements.text.Text(
+            text_, font_size, top_left, font_face, text_color, text_background_color, self, anti_aliasing
         )
 
-        super().__init__(click_event, text, text_centered)
+        super().__init__(click_function, click_event, text_, text_centered)
 
         if self.text_centered:
             _center_text(self.rectangle.center, self.text)
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the rectangular button.
+
+        :return: Simple string with rectangular button data.
+        :rtype: str
+        """
+        return f'Rectangular Button -> Text: ({self.text.__repr__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
+
+    def __str__(self) -> str:
+        """
+        String representation of the rectangular button.
+
+        :return: Detailed string with rectangular button data.
+        :rtype: str
+        """
+        return f'Forge Rectangular Button -> Text: ({self.text.__str__()}), Rectangle: ({self.rectangle.__str__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None} ' \
+               f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def add_to_renderer(
             self,
@@ -238,13 +290,14 @@ class CircularButton(Button):
     Circular button class in Hearth.
     """
 
-    __slots__ = 'circle', 'click_event', 'text', '_id'
+    __slots__ = 'children', 'circle'
 
     def __init__(
             self,
             center: forge.core.physics.vector.Vector2D, radius: int,
             color: forge.core.engine.color.Color,
-            click_event: forge.core.managers.event.Event,
+            click_function: typing.Callable[[], None] | None,
+            click_event: forge.core.managers.event.Event | None,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
             border: forge.hearth.elements.shapes.Border | None = None,
@@ -261,6 +314,8 @@ class CircularButton(Button):
         :type center: forge.core.physics.vector.Vector2D
         :param color: Color of the button.
         :type color: forge.core.engine.color.Color
+        :param click_function: Function to call when the button is clicked.
+        :type click_function: typing.Callable[[], None] | None
         :param click_event: Event to post when the button is clicked.
         :type click_event: forge.core.managers.event.Event
         :param parent: Parent of the button; defaults to None.
@@ -291,10 +346,32 @@ class CircularButton(Button):
             text, font_size, self.circle.top_left, font_face, text_color, text_background_color, self, anti_aliasing
         )
 
-        super().__init__(click_event, text, text_centered)
+        super().__init__(click_function, click_event, text, text_centered)
 
         if self.text_centered:
             _center_text(self.circle.center, self.text)
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the circular button.
+
+        :return: Simple string with circular button data.
+        :rtype: str
+        """
+        return f'Circular Button -> Text: ({self.text.__repr__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
+
+    def __str__(self) -> str:
+        """
+        String representation of the circular button.
+
+        :return: Detailed string with circular button data.
+        :rtype: str
+        """
+        return f'Forge Circular Button -> Text: ({self.text.__str__()}), Circle: ({self.circle.__str__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def add_to_renderer(
             self,
@@ -354,12 +431,13 @@ class PolygonalButton(Button):
     Polygonal button class in Hearth.
     """
 
-    __slots__ = 'polygon', 'click_event', 'text', '_id'
+    __slots__ = 'children', 'polygon'
 
     def __init__(
             self,
             vertices: list[forge.core.physics.vector.Vector2D],
             color: forge.core.engine.color.Color,
+            click_function: typing.Callable[[], None] | None,
             click_event: forge.core.managers.event.Event,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
@@ -377,6 +455,8 @@ class PolygonalButton(Button):
         :type vertices: list[forge.core.physics.vector.Vector2D]
         :param color: Color of the button.
         :type color: forge.core.engine.color.Color
+        :param click_function: Function to call when the button is clicked.
+        :type click_function: typing.Callable[[], None] | None
         :param click_event: Event to post when the button is clicked.
         :type click_event: forge.core.managers.event.Event
         :param parent: Parent of the button; defaults to None.
@@ -407,10 +487,32 @@ class PolygonalButton(Button):
             text, font_size, self.polygon.top_left, font_face, text_color, text_background_color, self, anti_aliasing
         )
 
-        super().__init__(click_event, text, text_centered)
+        super().__init__(click_function, click_event, text, text_centered)
 
         if self.text_centered:
             _center_text(self.polygon.center, self.text)
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the polygonal button.
+
+        :return: Simple string with polygonal button data.
+        :rtype: str
+        """
+        return f'Polygonal Button -> Text: ({self.text.__repr__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
+
+    def __str__(self) -> str:
+        """
+        String representation of the polygonal button.
+
+        :return: Detailed string with polygonal button information.
+        :rtype: str
+        """
+        return f'Forge Polygonal Button -> Text: ({self.text.__str__()}), Polygon: ({self.polygon.__str__()}), ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def add_to_renderer(
             self,
