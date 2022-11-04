@@ -74,7 +74,7 @@ class Button(forge.hearth.components.base.UIComponent):
         :rtype: str
         """
         return f'Forge Button -> Text: ({self.text.__str__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None} ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def id(self) -> int:
@@ -215,7 +215,7 @@ class RectangularButton(Button):
         :rtype: str
         """
         return f'Rectangular Button -> Text: ({self.text.__repr__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
 
     def __str__(self) -> str:
@@ -226,7 +226,7 @@ class RectangularButton(Button):
         :rtype: str
         """
         return f'Forge Rectangular Button -> Text: ({self.text.__str__()}), Rectangle: ({self.rectangle.__str__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None} ' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def add_to_renderer(
@@ -359,7 +359,7 @@ class CircularButton(Button):
         :rtype: str
         """
         return f'Circular Button -> Text: ({self.text.__repr__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
 
     def __str__(self) -> str:
@@ -370,7 +370,7 @@ class CircularButton(Button):
         :rtype: str
         """
         return f'Forge Circular Button -> Text: ({self.text.__str__()}), Circle: ({self.circle.__str__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def add_to_renderer(
@@ -500,7 +500,7 @@ class PolygonalButton(Button):
         :rtype: str
         """
         return f'Polygonal Button -> Text: ({self.text.__repr__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
 
     def __str__(self) -> str:
@@ -511,7 +511,7 @@ class PolygonalButton(Button):
         :rtype: str
         """
         return f'Forge Polygonal Button -> Text: ({self.text.__str__()}), Polygon: ({self.polygon.__str__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}' \
+               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
     def add_to_renderer(
