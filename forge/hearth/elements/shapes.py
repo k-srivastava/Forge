@@ -321,10 +321,8 @@ class Rectangle(forge.hearth.elements.base.UIElement):
         :param clockwise: Whether to get the vertices in clockwise or counter-clockwise order; defaults to True.
         :type clockwise: bool
         :return: All the vertices of the rectangle.
-        :rtype: tuple[
-            forge.core.physics.vector.Vector2D, forge.core.physics.vector.Vector2D,
-            forge.core.physics.vector.Vector2D, forge.core.physics.vector.Vector2D
-        ]
+        :rtype: tuple[forge.core.physics.vector.Vector2D, forge.core.physics.vector.Vector2D,
+                forge.core.physics.vector.Vector2D, forge.core.physics.vector.Vector2D]
         """
         top_left = copy.copy(self.top_left)
         top_right = forge.core.physics.vector.Vector2D(self.top_left.x + self.width, self.top_left.y)

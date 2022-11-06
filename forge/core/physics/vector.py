@@ -138,7 +138,7 @@ class Vector2D:
         Check whether the vector is normalized, i.e., its length is equal to one.
 
         :param precision: Precision to which the length of the vector is to be checked to keep a delta for
-        floating-point inaccuracies; defaults to 4.
+                          floating-point inaccuracies; defaults to 4.
         :type precision: int
 
         :return: True if the length or magnitude of the vector is equal to one; else False.
