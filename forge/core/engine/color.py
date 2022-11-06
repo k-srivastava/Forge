@@ -8,6 +8,8 @@ import random as rand
 
 import pygame
 
+import forge.core.utils.exceptions
+
 
 @dataclasses.dataclass(slots=True)
 class Color:
@@ -229,7 +231,7 @@ class Color:
         :return: Detailed string with values of all components of the color.
         :rtype: str
         """
-        return f'Forge ColorRGBA -> red: {self.red}, green: {self.green}, blue: {self.blue}, alpha: {self.alpha}'
+        return f'Forge ColorRGBA -> Red: {self.red}, Green: {self.green}, Blue: {self.blue}, Alpha: {self.alpha}'
 
     def as_tuple(self, with_alpha: bool = False) -> tuple[int, int, int] | tuple[int, int, int, int]:
         """
@@ -285,13 +287,11 @@ def _confirm_color_bounds(color: Color) -> None:
     :param color: Color whose bounds are to be checked.
     :type color: Color
 
-    :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
+    :raises forge.core.utils.exceptions.RGBAColorError: Forge colors can only have 8-bit values for the R, G, B and A
+                                                        components.
     """
 
     if color.red in range(256) and color.green in range(256) and color.blue in range(256) and color.alpha in range(256):
         return
 
-    raise ValueError(
-        'RGBA colors can only have values between 0 and 255 (inclusive), '
-        f'not: {color.red, color.green, color.blue, color.alpha}.'
-    )
+    raise forge.core.utils.exceptions.RGBAColorError(color.red, color.green, color.blue, color.alpha)
