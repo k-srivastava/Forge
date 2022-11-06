@@ -35,9 +35,28 @@ class Border:
     """
     Border for each supported shape in Hearth.
     """
+
     width: int
     color: forge.core.engine.color.Color
     radius: int | None = None  # A border radius is only applicable for rectangles.
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the border.
+
+        :return: Simple string with border data.
+        :rtype: str
+        """
+        return f'Border -> Width: {self.width}, Radius: {self.radius}, Color: ({self.color.__repr__()})'
+
+    def __str__(self) -> str:
+        """
+        String representation of the border.
+
+        :return: Detailed string with border data.
+        :rtype: str
+        """
+        return f'Forge Border -> Width: {self.width}, Radius: {self.radius}, Color: ({self.color.__repr__()})'
 
 
 class Line(forge.hearth.elements.base.UIElement):
@@ -45,7 +64,7 @@ class Line(forge.hearth.elements.base.UIElement):
     Basic lines in Hearth.
     """
 
-    __slots__ = 'start_point', 'end_point', 'parent', 'children', 'color', 'line_width', '_id'
+    __slots__ = 'start_point', 'end_point', 'line_width'
 
     def __init__(
             self,
@@ -84,6 +103,27 @@ class Line(forge.hearth.elements.base.UIElement):
 
             if forge.hearth.settings.NON_CONSTRAINED_CHILDREN_USE_RELATIVE_POSITIONING:
                 calculate_relative_positions(self.parent, [self.start_point, self.end_point])
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the line.
+
+        :return: Simple string with line data.
+        :rtype: str
+        """
+        return f'Line -> Start Point: ({self.start_point.__repr__()}), End Point: ({self.end_point.__repr__()}), ' \
+               f'Child Count: {len(self.children)}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the line.
+
+        :return: Detailed string with line data.
+        :rtype: str
+        """
+        return f'Forge Line -> Start Point: ({self.start_point.__str__()}), End Point: ({self.end_point.__str__()}), ' \
+               f'Center: ({self.center.__str__()}), Color: ({self.color.__str__()}), ' \
+               f'Parent: ({self.parent.__str__()}), Children: {self.children}'
 
     @property
     def center(self) -> forge.core.physics.vector.Vector2D:
@@ -165,7 +205,7 @@ class Rectangle(forge.hearth.elements.base.UIElement):
     """
 
     __slots__ = (
-        'top_left', 'width', 'height', 'parent', 'children', 'color', 'line_width', 'corner_radius', 'border', '_id'
+        'top_left', 'width', 'height', 'line_width', 'corner_radius', 'border'
     )
 
     def __init__(
@@ -215,6 +255,27 @@ class Rectangle(forge.hearth.elements.base.UIElement):
 
             if forge.hearth.settings.NON_CONSTRAINED_CHILDREN_USE_RELATIVE_POSITIONING:
                 calculate_relative_positions(self.parent, [self.top_left])
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the rectangle.
+
+        :return: Simple string with rectangle data.
+        :rtype: str
+        """
+        return f'Rectangle -> Width: {self.width}, Height: {self.height}, Top Left: ({self.top_left.__repr__()}), ' \
+               f'Child Count: {len(self.children)}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the rectangle.
+
+        :return: Detailed string with rectangle information.
+        :rtype: str
+        """
+        return f'Forge Rectangle -> Width: {self.width}, Height: {self.height}, ' \
+               f'Top Left: ({self.top_left.__str__()}), Center: ({self.center.__str__()}), ' \
+               f'Color: ({self.color.__str__()}), Parent: ({self.parent.__str__()}), Children: {self.children}'
 
     @property
     def center(self) -> forge.core.physics.vector.Vector2D:
@@ -332,7 +393,7 @@ class Circle(forge.hearth.elements.base.UIElement):
     Basic circle in Hearth.
     """
 
-    __slots__ = 'center', 'radius', 'parent', 'children', 'color', 'line_width', 'border', '_id'
+    __slots__ = 'center', 'radius', 'line_width', 'border'
 
     def __init__(
             self,
@@ -371,6 +432,26 @@ class Circle(forge.hearth.elements.base.UIElement):
 
         if self.parent is not None:
             self.parent.children.append(self)
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the circle.
+
+        :return: Simple string with circle data.
+        :rtype: str
+        """
+        return f'Circle -> Radius, Center: ({self.center.__repr__()}), Child Count: {len(self.children)}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the circle.
+
+        :return: Detailed string with circle information.
+        :rtype: str
+        """
+        return f'Forge Circle -> Radius: {self.radius}, Center: ({self.center.__str__()}), ' \
+               f'Top Left: ({self.top_left.__str__()}), Color: ({self.color.__str__()}), ' \
+               f'Parent: ({self.parent.__str__()}), Children: {self.children}'
 
     @property
     def top_left(self) -> forge.core.physics.vector.Vector2D:
@@ -448,7 +529,7 @@ class Polygon(forge.hearth.elements.base.UIElement):
     Basic polygon in Hearth.
     """
 
-    __slots__ = 'vertices', 'parent', 'children', 'color', 'parent', 'line_width', 'border', '_id'
+    __slots__ = 'vertices', 'parent', 'line_width', 'border'
 
     def __init__(
             self,
@@ -484,6 +565,25 @@ class Polygon(forge.hearth.elements.base.UIElement):
 
         if self.parent is not None:
             self.parent.children.append(self)
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the polygon.
+
+        :return: Simple string with polygon data.
+        :rtype: str
+        """
+        return f'Polygon -> Vertex Count: {len(self.vertices)}, Child Count: {len(self.children)}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the polygon.
+
+        :return: Detailed string with polygon information.
+        :rtype: str
+        """
+        return f'Forge Polygon -> Vertices: {self.vertices}, Color: ({self.color.__str__()}), ' \
+               f'Parent: ({self.parent.__str__()}), Children: {self.children}'
 
     @property
     def top_left(self) -> forge.core.physics.vector.Vector2D:
