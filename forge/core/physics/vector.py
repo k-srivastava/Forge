@@ -9,6 +9,8 @@ import random as rand
 
 import pygame
 
+import forge.core.utils.exceptions
+
 
 @dataclasses.dataclass(slots=True)
 class Vector2D:
@@ -144,6 +146,22 @@ class Vector2D:
         """
         return round(self.length(), precision) == 1
 
+    def reflect(self, normal: Vector2D) -> None:
+        """
+        Reflect the vector along a given normal to the direction of the vector.
+
+        :param normal: Normal to the reflection.
+        :type normal: Vector2D
+
+        :raises ValueError: The normal vector must be normalized, or have a length or magnitude of one.
+        """
+        if not normal.is_normalized():
+            raise ValueError('The normal vector for reflection must be normalised, or naturally have a unit length.')
+
+        reflected_vector = (normal * -2 * dot(self, normal)) + self
+        self.x = reflected_vector.x
+        self.y = reflected_vector.y
+
     def as_tuple(self) -> tuple[float, float]:
         """
         Return the x and y components of the vector in a tuple. Beneficial for internal interoperability with Pygame.
@@ -180,7 +198,7 @@ def clamp(vector: Vector2D, min_: Vector2D, max_: Vector2D) -> Vector2D:
     :raises ValueError: The maximum bound cannot be greater than the minimum bound on either component axis.
     """
     if min_.x > max_.x or min_.y > max_.y:
-        raise ValueError('The minimum bound vector cannot be greater than the maximum bound vector.')
+        raise forge.core.utils.exceptions.ClampError()
 
     clamped_vector = Vector2D(0, 0)
 
@@ -224,24 +242,6 @@ def normalized(vector: Vector2D) -> Vector2D:
     vector.y /= length
 
     return vector
-
-
-def transformed(vector: Vector2D, transform: 'core.physics.transform.Transform2D') -> Vector2D:
-    """
-    Transform a vector by calculating its position against a supplied transform.
-
-    :param vector: Vector to be transformed.
-    :type vector: Vector2D
-    :param transform: Transform for the vector.
-    :type transform: core.physics.transform.Transform2D
-
-    :return: Transformed vector.
-    :rtype: Vector2D
-    """
-    return Vector2D(
-        (transform.cos() * vector.x - transform.sin() * vector.y) + transform.position.x,
-        (transform.sin() * vector.x + transform.cos() * vector.y) + transform.position.y
-    )
 
 
 def orthogonal(vector: Vector2D) -> Vector2D:
@@ -368,7 +368,7 @@ def distance_squared_between(vector1: Vector2D, vector2: Vector2D) -> float:
     return (vector1.x - vector2.x) ** 2 + (vector1.y - vector2.y) ** 2
 
 
-def reflect(direction: Vector2D, normal: Vector2D) -> Vector2D:
+def reflect_to(direction: Vector2D, normal: Vector2D) -> Vector2D:
     """
     Reflect a vector along a given normal to the direction of the vector.
 
@@ -474,11 +474,22 @@ def right() -> Vector2D:
     return Vector2D(1, 0)
 
 
-def random() -> Vector2D:
+def random(allow_zero: bool = True) -> Vector2D:
     """
     Create a new vector pointing in a random direction, i.e. x: -1 | 0 | 1, y: -1 | 0 | 1.
+
+    :param allow_zero: Allow a zero vector through random generation.
+    :type allow_zero: bool
 
     :return: New random vector.
     :rtype: Vector2D
     """
-    return Vector2D(*rand.choices((-1, 0, 1), k=2))
+    if allow_zero:
+        return Vector2D(*rand.choices((-1, 0, 1), k=2))
+
+    else:
+        while True:
+            random_vector = Vector2D(*rand.choices((-1, 0, 1), k=2))
+
+            if random_vector.length_squared() != 0:
+                return random_vector

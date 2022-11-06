@@ -1,6 +1,8 @@
 """
 Game environment in Forge.
 """
+import forge.core.utils.exceptions
+
 # Constraints on the body sizes.
 MIN_BODY_AREA: float = 0.01 * 0.01
 MAX_BODY_AREA: float = 64 * 64
@@ -19,16 +21,11 @@ def verify_body_constraints(area: float, density: float) -> None:
     :param density: Density of the body.
     :type density: float
 
-    :raises ValueError: The body's area and density must lie within the given world constraints.
+    :raises forge.core.utils.exceptions.BodyAreaError: The body's area must lie within the world constraints.
+    :raises forge.core.utils.exceptions.BodyDensityError: The body's density must lie within given world constraints.
     """
     if not MIN_BODY_AREA <= area <= MAX_BODY_AREA:
-        raise ValueError(
-            f'The area is not within the specified world limits. Area must be between {MIN_BODY_AREA} and '
-            f'{MAX_BODY_AREA}, not {area}.'
-        )
+        raise forge.core.utils.exceptions.BodyAreaError(area, MIN_BODY_AREA, MAX_BODY_AREA)
 
     if not MIN_BODY_DENSITY <= area <= MAX_BODY_DENSITY:
-        raise ValueError(
-            f'The density is not within the specified world limits. Density must be between {MIN_BODY_DENSITY} and '
-            f'{MAX_BODY_DENSITY}, not {density}.'
-        )
+        raise forge.core.utils.exceptions.BodyDensityError(density, MIN_BODY_DENSITY, MAX_BODY_DENSITY)

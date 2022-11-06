@@ -1,6 +1,7 @@
 """
 Core mathematical functions for Forge.
 """
+import forge.core.utils.exceptions
 
 
 def clamp(value: int | float, min_: int | float, max_: int | float) -> int | float:
@@ -20,7 +21,7 @@ def clamp(value: int | float, min_: int | float, max_: int | float) -> int | flo
     :raises ValueError: The maximum bound cannot be greater than the minimum bound.
     """
     if min_ > max_:
-        raise ValueError('The minimum bound cannot be greater than the maximum bound.')
+        raise forge.core.utils.exceptions.ClampError()
 
     if value > max_:
         value = max_

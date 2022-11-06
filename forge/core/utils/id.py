@@ -4,6 +4,8 @@ Forge's ID system. The uniqueness of each ID is maintained on a global, project-
 import random
 import string
 
+import forge.core.utils.exceptions
+
 _IDS: set[int] = set()
 
 
@@ -35,9 +37,9 @@ def delete_id(id_: int) -> None:
     :param id_: ID to be deleted.
     :type id_: int
 
-    :raises KeyError: An ID must be registered if it is to be deleted.
+    :raises forge.core.utils.exceptions.IDNotFoundError: An ID must be registered if it is to be deleted.
     """
     if id_ not in _IDS:
-        raise KeyError(f'ID: {id_} has not been registered as an ID and cannot be deleted.')
+        raise forge.core.utils.exceptions.IDNotFoundError(id_)
 
     _IDS.remove(id_)
