@@ -5,6 +5,7 @@ from unittest import TestCase
 import pygame
 
 from forge.core.physics import vector as vector
+from forge.core.utils.exceptions import ClampError
 
 
 class TestVector2D(TestCase):
@@ -50,6 +51,14 @@ class TestVector2D(TestCase):
         self.assertTrue(vec1.is_normalized())
         self.assertFalse(vec2.is_normalized())
 
+    def test_reflect(self):
+        vec1 = vector.left()
+        normal = vector.right()
+
+        vec1.reflect(normal)
+
+        self.assertEqual(vector.right(), vec1)
+
     def test_as_tuple(self):
         vec = vector.Vector2D(self.rand_x, self.rand_y)
         self.assertEqual((self.rand_x, self.rand_y), vec.as_tuple())
@@ -73,7 +82,7 @@ class TestVector2D(TestCase):
         min_ = vector.Vector2D(0, 0)
         max_ = vector.Vector2D(50, 100)
 
-        self.assertRaises(ValueError, vector.clamp, vec, max_, min_)
+        self.assertRaises(ClampError, vector.clamp, vec, max_, min_)
 
     def test_vector_normalized(self):
         vec = vector.Vector2D(self.rand_x, self.rand_y)
@@ -123,17 +132,17 @@ class TestVector2D(TestCase):
 
         self.assertEqual(9882, vector.distance_squared_between(vec, vec2))
 
-    def test_vector_reflect(self):
+    def test_vector_reflect_to(self):
         direction = vector.Vector2D(1, 2)
         normal = vector.Vector2D(0, 1)
 
-        self.assertEqual(vector.Vector2D(1, -2), vector.reflect(direction, normal))
+        self.assertEqual(vector.Vector2D(1, -2), vector.reflect_to(direction, normal))
 
     def test_vector_reflect_raises(self):
         direction = vector.Vector2D(self.rand_x, self.rand_y)
         normal = vector.Vector2D(100, -2)
 
-        self.assertRaises(ValueError, vector.reflect, direction, normal)
+        self.assertRaises(ValueError, vector.reflect_to, direction, normal)
 
     def test_vector_from_tuple(self):
         vec = vector.Vector2D(self.rand_x, self.rand_y)

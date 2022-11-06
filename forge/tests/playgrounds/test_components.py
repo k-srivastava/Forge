@@ -29,36 +29,39 @@ class CustomSlider:
         self.text_box.add_to_renderer()
 
 
+class ComponentTest(game.Game):
+    def __init__(self) -> None:
+        super().__init__(display.Display(title='Component Tests'))
+
+        self.base_event = event.Event('<BASE-EVENT>')
+
+        self.custom_slider = CustomSlider(
+            slider.Slider(0, 100, None, self.base_event, vector.Vector2D(100, 100), 350, color.random(),
+                          color.random()),
+            text.Text('0', 32, vector.Vector2D(500, 100))
+        )
+
+        self.custom_checkbox = CustomCheckBox(
+            checkbox.CircularCheckbox(vector.Vector2D(150, 500), 50, color.random(), None, self.base_event),
+            text.Text('False', 32, vector.Vector2D(500, 500))
+        )
+
+        self.base_event += lambda: self.update_slider(self.custom_slider.slider_comp.value())
+        self.base_event += lambda: self.update_checkbox(self.custom_checkbox.check_box.value)
+
+        self.custom_slider.add_to_default_renderer()
+        self.custom_checkbox.add_to_default_renderer()
+
+    def update_slider(self, value: float) -> None:
+        self.custom_slider.text_box.text = str(round(value, 2))
+
+    def update_checkbox(self, value: bool) -> None:
+        self.custom_checkbox.text_box.text = str(value).lower()
+
+
 def main() -> None:
-    def update_checkbox_text(text_box: text.Text, value: bool) -> None:
-        text_box.text = str(value)
-
-    def update_slider_text(text_box: text.Text, value: float) -> None:
-        text_box.text = str(round(value, 2))
-
-    test_components = game.Game(display.Display(800, 800, 'Component Tests', 120))
-
-    base_event = event.Event('<BASE-EVENT>')
-
-    custom_checkbox = CustomCheckBox(
-        checkbox.CircleCheckbox(
-            vector.Vector2D(100, 500), 50, color.random(), base_event, style=checkbox.CheckboxStyle.CHECKED
-        ),
-        text.Text('False', 32, vector.Vector2D(500, 500))
-    )
-
-    custom_slider = CustomSlider(
-        slider.Slider(0, 100, base_event, vector.Vector2D(100, 100), 350, color.random(), color.random()),
-        text.Text('0', 32, vector.Vector2D(500, 100))
-    )
-
-    base_event += lambda: update_checkbox_text(custom_checkbox.text_box, custom_checkbox.check_box.value)
-    base_event += lambda: update_slider_text(custom_slider.text_box, custom_slider.slider_comp.value())
-
-    custom_checkbox.add_to_default_renderer()
-    custom_slider.add_to_default_renderer()
-
-    test_components.mainloop()
+    component_tests = ComponentTest()
+    component_tests.mainloop()
 
 
 if __name__ == '__main__':

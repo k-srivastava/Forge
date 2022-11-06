@@ -3,12 +3,13 @@ from unittest import TestCase
 import pygame.color
 
 from forge.core.engine.color import Color
+from forge.core.utils.exceptions import RGBAColorError
 
 
 class TestColor(TestCase):
     def test_initialization(self):
-        self.assertRaises(ValueError, Color, 300, 200, 200)
-        self.assertRaises(ValueError, Color, 80, 90, 20, 20.4)
+        self.assertRaises(RGBAColorError, Color, 300, 200, 200)
+        self.assertRaises(RGBAColorError, Color, 80, 90, -20, 20.4)
 
     def test_as_tuple(self):
         color = Color(120, 80, 20, 65)

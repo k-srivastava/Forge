@@ -1,4 +1,4 @@
-from forge.core.engine import display, game, image
+from forge.core.engine import display, game, image, sprite
 from forge.core.managers import keyboard, mouse
 from forge.core.physics import vector
 
@@ -43,7 +43,8 @@ class ImageTest(game.Game):
 
 
 def main() -> None:
-    image_tests = ImageTest(display.Display(title='Image Tests'))
+    icon_sprite = sprite.Sprite('assets/flower.png')
+    image_tests = ImageTest(display.Display(title='Image Tests', icon=icon_sprite))
     image_tests.mainloop()
 
 
