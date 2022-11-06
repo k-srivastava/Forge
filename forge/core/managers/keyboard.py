@@ -112,7 +112,7 @@ class Key(enum.Enum):
     RIGHT_PAREN = 41
     RIGHT_SHIFT = 1073742053
 
-    # TODO: Organize the remaining keys.
+    # Remaining keys.
     AMPERSAND = 38
     ASTERISK = 42
     AT = 64
@@ -189,6 +189,7 @@ def is_clicked(key: Key) -> bool:
     return False
 
 
+# noinspection DuplicatedCode
 def is_any_clicked() -> bool:
     """
     Check if any keyboard key is pressed once.
@@ -207,3 +208,30 @@ def is_any_clicked() -> bool:
                 return True
 
     return False
+
+
+def is_pressed(key: Key) -> bool:
+    """
+    Check if a certain key is pressed continuously.
+
+    :param key: Enum value of the key to check.
+    :return: True if the keyboard key is pressed continuously; else False.
+    """
+    if DISABLED:
+        return False
+
+    # Disabling the type-checker since the Key enum will only have hard-coded integer values.
+    # noinspection PyTypeChecker
+    return pygame.key.get_pressed()[key.value]
+
+
+def is_any_pressed() -> bool:
+    """
+    Check if any keyboard key is pressed continuously.
+
+    :return: True if any keyboard key is pressed continuously; else False.
+    """
+    if DISABLED:
+        return False
+
+    return any(pygame.key.get_pressed())
