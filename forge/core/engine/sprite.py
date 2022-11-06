@@ -20,7 +20,7 @@ class Sprite:
         """
         Internal representation of the sprite.
 
-        :return: Simple string with sprite filename.
+        :return: Simple string with sprite data.
         :rtype: str
         """
         return f'Sprite -> Filename: {self.filename}'
@@ -29,7 +29,7 @@ class Sprite:
         """
         String representation of the sprite.
 
-        :return: Detailed string with sprite information.
+        :return: Detailed string with sprite data.
         :rtype: str
         """
         return f'Forge Sprite -> Filename: {self.filename}'

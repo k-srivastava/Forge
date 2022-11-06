@@ -41,7 +41,7 @@ class Renderer:
         """
         Internal representation of the renderer.
 
-        :return: Simple string with renderer name and image count.
+        :return: Simple string with renderer data.
         :rtype: str
         """
         return f'Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}'
@@ -50,10 +50,10 @@ class Renderer:
         """
         String representation of the renderer.
 
-        :return: Detailed string with renderer information.
+        :return: Detailed string with renderer data.
         :rtype: str
         """
-        return f'Forge Renderer -> Name: {self.name}, ID: {self._id} Image Pool: {self.image_pool.__str__()}'
+        return f'Forge Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()})'
 
     def id(self) -> int:
         """
@@ -73,12 +73,48 @@ class Renderer:
 
 @dataclasses.dataclass
 class ObjectRenderer(Renderer):
-    ...
+    def __repr__(self) -> str:
+        """
+        Internal representation of the object renderer.
+
+        :return: Simple string with object renderer data.
+        :rtype: str
+        """
+        return f'Object Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the object renderer.
+
+        :return: Detailed string with object renderer data.
+        :rtype: str
+        """
+        return f'Forge Object Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()})'
 
 
 @dataclasses.dataclass
 class UIRenderer(Renderer):
     elements: list['forge.hearth.elements.base.UIElement'] = dataclasses.field(default_factory=list)
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the ui renderer.
+
+        :return: Simple string with ui renderer data.
+        :rtype: str
+        """
+        return f'UI Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}, ' \
+               f'Element Count: {len(self.elements)}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the ui renderer.
+
+        :return: Detailed string with ui renderer data.
+        :rtype: str
+        """
+        return f'Forge UI Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()}), ' \
+               f'Elements: {self.elements}'
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         super().render(display)
@@ -116,6 +152,26 @@ class UIRenderer(Renderer):
 @dataclasses.dataclass
 class ComponentRenderer(Renderer):
     components: list['forge.hearth.components.base.UIComponent'] = dataclasses.field(default_factory=list)
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the component renderer.
+
+        :return: Simple string with component renderer data.
+        :rtype: str
+        """
+        return f'Component Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}, ' \
+               f'Component Count: {len(self.components)}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the component renderer.
+
+        :return: Detailed string with component renderer data.
+        :rtype: str
+        """
+        return f'Forge Component Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()}), ' \
+               f'Components: {self.components}'
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         super().render(display)

@@ -13,6 +13,24 @@ class Timer:
     rounding: int = 2
     _start: float | None = None
 
+    def __repr__(self) -> str:
+        """
+        Internal representation of the timer.
+
+        :return: Simple string with timer data.
+        :rtype: str
+        """
+        return f'Timer -> Start Time: {self._start}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the timer.
+
+        :return: Detailed string with timer data.
+        :rtype: str
+        """
+        return f'Forge Timer -> Start Time: {self._start}, Rounding Places: {self.rounding}'
+
     def start(self) -> None:
         """
         Start the timer.

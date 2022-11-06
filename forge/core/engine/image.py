@@ -54,20 +54,19 @@ class Image(forge.core.utils.base.Renderable):
         """
         Internal representation of the image.
 
-        :return: Simple string with image name and position.
+        :return: Simple string with basic image data.
         :rtype: str
         """
-        return f'Image -> Name: {self.name}, Position: {self.position.__repr__()}'
+        return f'Image -> Name: {self.name}, Position: ({self.position.__repr__()})'
 
     def __str__(self) -> str:
         """
         String representation of the image.
 
-        :return: Detailed string with image information.
+        :return: Detailed string with image data.
         :rtype: str
         """
-        return f'Forge Image -> Name: {self.name}, ID: {self._id} Filename: {self.filename}, ' \
-               f'Position: {self.position.__str__()}'
+        return f'Forge Image -> Name: {self.name}, Filename: {self.filename}, Position: ({self.position.__str__()})'
 
     def id(self) -> int:
         """
@@ -244,7 +243,7 @@ class ImagePool:
         """
         Internal representation of the image.
 
-        :return: Simple string with pool name and image count.
+        :return: Simple string with basic image pool data.
         :rtype: str
         """
         return f'Image Pool -> Name: {self.name}, Image Count: {len(self._images)}'
@@ -253,10 +252,10 @@ class ImagePool:
         """
         String representation of the image.
 
-        :return: Detailed string with image pool information.
+        :return: Detailed string with image pool data.
         :rtype: str
         """
-        return f'Forge Image Pool -> Name: {self.name}, ID: {self._id}, Images: {self._images}'
+        return f'Forge Image Pool -> Name: {self.name}, Images: {self._images}'
 
     def id(self) -> int:
         """
