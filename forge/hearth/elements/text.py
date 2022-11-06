@@ -21,10 +21,7 @@ class Text(forge.hearth.elements.base.UIElement):
     Text class in Hearth.
     """
 
-    __slots__ = (
-        'text', 'font_size', 'top_left', 'font_face', 'color', 'background_color', 'parent', 'children',
-        'anti_aliasing', '_id', '_render_font'
-    )
+    __slots__ = 'text', 'font_size', 'top_left', 'font_face', 'background_color', 'anti_aliasing', '_render_font'
 
     def __init__(
             self,
@@ -76,6 +73,44 @@ class Text(forge.hearth.elements.base.UIElement):
 
             if forge.hearth.settings.NON_CONSTRAINED_CHILDREN_USE_RELATIVE_POSITIONING:
                 forge.hearth.elements.shapes.calculate_relative_positions(self.parent, [self.top_left])
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the text.
+
+        :return: Simple string with text data.
+        :rtype: str
+        """
+        return f'Text -> Text: {self.text}, Font Size: {self.font_size}, Top Left: ({self.top_left.__repr__()}), ' \
+               f'Child Count: {len(self.children)}'
+
+    def __str__(self) -> str:
+        """
+        String representation of the text.
+
+        :return: Detailed string with text information.
+        :rtype: str
+        """
+        return f'Forge Text -> Text: {self.text}, Font Size: {self.font_size}, Font Face: {self.font_face}' \
+               f'Top Left: ({self.top_left.__str__()}), Center: ({self.center.__str__()}), ' \
+               f'Color: ({self.color.__str__()}), Background Color: ({self.background_color.__str__()}) ' \
+               f'Parent: ({self.parent.__str__()}), Children: {self.children}'
+
+    @property
+    def center(self) -> forge.core.physics.vector.Vector2D:
+        dimensions = self.dimensions()
+
+        return forge.core.physics.vector.Vector2D(
+            self.top_left.x + dimensions.x // 2,
+            self.top_left.y + dimensions.y // 2
+        )
+
+    @center.setter
+    def center(self, value: forge.core.physics.vector.Vector2D) -> None:
+        dimensions = self.dimensions()
+
+        self.top_left.x = value.x - dimensions.x // 2
+        self.top_left.y = value.y - dimensions.y // 2
 
     def id(self) -> int:
         """
