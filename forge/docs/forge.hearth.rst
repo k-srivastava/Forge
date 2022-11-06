@@ -11,6 +11,14 @@ Subpackages
    forge.hearth.elements
    forge.hearth.utils
 
+forge.hearth.settings module
+----------------------------
+
+.. automodule:: forge.hearth.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

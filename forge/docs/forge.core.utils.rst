@@ -13,7 +13,7 @@ forge.core.utils.aliases module
    :show-inheritance:
 
 forge.core.utils.base module
---------------------------------
+----------------------------
 
 .. automodule:: forge.core.utils.base
    :members:
@@ -24,6 +24,14 @@ forge.core.utils.dispatch module
 --------------------------------
 
 .. automodule:: forge.core.utils.dispatch
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+forge.core.utils.exceptions module
+----------------------------------
+
+.. automodule:: forge.core.utils.exceptions
    :members:
    :undoc-members:
    :show-inheritance:
@@ -48,14 +56,6 @@ forge.core.utils.math module
 ----------------------------
 
 .. automodule:: forge.core.utils.math
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-forge.core.utils.shapes module
--------------------------------
-
-.. automodule:: forge.core.utils.shapes
    :members:
    :undoc-members:
    :show-inheritance:

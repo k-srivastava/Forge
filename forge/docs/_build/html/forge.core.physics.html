@@ -132,17 +132,14 @@
 <dd><p>Check whether the vector is normalized, i.e., its length is equal to one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>precision</strong> – Precision to which the length of the vector is to be checked to keep a delta for</p>
+<dd class="field-odd"><p><strong>precision</strong> (<em>int</em>) – Precision to which the length of the vector is to be checked to keep a delta for
+floating-point inaccuracies; defaults to 4.</p>
 </dd>
-</dl>
-<p>floating-point inaccuracies; defaults to 4.
-:type precision: int</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if the length or magnitude of the vector is equal to one; else False.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the length or magnitude of the vector is equal to one; else False.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bool</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,6 +179,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><strong>ZeroDivisionError</strong> – A vector of zero length cannot be normalized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="forge.core.physics.vector.Vector2D.reflect">
+<span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#forge.core.physics.vector.Vector2D.reflect" title="Permalink to this definition"></a></dt>
+<dd><p>Reflect the vector along a given normal to the direction of the vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>normal</strong> (<a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Normal to the reflection.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The normal vector must be normalized, or have a length or magnitude of one.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -459,21 +470,24 @@ rotation becomes irrelevant.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="forge.core.physics.vector.random">
-<span class="sig-prename descclassname"><span class="pre">forge.core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#forge.core.physics.vector.random" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">forge.core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_zero</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#forge.core.physics.vector.random" title="Permalink to this definition"></a></dt>
 <dd><p>Create a new vector pointing in a random direction, i.e. x: -1 | 0 | 1, y: -1 | 0 | 1.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>New random vector.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>allow_zero</strong> (<em>bool</em>) – Allow a zero vector through random generation.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D">Vector2D</a></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New random vector.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D">Vector2D</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="forge.core.physics.vector.reflect">
-<span class="sig-prename descclassname"><span class="pre">forge.core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">reflect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#forge.core.physics.vector.reflect" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="forge.core.physics.vector.reflect_to">
+<span class="sig-prename descclassname"><span class="pre">forge.core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">reflect_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#forge.core.physics.vector.reflect_to" title="Permalink to this definition"></a></dt>
 <dd><p>Reflect a vector along a given normal to the direction of the vector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -529,26 +543,6 @@ rotation becomes irrelevant.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="forge.core.physics.vector.transformed">
-<span class="sig-prename descclassname"><span class="pre">forge.core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">transformed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">core.physics.transform.Transform2D</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#forge.core.physics.vector.transformed" title="Permalink to this definition"></a></dt>
-<dd><p>Transform a vector by calculating its position against a supplied transform.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>vector</strong> (<a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><em>Vector2D</em></a>) – Vector to be transformed.</p></li>
-<li><p><strong>transform</strong> (<em>core.physics.transform.Transform2D</em>) – Transform for the vector.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Transformed vector.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D">Vector2D</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="forge.core.physics.vector.up">
 <span class="sig-prename descclassname"><span class="pre">forge.core.physics.vector.</span></span><span class="sig-name descname"><span class="pre">up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#forge.core.physics.vector.Vector2D" title="forge.core.physics.vector.Vector2D"><span class="pre">Vector2D</span></a></span></span><a class="headerlink" href="#forge.core.physics.vector.up" title="Permalink to this definition"></a></dt>
 <dd><p>Create a new vector pointing in the up direction, i.e., x: 0, y: -1.</p>
@@ -592,7 +586,10 @@ rotation becomes irrelevant.</p>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>ValueError</strong> – The body’s area and density must lie within the given world constraints.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="forge.core.utils.html#forge.core.utils.exceptions.BodyAreaError" title="forge.core.utils.exceptions.BodyAreaError"><strong>forge.core.utils.exceptions.BodyAreaError</strong></a> – The body’s area must lie within the world constraints.</p></li>
+<li><p><a class="reference internal" href="forge.core.utils.html#forge.core.utils.exceptions.BodyDensityError" title="forge.core.utils.exceptions.BodyDensityError"><strong>forge.core.utils.exceptions.BodyDensityError</strong></a> – The body’s density must lie within given world constraints.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

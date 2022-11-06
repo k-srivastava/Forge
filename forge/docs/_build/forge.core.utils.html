@@ -143,8 +143,108 @@ renderer.</p>
 </dd></dl>
 
 </section>
-<section id="forge-core-utils-id-module">
-<h2>forge.core.utils.id module<a class="headerlink" href="#forge-core-utils-id-module" title="Permalink to this heading"></a></h2>
+<section id="module-forge.core.utils.exceptions">
+<span id="forge-core-utils-exceptions-module"></span><h2>forge.core.utils.exceptions module<a class="headerlink" href="#module-forge.core.utils.exceptions" title="Permalink to this heading"></a></h2>
+<p>Custom exceptions in Forge.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.BodyAreaError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">BodyAreaError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_body_area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_body_area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.BodyAreaError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Body size does not comply with specified world limits.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.BodyDensityError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">BodyDensityError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_body_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_body_density</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.BodyDensityError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Body density does not comply with specified world limits.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.ClampError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">ClampError</span></span><a class="headerlink" href="#forge.core.utils.exceptions.ClampError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Values passed to be clamped are logically incorrect.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.EventNameError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">EventNameError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.EventNameError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Event with the given name already exists.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.EventNotRegisteredError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">EventNotRegisteredError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.EventNotRegisteredError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Event with the given name or ID has not been registered.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.IDNotFoundError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">IDNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.IDNotFoundError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>ID has not been registered for a Forge object.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.InternalEventDeletionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">InternalEventDeletionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.InternalEventDeletionError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Internal events cannot be deleted using their names.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.InternalEventRetrievalError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">InternalEventRetrievalError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.InternalEventRetrievalError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Internal events cannot be retrieved using their names.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="forge.core.utils.exceptions.RGBAColorError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.exceptions.</span></span><span class="sig-name descname"><span class="pre">RGBAColorError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">red</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">green</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.exceptions.RGBAColorError" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Invalid RGBA color arguments.</p>
+</dd></dl>
+
+</section>
+<section id="module-forge.core.utils.id">
+<span id="forge-core-utils-id-module"></span><h2>forge.core.utils.id module<a class="headerlink" href="#module-forge.core.utils.id" title="Permalink to this heading"></a></h2>
+<p>Forge’s ID system. The uniqueness of each ID is maintained on a global, project-wide level.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="forge.core.utils.id.delete_id">
+<span class="sig-prename descclassname"><span class="pre">forge.core.utils.id.</span></span><span class="sig-name descname"><span class="pre">delete_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#forge.core.utils.id.delete_id" title="Permalink to this definition"></a></dt>
+<dd><p>Delete an ID making it free to be randomly generated again. Often used when an object associated with the given ID
+is also deleted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – ID to be deleted.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="#forge.core.utils.exceptions.IDNotFoundError" title="forge.core.utils.exceptions.IDNotFoundError"><strong>forge.core.utils.exceptions.IDNotFoundError</strong></a> – An ID must be registered if it is to be deleted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="forge.core.utils.id.generate_random_id">
+<span class="sig-prename descclassname"><span class="pre">forge.core.utils.id.</span></span><span class="sig-name descname"><span class="pre">generate_random_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#forge.core.utils.id.generate_random_id" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a new unique random ID of a given length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>length</strong> (<em>int</em>) – Length of the ID to be generated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New random and unique ID.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-forge.core.utils.loaders">
 <span id="forge-core-utils-loaders-module"></span><h2>forge.core.utils.loaders module<a class="headerlink" href="#module-forge.core.utils.loaders" title="Permalink to this heading"></a></h2>
@@ -206,105 +306,6 @@ renderer.</p>
 <dd class="field-even"><p><strong>ValueError</strong> – The maximum bound cannot be greater than the minimum bound.</p>
 </dd>
 </dl>
-</dd></dl>
-
-</section>
-<section id="module-forge.core.utils.shapes">
-<span id="forge-core-utils-shapes-module"></span><h2>forge.core.utils.shapes module<a class="headerlink" href="#module-forge.core.utils.shapes" title="Permalink to this heading"></a></h2>
-<p>Basic shapes in Forge.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Circle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.shapes.</span></span><span class="sig-name descname"><span class="pre">Circle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.shapes.Circle" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#forge.core.utils.shapes.Shape" title="forge.core.utils.shapes.Shape"><code class="xref py py-class docutils literal notranslate"><span class="pre">Shape</span></code></a></p>
-<p>Circle shape in Forge.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Circle.area">
-<span class="sig-name descname"><span class="pre">area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#forge.core.utils.shapes.Circle.area" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the area of the circle.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Area of the circle.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Circle.radius">
-<span class="sig-name descname"><span class="pre">radius</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#forge.core.utils.shapes.Circle.radius" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Rectangle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.shapes.</span></span><span class="sig-name descname"><span class="pre">Rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.shapes.Rectangle" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#forge.core.utils.shapes.Shape" title="forge.core.utils.shapes.Shape"><code class="xref py py-class docutils literal notranslate"><span class="pre">Shape</span></code></a></p>
-<p>Rectangle shape in Forge.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Rectangle.area">
-<span class="sig-name descname"><span class="pre">area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#forge.core.utils.shapes.Rectangle.area" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the area of the rectangle.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Area of the rectangle.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Rectangle.height">
-<span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#forge.core.utils.shapes.Rectangle.height" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Rectangle.width">
-<span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#forge.core.utils.shapes.Rectangle.width" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Shape">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.shapes.</span></span><span class="sig-name descname"><span class="pre">Shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.shapes.Shape" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
-<p>Base shape class in Forge.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.Shape.area">
-<span class="sig-name descname"><span class="pre">area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#forge.core.utils.shapes.Shape.area" title="Permalink to this definition"></a></dt>
-<dd><p>Calculate the area of the shape.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Area of the shape.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.ShapeType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">forge.core.utils.shapes.</span></span><span class="sig-name descname"><span class="pre">ShapeType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#forge.core.utils.shapes.ShapeType" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>Enumeration of all shape types supported by Forge.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.ShapeType.CIRCLE">
-<span class="sig-name descname"><span class="pre">CIRCLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#forge.core.utils.shapes.ShapeType.CIRCLE" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="forge.core.utils.shapes.ShapeType.RECTANGLE">
-<span class="sig-name descname"><span class="pre">RECTANGLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#forge.core.utils.shapes.ShapeType.RECTANGLE" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </section>
