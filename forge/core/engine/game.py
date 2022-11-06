@@ -30,10 +30,10 @@ class Game:
         :param display: Display for the game.
         :type display: forge.core.engine.display.Display
 
-        :raises SyntaxError: Only one game can be created at a time.
+        :raises RuntimeError: Only one game can be created at a time.
         """
         if _GAME[0] is not None:
-            raise SyntaxError('New game cannot be created when one already exists.')
+            raise RuntimeError('New game cannot be created when one already exists.')
 
         pygame.init()
 
@@ -43,6 +43,24 @@ class Game:
         forge.core.utils.loaders.load_internal_events()
 
         _GAME[0] = self
+
+    def __repr__(self) -> str:
+        """
+        Internal representation of the game.
+
+        :return: Simple string with basic game data.
+        :rtype: str
+        """
+        return f'Game -> Display: ({self.display.__repr__()})'
+
+    def __str__(self) -> str:
+        """
+        String representation of the game.
+
+        :return: Detailed string with game data.
+        :rtype: str
+        """
+        return f'Forge Game -> Display: ({self.display.__str__()})'
 
     def mainloop(self) -> None:
         """
@@ -58,6 +76,7 @@ class Game:
         """
         for event in self.event_list:
             if event.type == pygame.QUIT:
+
                 pygame.quit()
                 sys.exit(0)
 
@@ -97,7 +116,7 @@ def get_game() -> Game | None:
     """
     Retrieve the current game.
 
-    :return: Current game, if it exists.
+    :return: Current game; if it exists.
     :rtype: Game | None
     """
     return _GAME[0]
