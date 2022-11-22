@@ -280,6 +280,44 @@ def random(with_alpha: bool = False) -> Color:
     return Color(red, green, blue, alpha)
 
 
+def click_color(color: Color, delta: int = 20) -> Color:
+    """
+    Calculate a darker or lighter shade of the given color using a delta.
+
+    :param color: Color for which a new shade is to be calculated.
+    :type color: Color
+    :param delta: Amount by which each component is to be changed.
+    :type delta: int
+
+    :return: Color with all components modified by the delta.
+    :rtype: Color
+    """
+
+    def calculate_color(component: int, delta_: int) -> int:
+        """
+        Calculate a darker or lighter shade of the given component.
+
+        :param component: Component for which a new shade is to be calculated.
+        :type component: int
+        :param delta_: Amount by which th component is to be changed.
+        :type delta_: int
+
+        :return: Component modified by the delta.
+        :rtype: int
+        """
+        if component - delta_ in range(256):
+            return component - delta_
+
+        if component + delta_ in range(256):
+            return component + delta_
+
+        return component
+
+    return Color(
+        calculate_color(color.red, delta), calculate_color(color.green, delta), calculate_color(color.blue, delta)
+    )
+
+
 def _confirm_color_bounds(color: Color) -> None:
     """
     Confirm whether a Forge color's R, G, B and A components lie within the 8-bit color range (0-255).

@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import pygame.color
 
-from forge.core.engine.color import Color
+from forge.core.engine.color import Color, click_color
 from forge.core.utils.exceptions import RGBAColorError
 
 
@@ -22,3 +22,8 @@ class TestColor(TestCase):
         pygame_color = pygame.color.Color(80, 97, 20)
 
         self.assertEqual(pygame_color, forge_color.as_pygame_color())
+
+    def test_click_color(self):
+        self.assertEqual(click_color(Color(80, 80, 80)), Color(60, 60, 60))
+        self.assertEqual(click_color(Color(10, 80, 80), 30), Color(40, 50, 50))
+        self.assertEqual(click_color(Color(5, 80, 245), 10), Color(15, 70, 235))
