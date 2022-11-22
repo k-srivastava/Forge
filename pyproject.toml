@@ -4,14 +4,14 @@ build-backend = "hatchling.build"
 
 [project]
 name = "game-forge"
-version = "0.4.0"
+version = "0.5.0"
 authors = [
     { name = "Kshitij Srivastava", email = "kshitijsrivastava2312@gmail.com" }
 ]
 description = "A Pygame wrapper for making simple, yet detailed 2D games and experiences."
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
