@@ -6,6 +6,7 @@ from __future__ import annotations
 import dataclasses
 import math
 import random as rand
+import typing
 
 import pygame
 
@@ -39,6 +40,9 @@ class Vector2D:
         return self
 
     def __mul__(self, scalar: int | float) -> Vector2D:
+        return Vector2D(self.x * scalar, self.y * scalar)
+
+    def __rmul__(self, scalar: int | float) -> Vector2D:
         return Vector2D(self.x * scalar, self.y * scalar)
 
     def __imul__(self, scalar: int | float) -> Vector2D:
@@ -94,6 +98,9 @@ class Vector2D:
 
     def __copy__(self) -> Vector2D:
         return Vector2D(self.x, self.y)
+
+    def __round__(self, n: typing.SupportsIndex | None = None) -> Vector2D:
+        return Vector2D(round(self.x, n), round(self.y, n))
 
     def __repr__(self) -> str:
         return f'Vector -> x: {self.x:.3f}, y: {self.y:.3f}'
@@ -195,7 +202,8 @@ def clamp(vector: Vector2D, min_: Vector2D, max_: Vector2D) -> Vector2D:
     :return: Vector clamped to the minimum and maximum bound.
     :rtype: Vector2D
 
-    :raises ValueError: The maximum bound cannot be greater than the minimum bound on either component axis.
+    :raises forge.core.utils.exceptions.ClampError: The maximum bound cannot be greater than the minimum bound on
+                                                    either component axis.
     """
     if min_.x > max_.x or min_.y > max_.y:
         raise forge.core.utils.exceptions.ClampError()
@@ -474,17 +482,17 @@ def right() -> Vector2D:
     return Vector2D(1, 0)
 
 
-def random(allow_zero: bool = True) -> Vector2D:
+def random(allow_zero_length: bool = True) -> Vector2D:
     """
     Create a new vector pointing in a random direction, i.e. x: -1 | 0 | 1, y: -1 | 0 | 1.
 
-    :param allow_zero: Allow a zero vector through random generation.
-    :type allow_zero: bool
+    :param allow_zero_length: Allow a zero vector through random generation.
+    :type allow_zero_length: bool
 
     :return: New random vector.
     :rtype: Vector2D
     """
-    if allow_zero:
+    if allow_zero_length:
         return Vector2D(*rand.choices((-1, 0, 1), k=2))
 
     else:
