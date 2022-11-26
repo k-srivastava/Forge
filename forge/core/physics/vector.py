@@ -11,6 +11,7 @@ import typing
 import pygame
 
 import forge.core.utils.exceptions
+import forge.core.utils.math
 
 
 @dataclasses.dataclass(slots=True)
@@ -208,25 +209,10 @@ def clamp(vector: Vector2D, min_: Vector2D, max_: Vector2D) -> Vector2D:
     if min_.x > max_.x or min_.y > max_.y:
         raise forge.core.utils.exceptions.ClampError()
 
-    clamped_vector = Vector2D(0, 0)
-
-    # Clamp along the x-axis.
-    if vector.x < min_.x:
-        clamped_vector.x = min_.x
-    elif vector.x > max_.x:
-        clamped_vector.x = max_.x
-    else:
-        clamped_vector.x = vector.x
-
-    # Clamp along the y-axis.
-    if vector.y < min_.y:
-        clamped_vector.y = min_.y
-    elif vector.y > max_.y:
-        clamped_vector.y = max_.y
-    else:
-        clamped_vector.y = vector.y
-
-    return clamped_vector
+    return Vector2D(
+        forge.core.utils.math.clamp(vector.x, min_.x, max_.x),
+        forge.core.utils.math.clamp(vector.y, min_.y, max_.y)
+    )
 
 
 def normalized(vector: Vector2D) -> Vector2D:
