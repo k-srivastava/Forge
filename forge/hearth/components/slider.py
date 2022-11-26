@@ -116,6 +116,9 @@ class Slider(forge.hearth.components.base.UIComponent):
                f'On Move Event: ({self.move_event.__str__() if self.move_event else None}), ' \
                f'Bar -> ({self.bar.__str__()}), Grabber: ({self.grabber.__str__()})'
 
+    def id(self) -> int:
+        return self._id
+
     def value(self) -> float:
         """
         Compute the current raw value of the slider.
