@@ -3,20 +3,21 @@ Various base classes for Hearth components.
 """
 from __future__ import annotations
 
-import typing
+import abc
 
 import forge.core.engine.constants
 import forge.core.utils.aliases
 import forge.hearth.elements.base
 
 
-class UIComponent(typing.Protocol):
+class UIComponent(abc.ABC):
     """
     Base UI component class for Hearth.
     """
     children: list[forge.hearth.elements.base.UIElement | UIComponent]
     _id: int
 
+    @abc.abstractmethod
     def id(self) -> int:
         """
         Get the unique ID of the UI component.
@@ -25,6 +26,7 @@ class UIComponent(typing.Protocol):
         :rtype: int
         """
 
+    @abc.abstractmethod
     def add_to_renderer(
             self,
             component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
@@ -41,6 +43,7 @@ class UIComponent(typing.Protocol):
         :type ui_renderer_name: str
         """
 
+    @abc.abstractmethod
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
         Render the UI component and its elements to the display.
@@ -49,6 +52,7 @@ class UIComponent(typing.Protocol):
         :type display: forge.core.utils.aliases.Surface
         """
 
+    @abc.abstractmethod
     def update(self) -> None:
         """
         Update the UI component.

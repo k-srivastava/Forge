@@ -1,17 +1,18 @@
 """
 Various base classes for Forge to organize code.
 """
-import typing
+import abc
 
 import forge.core.engine.constants
 import forge.core.utils.aliases
 
 
-class Renderable(typing.Protocol):
+class Renderable(abc.ABC):
     """
     Base renderable class for Forge.
     """
 
+    @abc.abstractmethod
     def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER) -> None:
         """
         Add the object to a renderer.
@@ -21,6 +22,7 @@ class Renderable(typing.Protocol):
         :type renderer_name: str
         """
 
+    @abc.abstractmethod
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
         Render the object to the display.

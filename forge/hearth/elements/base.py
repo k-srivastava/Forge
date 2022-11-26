@@ -3,14 +3,14 @@ Various base classes used throughout Hearth to define UI elements.
 """
 from __future__ import annotations
 
-import typing
+import abc
 
 import forge.core.engine.color
 import forge.core.engine.constants
 import forge.core.utils.aliases
 
 
-class UIElement(typing.Protocol):
+class UIElement(abc.ABC):
     """
     Base UI element class for Hearth.
     """
@@ -19,6 +19,7 @@ class UIElement(typing.Protocol):
     color: forge.core.engine.color.Color
     _id: int
 
+    @abc.abstractmethod
     def id(self) -> int:
         """
         Get the unique ID of the UI element.
@@ -27,6 +28,7 @@ class UIElement(typing.Protocol):
         :rtype: int
         """
 
+    @abc.abstractmethod
     def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER) -> None:
         """
         Add the UI element to a renderer.
@@ -36,6 +38,7 @@ class UIElement(typing.Protocol):
         :type renderer_name: str
         """
 
+    @abc.abstractmethod
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
         Render the UI element to the display.
@@ -44,6 +47,7 @@ class UIElement(typing.Protocol):
         :type display: forge.core.utils.aliases.Surface
         """
 
+    @abc.abstractmethod
     def update(self) -> None:
         """
         Update the UI element.
