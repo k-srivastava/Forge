@@ -1,8 +1,6 @@
 """
 Two-dimensional vectors in Forge.
 """
-from __future__ import annotations
-
 import dataclasses
 import math
 import random as rand
@@ -22,43 +20,43 @@ class Vector2D:
     x: float
     y: float
 
-    def __add__(self, other: Vector2D) -> Vector2D:
+    def __add__(self, other: typing.Self) -> typing.Self:
         return Vector2D(self.x + other.x, self.y + other.y)
 
-    def __iadd__(self, other: Vector2D) -> Vector2D:
+    def __iadd__(self, other: typing.Self) -> typing.Self:
         self.x += other.x
         self.y += other.y
 
         return self
 
-    def __sub__(self, other: Vector2D) -> Vector2D:
+    def __sub__(self, other: typing.Self) -> typing.Self:
         return Vector2D(self.x - other.x, self.y - other.y)
 
-    def __isub__(self, other: Vector2D) -> Vector2D:
+    def __isub__(self, other: typing.Self) -> typing.Self:
         self.x -= other.x
         self.y -= other.y
 
         return self
 
-    def __mul__(self, scalar: int | float) -> Vector2D:
+    def __mul__(self, scalar: int | float) -> typing.Self:
         return Vector2D(self.x * scalar, self.y * scalar)
 
-    def __rmul__(self, scalar: int | float) -> Vector2D:
+    def __rmul__(self, scalar: int | float) -> typing.Self:
         return Vector2D(self.x * scalar, self.y * scalar)
 
-    def __imul__(self, scalar: int | float) -> Vector2D:
+    def __imul__(self, scalar: int | float) -> typing.Self:
         self.x *= scalar
         self.y *= scalar
 
         return self
 
-    def __truediv__(self, scalar: int | float) -> Vector2D:
+    def __truediv__(self, scalar: int | float) -> typing.Self:
         if scalar == 0:
             raise ZeroDivisionError('Cannot divide a vector by zero.')
 
         return Vector2D(self.x / scalar, self.y / scalar)
 
-    def __itruediv__(self, scalar: int | float) -> Vector2D:
+    def __itruediv__(self, scalar: int | float) -> typing.Self:
         if scalar == 0:
             raise ZeroDivisionError('Cannot divide a vector by zero.')
 
@@ -67,13 +65,13 @@ class Vector2D:
 
         return self
 
-    def __floordiv__(self, scalar: int | float) -> Vector2D:
+    def __floordiv__(self, scalar: int | float) -> typing.Self:
         if scalar == 0:
             raise ZeroDivisionError('Cannot divide a vector by zero.')
 
         return Vector2D(self.x // scalar, self.y // scalar)
 
-    def __ifloordiv__(self, scalar: int | float) -> Vector2D:
+    def __ifloordiv__(self, scalar: int | float) -> typing.Self:
         if scalar == 0:
             raise ZeroDivisionError('Cannot divide a vector by zero.')
 
@@ -82,25 +80,25 @@ class Vector2D:
 
         return self
 
-    def __eq__(self, other: Vector2D) -> bool:
+    def __eq__(self, other: typing.Self) -> bool:
         return self.x == other.x and self.y == other.y
 
-    def __ne__(self, other: Vector2D) -> bool:
+    def __ne__(self, other: typing.Self) -> bool:
         return self.x != other.x or self.y != other.y
 
-    def __abs__(self) -> Vector2D:
+    def __abs__(self) -> typing.Self:
         return Vector2D(abs(self.x), abs(self.y))
 
-    def __neg__(self) -> Vector2D:
+    def __neg__(self) -> typing.Self:
         return Vector2D(-self.x, -self.y)
 
     def __bool__(self) -> bool:
         return self.x != 0 and self.y != 0
 
-    def __copy__(self) -> Vector2D:
+    def __copy__(self) -> typing.Self:
         return Vector2D(self.x, self.y)
 
-    def __round__(self, n: typing.SupportsIndex | None = None) -> Vector2D:
+    def __round__(self, n: typing.SupportsIndex | None = None) -> typing.Self:
         return Vector2D(round(self.x, n), round(self.y, n))
 
     def __repr__(self) -> str:
@@ -154,7 +152,7 @@ class Vector2D:
         """
         return round(self.length(), precision) == 1
 
-    def reflect(self, normal: Vector2D) -> None:
+    def reflect(self, normal: typing.Self) -> None:
         """
         Reflect the vector along a given normal to the direction of the vector.
 

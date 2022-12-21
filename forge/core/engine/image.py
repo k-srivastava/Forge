@@ -4,6 +4,7 @@ Images in Forge.
 from __future__ import annotations
 
 import dataclasses
+import typing
 import warnings
 
 import attrs
@@ -137,7 +138,7 @@ class ImagePool:
                 image.parent = self
 
     @forge.core.utils.dispatch.multidispatch(Image)
-    def __iadd__(self, image: Image) -> ImagePool:
+    def __iadd__(self, image: Image) -> typing.Self:
         """
         Add an image to the pool using the '+=' operator.
 
@@ -145,7 +146,7 @@ class ImagePool:
         :type image: Image
 
         :return: Image pool with the image added to its internal list.
-        :rtype: ImagePool
+        :rtype: typing.Self
 
         :raises ValueError: All images in the pool must be unique.
         """
@@ -161,7 +162,7 @@ class ImagePool:
         return self
 
     @forge.core.utils.dispatch.multidispatch(list)
-    def __iadd__(self, images: list[Image]) -> ImagePool:
+    def __iadd__(self, images: list[Image]) -> typing.Self:
         """
         Add a list of images to the pool using the '+=' operator.
 
@@ -169,7 +170,7 @@ class ImagePool:
         :type images: list[Image]
 
         :return: Image pool with the images added to its internal list.
-        :rtype: ImagePool
+        :rtype: typing.Self
 
         :raises ValueError: All images in the pool must be unique.
         """
@@ -187,7 +188,7 @@ class ImagePool:
         return self
 
     @forge.core.utils.dispatch.multidispatch(Image)
-    def __isub__(self, image: Image) -> ImagePool:
+    def __isub__(self, image: Image) -> typing.Self:
         """
         Remove an image from the pool using the '-=' operator.
 
@@ -195,7 +196,7 @@ class ImagePool:
         :type image: Image
 
         :return: Image pool with the image removed from its internal list.
-        :rtype: ImagePool
+        :rtype: typing.Self
 
         :raises ValueError: Image must be part of the pool to be removed.
         """
@@ -216,7 +217,7 @@ class ImagePool:
         return self
 
     @forge.core.utils.dispatch.multidispatch(str)
-    def __isub__(self, image_data: str | int) -> ImagePool:
+    def __isub__(self, image_data: str | int) -> typing.Self:
         image: Image
         if type(image_data) is str:
             image = get_image_from_name(image_data)

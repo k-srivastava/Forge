@@ -23,8 +23,8 @@ class Display:
     """
 
     __slots__ = (
-        'title', 'max_fps', 'background_color', 'icon', 'object_renderer', 'ui_renderer', 'component_renderer',
-        '_surface', '_clock', '_delta_time'
+        'title', 'max_fps', 'background_color', 'icon', 'object_renderer', 'ui_renderer', 'shape_renderer',
+        'component_renderer', '_surface', '_clock', '_delta_time'
     )
 
     def __init__(
@@ -61,6 +61,10 @@ class Display:
 
         self.ui_renderer = forge.core.engine.renderer.UIRenderer(
             forge.core.engine.constants.DISPLAY_UI_RENDERER
+        )
+
+        self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
+            forge.core.engine.constants.DISPLAY_SHAPE_RENDERER
         )
 
         self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
@@ -144,6 +148,7 @@ class Display:
 
         self.object_renderer.render(self._surface)
         self.ui_renderer.render(self._surface)
+        self.shape_renderer(self._surface)
         self.component_renderer.render(self._surface)
 
     def update(self) -> None:
@@ -154,6 +159,7 @@ class Display:
 
         self.object_renderer.update(self._delta_time)
         self.ui_renderer.update(self._delta_time)
+        self.shape_renderer.update(self._delta_time)
         self.component_renderer.update(self._delta_time)
 
         pygame.display.flip()

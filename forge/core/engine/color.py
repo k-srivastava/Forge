@@ -1,10 +1,9 @@
 """
 RGBA colors in Forge.
 """
-from __future__ import annotations
-
 import dataclasses
 import random as rand
+import typing
 
 import pygame
 
@@ -27,15 +26,15 @@ class Color:
         """
         _confirm_color_bounds(self)
 
-    def __add__(self, other: Color) -> Color:
+    def __add__(self, other: typing.Self) -> typing.Self:
         """
         Add two colors together using the '+' operator.
 
         :param other: Other color to be added.
-        :type other: Color
+        :type other: typing.Self
 
         :return: Color with each component as the sum of the individual components of the colors.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
         """
@@ -49,15 +48,15 @@ class Color:
         except ValueError as e:
             raise e
 
-    def __iadd__(self, other: Color) -> Color:
+    def __iadd__(self, other: typing.Self) -> typing.Self:
         """
         Add one color to another color in-place using the '+=' operator.
 
         :param other: Other color to be added.
-        :type other: Color
+        :type other: typing.Self
 
         :return: Color with each component as the sum of the individual components of the colors.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
         """
@@ -69,15 +68,15 @@ class Color:
         _confirm_color_bounds(self)
         return self
 
-    def __sub__(self, other: Color) -> Color:
+    def __sub__(self, other: typing.Self) -> typing.Self:
         """
         Subtract two colors from each other using the '-' operator.
 
         :param other: Other color to be subtracted.
-        :type other: Color
+        :type other: typing.Self
 
         :return: Color with each component as the difference of the individual components of the colors.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
         """
@@ -91,15 +90,15 @@ class Color:
         except ValueError as e:
             raise e
 
-    def __isub__(self, other: Color) -> Color:
+    def __isub__(self, other: typing.Self) -> typing.Self:
         """
         Subtract one color from another color in-place using the '-=' operator.
 
         :param other: Other color to be subtracted.
-        :type other: Color
+        :type other: typing.Self
 
         :return: Color with each component as the difference of the individual components of the colors.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
         """
@@ -111,7 +110,7 @@ class Color:
         _confirm_color_bounds(self)
         return self
 
-    def __mul__(self, factor: int) -> Color:
+    def __mul__(self, factor: int) -> typing.Self:
         """
         Multiply a color by a given value on all components using the '*' operator.
 
@@ -119,7 +118,7 @@ class Color:
         :type factor: int
 
         :return: Color with each component multiplied by the factor.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
         """
@@ -130,7 +129,7 @@ class Color:
         except ValueError as e:
             raise e
 
-    def __imul__(self, factor: int) -> Color:
+    def __imul__(self, factor: int) -> typing.Self:
         """
         Multiply a color in-place by a given value on all components using the '*=' operator.
 
@@ -138,7 +137,7 @@ class Color:
         :type factor: int
 
         :return: Color with each component multiplied by the factor.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
         """
@@ -150,7 +149,7 @@ class Color:
         _confirm_color_bounds(self)
         return self
 
-    def __floordiv__(self, factor: int) -> Color:
+    def __floordiv__(self, factor: int) -> typing.Self:
         """
         Floor divide a color by a given value on all components using the '//' operator.
 
@@ -158,7 +157,7 @@ class Color:
         :type factor: int
 
         :return: Color with each component floor divided by the factor.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ZeroDivisionError: Components of the color cannot be divided by zero.
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
@@ -173,7 +172,7 @@ class Color:
         except ValueError as e:
             raise e
 
-    def __ifloordiv__(self, factor: int) -> Color:
+    def __ifloordiv__(self, factor: int) -> typing.Self:
         """
         Floor divide a color in-place by a given value on all components using the '//=' operator.
 
@@ -181,7 +180,7 @@ class Color:
         :type factor: int
 
         :return: Color with each component floor divided by the factor.
-        :rtype: Color
+        :rtype: typing.Self
 
         :raises ZeroDivisionError: Components of the color cannot be divided by zero.
         :raises ValueError: Forge colors can only have 8-bit values for the R, G, B and A components.
@@ -206,12 +205,12 @@ class Color:
         """
         return not (self.red == self.green == self.blue == 0)
 
-    def __copy__(self) -> Color:
+    def __copy__(self) -> typing.Self:
         """
         Create a shallow copy of the color by copying all the components into a new color.
 
         :return: Shallow copy of the color.
-        :rtype: Color
+        :rtype: typing.Self
         """
         return Color(self.red, self.green, self.blue, self.alpha)
 

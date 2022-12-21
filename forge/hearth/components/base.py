@@ -1,9 +1,8 @@
 """
 Various base classes for Hearth components.
 """
-from __future__ import annotations
-
 import abc
+import typing
 
 import forge.core.engine.constants
 import forge.core.utils.aliases
@@ -14,7 +13,7 @@ class UIComponent(abc.ABC):
     """
     Base UI component class for Hearth.
     """
-    children: list[forge.hearth.elements.base.UIElement | UIComponent]
+    children: list[forge.hearth.elements.base.UIElement | typing.Self]
     _id: int
 
     @abc.abstractmethod
