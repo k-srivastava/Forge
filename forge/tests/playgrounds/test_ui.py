@@ -1,7 +1,8 @@
 from forge.core.engine import color, display, game
 from forge.core.managers import keyboard
 from forge.core.physics import vector
-from forge.hearth.elements import shapes, text
+from forge.hearth.components import button
+from forge.hearth.elements import base, shapes, text
 
 
 class UITest(game.Game):
@@ -9,11 +10,17 @@ class UITest(game.Game):
         super().__init__(display.Display(title='UI Tests'))
 
         self.hello_world = text.Text('Hello, world!', 32)
-        self.circle = shapes.Circle(vector.Vector2D(300, 300), 100, color.random(),
-                                    border=shapes.Border(10, color.random()))
+        self.circle = shapes.Circle(
+            vector.Vector2D(300, 300), 100, color.random(), border=base.Border(10, color.random())
+        )
+        self.press = button.RectangularButton(
+            vector.Vector2D(1150, 600), 100, 100, color.random(), lambda: print('Hello, world!'), None, text_='Button',
+            text_color=color.Color(255, 255, 255), text_centered=True
+        )
 
         self.circle.add_to_renderer()
         self.hello_world.add_to_renderer()
+        self.press.add_to_renderer()
 
     def update(self) -> None:
         displacement = 1

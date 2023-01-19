@@ -1,10 +1,10 @@
 import random
 
 import settings
-from forge.core.engine import color, constants
+from forge.core.engine import color, display
 from forge.core.managers import event
 from forge.core.physics import vector
-from forge.hearth.elements import shapes
+from forge.hearth.elements import base, shapes
 
 
 class Ball:
@@ -16,14 +16,14 @@ class Ball:
             vector.Vector2D(settings.DISPLAY_WIDTH // 2, settings.DISPLAY_HEIGHT // 2),
             settings.BALL_RADIUS,
             color.Color(0, 0, 0),
-            border=shapes.Border(5, color.Color(255, 255, 255), settings.BALL_RADIUS)
+            border=base.Border(5, color.Color(255, 255, 255), settings.BALL_RADIUS)
         )
 
         self.out_left = event.Event('<BALL-OUT-LEFT>', [self.reset])
         self.out_right = event.Event('<BALL-OUT-RIGHT>', [self.reset])
 
-    def add_to_renderer(self, renderer_name: str = constants.DISPLAY_UI_RENDERER) -> None:
-        self.shape.add_to_renderer(renderer_name)
+    def add_to_renderer(self) -> None:
+        display.get_display().master_renderer._core_renderer.shapes.append(self.shape)
 
     def resolve_wall_collisions(self) -> None:
         if self.shape.center.x - self.shape.radius <= 0:
