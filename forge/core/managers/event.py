@@ -58,7 +58,7 @@ class Event:
         _EVENTS[self._id] = self
         EVENT_NAMES[self.name] = self._id
 
-    def __iadd__(self, subscriber: typing.Callable[[], None]) -> Event:
+    def __iadd__(self, subscriber: typing.Callable[[], None]) -> typing.Self:
         """
         Register a new function to the event using the '+=' operator.
 
@@ -77,7 +77,7 @@ class Event:
         self._subscribers.append(subscriber)
         return self
 
-    def __isub__(self, subscriber: typing.Callable[[], None]) -> Event:
+    def __isub__(self, subscriber: typing.Callable[[], None]) -> typing.Self:
         """
         Deregister an existing function to the event using the '-=' operator.
 

@@ -55,22 +55,6 @@ class Display:
         self.background_color = background_color
         self.icon = icon
 
-        # self.object_renderer = forge.core.engine.renderer.ObjectRenderer(
-        #     forge.core.engine.constants.DISPLAY_OBJECT_RENDERER
-        # )
-        #
-        # self.ui_renderer = forge.core.engine.renderer.UIRenderer(
-        #     forge.core.engine.constants.DISPLAY_UI_RENDERER
-        # )
-        #
-        # self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
-        #     forge.core.engine.constants.DISPLAY_SHAPE_RENDERER
-        # )
-        #
-        # self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
-        #     forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER
-        # )
-
         self.master_renderer = forge.core.engine.renderer.MasterRenderer()
 
         self._surface = pygame.display.set_mode((width, height))
