@@ -130,14 +130,11 @@ class Text(forge.hearth.elements.base.UIElement):
         """
         return forge.core.physics.vector.from_tuple(self._render_font.size(self.text))
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the text to a renderer.
-
-        :param renderer_name: Name of the renderer to which the text is to be added; defaults to the base UI renderer.
-        :type renderer_name: str
         """
-        return forge.core.engine.renderer.get_renderer_from_name(renderer_name).elements.append(self)
+        forge.core.engine.renderer.get_master_renderer().add_shape(self)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """

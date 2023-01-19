@@ -86,23 +86,11 @@ class Button(forge.hearth.components.base.UIComponent):
         """
         return self._id
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the button and its text to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the button is to be added; defaults to the base
-                                        component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the button are to be added; defaults to
-                                 the base UI renderer.
-        :type ui_renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(component_renderer_name).components.append(self)
-        self.text.add_to_renderer(ui_renderer_name)
+        self.text.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """
@@ -151,7 +139,7 @@ class RectangularButton(Button):
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
             corner_radius: int | None = None,
-            border: forge.hearth.elements.shapes.Border | None = None,
+            border: forge.hearth.elements.base.Border | None = None,
             text_: str = '', font_size: int = forge.hearth.settings.DEFAULT_FONT_SIZE,
             font_face: str = forge.hearth.settings.DEFAULT_FONT_FACE,
             text_color: forge.core.engine.color.Color = forge.core.engine.color.Color(255, 255, 255),
@@ -232,23 +220,12 @@ class RectangularButton(Button):
                f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the button and its text to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the button is to be added; defaults to the base
-                                        component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the button are to be added; defaults to
-                                 the base UI renderer.
-        :type ui_renderer_name: str
         """
-        super().add_to_renderer(component_renderer_name, ui_renderer_name)
-        self.rectangle.add_to_renderer(ui_renderer_name)
+        self.rectangle.add_to_renderer()
+        self.text.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """
@@ -303,7 +280,7 @@ class CircularButton(Button):
             click_event: forge.core.managers.event.Event | None,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
-            border: forge.hearth.elements.shapes.Border | None = None,
+            border: forge.hearth.elements.base.Border | None = None,
             text: str = '', font_size: int = forge.hearth.settings.DEFAULT_FONT_SIZE,
             font_face: str = forge.hearth.settings.DEFAULT_FONT_FACE,
             text_color: forge.core.engine.color.Color = forge.core.engine.color.Color(255, 255, 255),
@@ -376,23 +353,12 @@ class CircularButton(Button):
                f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
        Add the button and its text to their renderers respectively.
-
-       :param component_renderer_name: Name of the renderer to which the button is to be added; defaults to the base
-                                       component renderer.
-       :type component_renderer_name: str
-       :param ui_renderer_name: Name of the renderer to which the elements of the button are to be added; defaults to
-                                the base UI renderer.
-       :type ui_renderer_name: str
        """
-        super().add_to_renderer(component_renderer_name, ui_renderer_name)
-        self.circle.add_to_renderer(ui_renderer_name)
+        self.circle.add_to_renderer()
+        self.text.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """
@@ -444,7 +410,7 @@ class PolygonalButton(Button):
             click_event: forge.core.managers.event.Event,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
-            border: forge.hearth.elements.shapes.Border | None = None,
+            border: forge.hearth.elements.base.Border | None = None,
             text: str = '', font_size: int = forge.hearth.settings.DEFAULT_FONT_SIZE,
             font_face: str = forge.hearth.settings.DEFAULT_FONT_FACE,
             text_color: forge.core.engine.color.Color = forge.core.engine.color.Color,
@@ -517,23 +483,12 @@ class PolygonalButton(Button):
                f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the button and its text to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the button is to be added; defaults to the base
-                                        component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the button are to be added; defaults to
-                                 the base UI renderer.
-        :type ui_renderer_name: str
         """
-        super().add_to_renderer(component_renderer_name, ui_renderer_name)
-        self.polygon.add_to_renderer(ui_renderer_name)
+        self.polygon.add_to_renderer()
+        self.text.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """

@@ -78,15 +78,11 @@ class Image(forge.core.utils.base.Renderable):
         """
         return self._id
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the image to a renderer.
-
-        :param renderer_name: Name of the renderer to which the image is to be added; defaults to the base object
-                              renderer.
-        :type renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(renderer_name).image_pool += self
+        forge.core.engine.renderer.get_master_renderer().add_image(self)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
@@ -108,12 +104,11 @@ class Image(forge.core.utils.base.Renderable):
 
 
 @dataclasses.dataclass(slots=True)
-class ImagePool:
+class ImagePool(forge.core.utils.base.Renderable):
     """
     Forge's image pool utility.
     """
     name: str = attrs.field(on_setattr=attrs.setters.frozen)
-    renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER
     _id: int = dataclasses.field(init=False)
     _images: list[Image] = dataclasses.field(default_factory=list)
     _belongs_to_renderer: bool = False
@@ -156,7 +151,7 @@ class ImagePool:
 
         if not self._belongs_to_renderer:
             image.parent = self
-            forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += image
+            forge.core.engine.renderer.get_master_renderer().add_image(image)
 
         self._images.append(image)
         return self
@@ -181,7 +176,7 @@ class ImagePool:
 
             if not self._belongs_to_renderer:
                 image.parent = self
-                forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += image
+                forge.core.engine.renderer.get_master_renderer().add_image(image)
 
             self._images.append(image)
 
@@ -212,7 +207,7 @@ class ImagePool:
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool -= image
+        forge.core.engine.renderer.get_master_renderer().remove_image(image)
 
         return self
 
@@ -236,7 +231,7 @@ class ImagePool:
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool -= image
+        forge.core.engine.renderer.get_master_renderer().remove_image(image)
 
         return self
 
@@ -280,7 +275,7 @@ class ImagePool:
         """
         Add the image pool to its renderer.
         """
-        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += self._images
+        forge.core.engine.renderer.get_master_renderer().add_images(self._images)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """

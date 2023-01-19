@@ -95,22 +95,11 @@ class Checkbox(forge.hearth.components.base.UIComponent):
         """
         return self._id
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the checkbox and its text to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the checkbox is to be added; defaults to the base
-                                        component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the checkbox are to be added; defaults to
-                                 the base UI renderer.
-        :type ui_renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(component_renderer_name).components.append(self)
+        forge.core.engine.renderer.get_master_renderer().add_component(self)
 
     def is_clicked(self) -> bool:
         """
@@ -158,7 +147,7 @@ class SquareCheckbox(Checkbox):
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
             corner_radius: int | None = None,
-            border: forge.hearth.elements.shapes.Border | None = None,
+            border: forge.hearth.elements.base.Border | None = None,
             value: bool = False,
             style: CheckboxStyle = CheckboxStyle.SOLID
     ) -> None:
@@ -218,23 +207,12 @@ class SquareCheckbox(Checkbox):
                f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the checkbox and its text to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the checkbox is to be added; defaults to the base
-                                        component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the checkbox are to be added; defaults to
-                                 the base UI renderer.
-        :type ui_renderer_name: str
         """
-        super().add_to_renderer(component_renderer_name, ui_renderer_name)
-        self.square.add_to_renderer(ui_renderer_name)
+        super().add_to_renderer()
+        # self.square.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """
@@ -324,7 +302,7 @@ class CircularCheckbox(Checkbox):
             click_event: forge.core.managers.event.Event,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
-            border: forge.hearth.elements.shapes.Border | None = None,
+            border: forge.hearth.elements.base.Border | None = None,
             value: bool = False,
             style: CheckboxStyle = CheckboxStyle.SOLID
     ) -> None:
@@ -382,23 +360,12 @@ class CircularCheckbox(Checkbox):
                f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
                f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the checkbox and its text to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the checkbox is to be added; defaults to the base
-                                        component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the checkbox are to be added; defaults to
-                                 the base UI renderer.
-        :type ui_renderer_name: str
         """
-        super().add_to_renderer(component_renderer_name, ui_renderer_name)
-        self.circle.add_to_renderer(ui_renderer_name)
+        super().add_to_renderer()
+        # self.circle.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """

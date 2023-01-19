@@ -26,20 +26,9 @@ class UIComponent(abc.ABC):
         """
 
     @abc.abstractmethod
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the UI component and its base elements to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the UI component is to be added; defaults to the
-                                        base component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the UI component are to be added;
-                                 defaults to the base UI renderer.
-        :type ui_renderer_name: str
         """
 
     @abc.abstractmethod

@@ -24,7 +24,7 @@ class Display:
 
     __slots__ = (
         'title', 'max_fps', 'background_color', 'icon', 'object_renderer', 'ui_renderer', 'shape_renderer',
-        'component_renderer', '_surface', '_clock', '_delta_time'
+        'component_renderer', 'master_renderer', '_surface', '_clock', '_delta_time'
     )
 
     def __init__(
@@ -55,21 +55,23 @@ class Display:
         self.background_color = background_color
         self.icon = icon
 
-        self.object_renderer = forge.core.engine.renderer.ObjectRenderer(
-            forge.core.engine.constants.DISPLAY_OBJECT_RENDERER
-        )
+        # self.object_renderer = forge.core.engine.renderer.ObjectRenderer(
+        #     forge.core.engine.constants.DISPLAY_OBJECT_RENDERER
+        # )
+        #
+        # self.ui_renderer = forge.core.engine.renderer.UIRenderer(
+        #     forge.core.engine.constants.DISPLAY_UI_RENDERER
+        # )
+        #
+        # self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
+        #     forge.core.engine.constants.DISPLAY_SHAPE_RENDERER
+        # )
+        #
+        # self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
+        #     forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER
+        # )
 
-        self.ui_renderer = forge.core.engine.renderer.UIRenderer(
-            forge.core.engine.constants.DISPLAY_UI_RENDERER
-        )
-
-        self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
-            forge.core.engine.constants.DISPLAY_SHAPE_RENDERER
-        )
-
-        self.component_renderer = forge.core.engine.renderer.ComponentRenderer(
-            forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER
-        )
+        self.master_renderer = forge.core.engine.renderer.MasterRenderer()
 
         self._surface = pygame.display.set_mode((width, height))
         self._clock = pygame.time.Clock()
@@ -146,10 +148,11 @@ class Display:
         """
         self._surface.fill(self.background_color.as_tuple())
 
-        self.object_renderer.render(self._surface)
-        self.ui_renderer.render(self._surface)
-        self.shape_renderer(self._surface)
-        self.component_renderer.render(self._surface)
+        # self.object_renderer.render(self._surface)
+        # self.ui_renderer.render(self._surface)
+        # self.shape_renderer(self._surface)
+        # self.component_renderer.render(self._surface)
+        self.master_renderer.render(self._surface)
 
     def update(self) -> None:
         """
@@ -157,10 +160,11 @@ class Display:
         """
         self._delta_time = self._clock.tick(self.max_fps) / 1000
 
-        self.object_renderer.update(self._delta_time)
-        self.ui_renderer.update(self._delta_time)
-        self.shape_renderer.update(self._delta_time)
-        self.component_renderer.update(self._delta_time)
+        # self.object_renderer.update(self._delta_time)
+        # self.ui_renderer.update(self._delta_time)
+        # self.shape_renderer.update(self._delta_time)
+        # self.component_renderer.update(self._delta_time)
+        self.master_renderer.update(self._delta_time)
 
         pygame.display.flip()
 
