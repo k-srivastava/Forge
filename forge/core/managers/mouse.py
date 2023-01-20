@@ -11,7 +11,7 @@ import forge.core.physics.vector
 DISABLED = False
 
 
-class MouseButton(enum.Enum):
+class MouseButton(enum.IntEnum):
     """
     Enum containing all possible mouse buttons for a simple three-buttoned mouse.
     """

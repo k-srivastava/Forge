@@ -10,7 +10,7 @@ import forge.core.engine.game
 DISABLED = False
 
 
-class Key(enum.Enum):
+class Key(enum.IntEnum):
     """
     Keys with direct-wrapping to Pygame's key-codes; which themselves are wrapped for SDL key codes.
     """
@@ -220,8 +220,6 @@ def is_pressed(key: Key) -> bool:
     if DISABLED:
         return False
 
-    # Disabling the type-checker since the Key enum will only have hard-coded integer values.
-    # noinspection PyTypeChecker
     return pygame.key.get_pressed()[key.value]
 
 

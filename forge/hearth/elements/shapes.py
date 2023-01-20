@@ -17,10 +17,7 @@ import forge.hearth.elements.base
 import forge.hearth.settings
 
 
-# A no-inspection has to be inserted because of a PyCharm bug.
-# PyCharm displays erroneous warnings when using enum.auto().
-# noinspection PyArgumentList
-class Shapes(enum.Enum):
+class Shapes(enum.IntEnum):
     """
     Enumeration of shapes supported by Hearth.
     """
