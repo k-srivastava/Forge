@@ -23,7 +23,7 @@ import forge.hearth.utils.bounds
 # A no-inspection has to be inserted because of a PyCharm bug.
 # PyCharm displays erroneous warnings when using enum.auto().
 # noinspection PyArgumentList
-class CheckboxStyle(enum.Enum):
+class CheckboxStyle(enum.IntEnum):
     """
     Enumeration of all valid checkbox check styles in Hearth.
     """
@@ -143,7 +143,7 @@ class SquareCheckbox(Checkbox):
             top_left: forge.core.physics.vector.Vector2D, size: int,
             color: forge.core.engine.color.Color,
             click_function: typing.Callable[[], None] | None,
-            click_event: forge.core.managers.event.Event,
+            click_event: forge.core.managers.event.Event | None,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
             corner_radius: int | None = None,
@@ -212,7 +212,7 @@ class SquareCheckbox(Checkbox):
         Add the checkbox and its text to their renderers respectively.
         """
         super().add_to_renderer()
-        # self.square.add_to_renderer()
+        self.square.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """
@@ -276,15 +276,7 @@ class SquareCheckbox(Checkbox):
         else:
             self.square.line_width = 3
 
-        self.square.render(display)
         super().render(display)
-
-    def update(self) -> None:
-        """
-        Update the checkbox.
-        """
-        self.square.update()
-        super().update()
 
 
 class CircularCheckbox(Checkbox):
@@ -299,7 +291,7 @@ class CircularCheckbox(Checkbox):
             center: forge.core.physics.vector.Vector2D, radius: int,
             color: forge.core.engine.color.Color,
             click_function: typing.Callable[[], None] | None,
-            click_event: forge.core.managers.event.Event,
+            click_event: forge.core.managers.event.Event | None,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
             border: forge.hearth.elements.base.Border | None = None,
@@ -365,7 +357,7 @@ class CircularCheckbox(Checkbox):
         Add the checkbox and its text to their renderers respectively.
         """
         super().add_to_renderer()
-        # self.circle.add_to_renderer()
+        self.circle.add_to_renderer()
 
     def is_clicked(self) -> bool:
         """
@@ -425,12 +417,4 @@ class CircularCheckbox(Checkbox):
         else:
             self.circle.line_width = 3
 
-        self.circle.render(display)
         super().render(display)
-
-    def update(self) -> None:
-        """
-        Update the checkbox.
-        """
-        self.circle.update()
-        super().update()
