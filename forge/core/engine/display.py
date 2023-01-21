@@ -64,7 +64,7 @@ class Display:
         pygame.display.set_caption(title)
 
         if icon is not None:
-            pygame.display.set_icon(icon.as_pygame_surface())
+            pygame.display.set_icon(icon.surface)
 
         _DISPLAY[0] = self
 
