@@ -44,7 +44,7 @@ class Pong(game.Game):
         self.ball.add_to_renderer()
 
         for ui in self.ui:
-            self.display.master_renderer._ui_renderer.elements.append(ui)
+            ui.add_to_renderer()
 
         self.ball.out_left += self.enemy_scores
         self.ball.out_right += self.player_scores
@@ -74,7 +74,7 @@ class Pong(game.Game):
                 self.ui_win_text.text = 'Enemy wins!'
 
             self.ui_win_text.center = vector.Vector2D(settings.DISPLAY_WIDTH // 2, settings.DISPLAY_HEIGHT // 2)
-            self.display.master_renderer._ui_renderer.elements.append(self.ui_win_text)
+            self.ui_win_text.add_to_renderer()
             self.timer.stop()
 
     def update(self) -> None:

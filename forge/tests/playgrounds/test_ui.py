@@ -13,9 +13,9 @@ class UITest(game.Game):
         self.circle = shapes.Circle(
             vector.Vector2D(300, 300), 100, color.random(), border=base.Border(10, color.random())
         )
-        self.press = button.RectangularButton(
-            vector.Vector2D(1150, 600), 100, 100, color.random(), lambda: print('Hello, world!'), None, text_='Button',
-            text_color=color.Color(255, 255, 255), text_centered=True
+        self.press = button.CircularButton(
+            vector.Vector2D(1150, 600), 100, color.random(), click_function=lambda: print('Hello, world!'),
+            text='Button', text_color=color.Color(255, 255, 255)
         )
 
         self.circle.add_to_renderer()
@@ -47,6 +47,7 @@ class UITest(game.Game):
         self.circle.center += direction * displacement
 
         super().update()
+        self.press.update()
 
 
 def main() -> None:
