@@ -1,5 +1,5 @@
 import settings
-from forge.core.engine import color, constants
+from forge.core.engine import color, display
 from forge.core.managers import keyboard
 from forge.core.physics import vector
 from forge.core.utils import math
@@ -20,8 +20,8 @@ class Paddle:
         if not is_player:
             self.shape.top_left.x = settings.DISPLAY_WIDTH - (100 + settings.PADDLE_WIDTH)
 
-    def add_to_renderer(self, renderer_name: str = constants.DISPLAY_UI_RENDERER) -> None:
-        self.shape.add_to_renderer(renderer_name)
+    def add_to_renderer(self) -> None:
+        display.get_display().master_renderer._core_renderer.shapes.append(self.shape)
 
     def poll_inputs(self) -> None:
         if not self.is_player:

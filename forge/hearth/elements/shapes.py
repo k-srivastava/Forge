@@ -2,7 +2,6 @@
 Shapes used throughout Hearth to create more complex UI elements.
 """
 import copy
-import dataclasses
 import enum
 
 import pygame
@@ -18,45 +17,13 @@ import forge.hearth.elements.base
 import forge.hearth.settings
 
 
-# A no-inspection has to be inserted because of a PyCharm bug.
-# PyCharm displays erroneous warnings when using enum.auto().
-# noinspection PyArgumentList
-class Shape(enum.Enum):
+class Shapes(enum.IntEnum):
     """
     Enumeration of shapes supported by Hearth.
     """
     RECTANGLE = enum.auto()
     CIRCLE = enum.auto()
     POLYGON = enum.auto()
-
-
-@dataclasses.dataclass(slots=True)
-class Border:
-    """
-    Border for each supported shape in Hearth.
-    """
-
-    width: int
-    color: forge.core.engine.color.Color
-    radius: int | None = None  # A border radius is only applicable for rectangles.
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the border.
-
-        :return: Simple string with border data.
-        :rtype: str
-        """
-        return f'Border -> Width: {self.width}, Radius: {self.radius}, Color: ({self.color.__repr__()})'
-
-    def __str__(self) -> str:
-        """
-        String representation of the border.
-
-        :return: Detailed string with border data.
-        :rtype: str
-        """
-        return f'Forge Border -> Width: {self.width}, Radius: {self.radius}, Color: ({self.color.__repr__()})'
 
 
 class Line(forge.hearth.elements.base.UIElement):
@@ -72,7 +39,7 @@ class Line(forge.hearth.elements.base.UIElement):
             end_point: forge.core.physics.vector.Vector2D,
             color: forge.core.engine.color.Color,
             parent: forge.hearth.elements.base.UIElement | None = None,
-            line_width: int = 1,
+            line_width: int = 1
     ) -> None:
         """
         Initialize the line.
@@ -144,14 +111,11 @@ class Line(forge.hearth.elements.base.UIElement):
         """
         return self._id
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the line to a renderer.
-
-        :param renderer_name: Name of the renderer to which the line is to be added; defaults to the base UI renderer.
-        :type renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(renderer_name).elements.append(self)
+        forge.core.engine.renderer.get_master_renderer().add_shape(self)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
@@ -199,13 +163,13 @@ class Line(forge.hearth.elements.base.UIElement):
         return self.start_point.as_pygame_vector(), self.end_point.as_pygame_vector()
 
 
-class Rectangle(forge.hearth.elements.base.UIElement):
+class Rectangle(forge.hearth.elements.base.Shape):
     """
     Basic rectangles in Hearth.
     """
 
     __slots__ = (
-        'top_left', 'width', 'height', 'line_width', 'corner_radius', 'border'
+        'width', 'height', 'line_width', 'corner_radius', '_top_left'
     )
 
     def __init__(
@@ -215,7 +179,7 @@ class Rectangle(forge.hearth.elements.base.UIElement):
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
             corner_radius: int | None = None,
-            border: Border | None = None
+            border: forge.hearth.elements.base.Border | None = None
     ) -> None:
         """
         Initialize the rectangle.
@@ -237,11 +201,10 @@ class Rectangle(forge.hearth.elements.base.UIElement):
         :param border: Border of the rectangle; defaults to None.
         :type border: Border | None
         """
-        self.top_left = top_left
+        self._top_left = top_left
         self.width = width
         self.height = height
         self.parent = parent
-        self.children = []
 
         self.color = color
         self.line_width = line_width
@@ -263,8 +226,7 @@ class Rectangle(forge.hearth.elements.base.UIElement):
         :return: Simple string with rectangle data.
         :rtype: str
         """
-        return f'Rectangle -> Width: {self.width}, Height: {self.height}, Top Left: ({self.top_left.__repr__()}), ' \
-               f'Child Count: {len(self.children)}'
+        return f'Rectangle -> Width: {self.width}, Height: {self.height}, Top Left: ({self.top_left.__repr__()})'
 
     def __str__(self) -> str:
         """
@@ -275,7 +237,15 @@ class Rectangle(forge.hearth.elements.base.UIElement):
         """
         return f'Forge Rectangle -> Width: {self.width}, Height: {self.height}, ' \
                f'Top Left: ({self.top_left.__str__()}), Center: ({self.center.__str__()}), ' \
-               f'Color: ({self.color.__str__()}), Parent: ({self.parent.__str__()}), Children: {self.children}'
+               f'Color: ({self.color.__str__()}), Parent: ({self.parent.__str__()})'
+
+    @property
+    def top_left(self) -> forge.core.physics.vector.Vector2D:
+        return self._top_left
+
+    @top_left.setter
+    def top_left(self, value: forge.core.physics.vector.Vector2D) -> None:
+        self._top_left = value
 
     @property
     def center(self) -> forge.core.physics.vector.Vector2D:
@@ -334,15 +304,11 @@ class Rectangle(forge.hearth.elements.base.UIElement):
 
         return top_left, bottom_left, bottom_right, top_right
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the rectangle to a renderer.
-
-        :param renderer_name: Name of the renderer to which the rectangle is to be added; defaults to the base
-                              UI renderer.
-        :type renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(renderer_name).elements.append(self)
+        forge.core.engine.renderer.get_master_renderer().add_shape(self)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
@@ -364,17 +330,10 @@ class Rectangle(forge.hearth.elements.base.UIElement):
                 self.border.width, self.border.radius if self.border.radius is not None else -1
             )
 
-        if forge.hearth.settings.AUTO_RENDER_CHILDREN:
-            for child in self.children:
-                child.render(display)
-
     def update(self) -> None:
         """
         Update the rectangle.
         """
-        if forge.hearth.settings.AUTO_UPDATE_CHILDREN:
-            for child in self.children:
-                child.update()
 
     def as_pygame_rect(self) -> pygame.rect.Rect:
         """
@@ -386,12 +345,12 @@ class Rectangle(forge.hearth.elements.base.UIElement):
         return pygame.rect.Rect(self.top_left.x, self.top_left.y, self.width, self.height)
 
 
-class Circle(forge.hearth.elements.base.UIElement):
+class Circle(forge.hearth.elements.base.Shape):
     """
     Basic circle in Hearth.
     """
 
-    __slots__ = 'center', 'radius', 'line_width', 'border'
+    __slots__ = 'radius', 'line_width', '_center'
 
     def __init__(
             self,
@@ -399,7 +358,7 @@ class Circle(forge.hearth.elements.base.UIElement):
             color: forge.core.engine.color.Color,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
-            border: Border | None = None
+            border: forge.hearth.elements.base.Border | None = None
     ) -> None:
         """
         Initialize the circle.
@@ -417,10 +376,9 @@ class Circle(forge.hearth.elements.base.UIElement):
         :param border: Border of the circle; defaults to None.
         :type border: Border | None
         """
-        self.center = center
+        self._center = center
         self.radius = radius
         self.parent = parent
-        self.children = []
 
         self.color = color
         self.line_width = line_width
@@ -438,7 +396,7 @@ class Circle(forge.hearth.elements.base.UIElement):
         :return: Simple string with circle data.
         :rtype: str
         """
-        return f'Circle -> Radius, Center: ({self.center.__repr__()}), Child Count: {len(self.children)}'
+        return f'Circle -> Radius, Center: ({self.center.__repr__()})'
 
     def __str__(self) -> str:
         """
@@ -449,7 +407,15 @@ class Circle(forge.hearth.elements.base.UIElement):
         """
         return f'Forge Circle -> Radius: {self.radius}, Center: ({self.center.__str__()}), ' \
                f'Top Left: ({self.top_left.__str__()}), Color: ({self.color.__str__()}), ' \
-               f'Parent: ({self.parent.__str__()}), Children: {self.children}'
+               f'Parent: ({self.parent.__str__()})'
+
+    @property
+    def center(self) -> forge.core.physics.vector.Vector2D:
+        return self._center
+
+    @center.setter
+    def center(self, value: forge.core.physics.vector.Vector2D) -> None:
+        self._center = value
 
     @property
     def top_left(self) -> forge.core.physics.vector.Vector2D:
@@ -480,15 +446,11 @@ class Circle(forge.hearth.elements.base.UIElement):
         """
         return self._id
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the circle to a renderer.
-
-        :param renderer_name: Name of the renderer to which the circle is to be added; defaults to the base
-                              UI renderer.
-        :type renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(renderer_name).elements.append(self)
+        forge.core.engine.renderer.get_master_renderer().add_shape(self)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
@@ -512,22 +474,16 @@ class Circle(forge.hearth.elements.base.UIElement):
                 self.border.width
             )
 
-        if forge.hearth.settings.AUTO_RENDER_CHILDREN:
-            for child in self.children:
-                child.render(display)
-
     def update(self) -> None:
-        if forge.hearth.settings.AUTO_UPDATE_CHILDREN:
-            for child in self.children:
-                child.update()
+        """"""
 
 
-class Polygon(forge.hearth.elements.base.UIElement):
+class Polygon(forge.hearth.elements.base.Shape):
     """
     Basic polygon in Hearth.
     """
 
-    __slots__ = 'vertices', 'parent', 'line_width', 'border'
+    __slots__ = 'vertices', 'line_width'
 
     def __init__(
             self,
@@ -535,7 +491,7 @@ class Polygon(forge.hearth.elements.base.UIElement):
             color: forge.core.engine.color.Color,
             parent: forge.hearth.elements.base.UIElement | None = None,
             line_width: int = 0,
-            border: Border | None = None
+            border: forge.hearth.elements.base.Border | None = None
     ) -> None:
         """
         Initialize the polygon.
@@ -553,16 +509,12 @@ class Polygon(forge.hearth.elements.base.UIElement):
         """
         self.vertices = vertices
         self.parent = parent
-        self.children = []
 
         self.color = color
         self.line_width = line_width
         self.border = border
 
         self._id = forge.core.utils.id.generate_random_id()
-
-        if self.parent is not None:
-            self.parent.children.append(self)
 
     def __repr__(self) -> str:
         """
@@ -571,7 +523,7 @@ class Polygon(forge.hearth.elements.base.UIElement):
         :return: Simple string with polygon data.
         :rtype: str
         """
-        return f'Polygon -> Vertex Count: {len(self.vertices)}, Child Count: {len(self.children)}'
+        return f'Polygon -> Vertex Count: {len(self.vertices)}'
 
     def __str__(self) -> str:
         """
@@ -581,7 +533,7 @@ class Polygon(forge.hearth.elements.base.UIElement):
         :rtype: str
         """
         return f'Forge Polygon -> Vertices: {self.vertices}, Color: ({self.color.__str__()}), ' \
-               f'Parent: ({self.parent.__str__()}), Children: {self.children}'
+               f'Parent: ({self.parent.__str__()})'
 
     @property
     def top_left(self) -> forge.core.physics.vector.Vector2D:
@@ -622,15 +574,11 @@ class Polygon(forge.hearth.elements.base.UIElement):
         """
         return self._id
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the polygon to a renderer.
-
-        :param renderer_name: Name of the renderer to which the polygon is to be added; defaults to the base
-                              UI renderer.
-        :type renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(renderer_name).elements.append(self)
+        forge.core.engine.renderer.get_master_renderer().add_shape(self)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
@@ -652,17 +600,10 @@ class Polygon(forge.hearth.elements.base.UIElement):
                 self.border.width
             )
 
-        if forge.hearth.settings.AUTO_RENDER_CHILDREN:
-            for child in self.children:
-                child.render(display)
-
     def update(self) -> None:
         """
         Update the polygon.
         """
-        if forge.hearth.settings.AUTO_UPDATE_CHILDREN:
-            for child in self.children:
-                child.update()
 
     def as_tuples(self) -> list[tuple[float, float]]:
         """

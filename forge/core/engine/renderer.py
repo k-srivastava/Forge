@@ -1,260 +1,303 @@
 """
-Renderers for Forge.
+Base renderer for Forge.
 """
 from __future__ import annotations
 
-import dataclasses
 import typing
 
-import attrs
-
+import forge.core.engine.constants
 import forge.core.engine.image
 import forge.core.utils.aliases
 import forge.core.utils.id
 import forge.hearth.settings
 
 if typing.TYPE_CHECKING:
-    import forge.hearth.elements.base
+    import forge.core.engine.game_object
     import forge.hearth.components.base
+    import forge.hearth.elements.base
 
-_RENDERERS: dict[int, Renderer] = {}
-RENDERER_IDS: dict[str, int] = {}
+_MASTER_RENDERER: list[MasterRenderer | None] = [None]
 
 
-@dataclasses.dataclass(slots=True)
-class Renderer:
-    name: str = attrs.field(on_setattr=attrs.setters.frozen)
-    image_pool: forge.core.engine.image.ImagePool = dataclasses.field(init=False)
-    _id: int = dataclasses.field(init=False)
+class CoreRenderer:
+    """
+    Renderer for images, shapes and game objects.
+    """
 
-    def __post_init__(self) -> None:
-        if self.name in RENDERER_IDS:
-            raise ValueError(f'Cannot create two renderers of the same name: {self.name}.')
-
-        self._id = forge.core.utils.id.generate_random_id()
-        self.image_pool = forge.core.engine.image.ImagePool(self.name, _images=[], _belongs_to_renderer=True)
-
-        _RENDERERS[self._id] = self
-        RENDERER_IDS[self.name] = self._id
-
-    def __repr__(self) -> str:
+    def __init__(self) -> None:
         """
-        Internal representation of the renderer.
-
-        :return: Simple string with renderer data.
-        :rtype: str
+        Initialize the core renderer.
         """
-        return f'Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the renderer.
-
-        :return: Detailed string with renderer data.
-        :rtype: str
-        """
-        return f'Forge Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()})'
+        self.shapes: list[forge.hearth.elements.base.Shape] = []
+        self.game_objects: list[forge.core.engine.game_object.GameObject] = []
+        self.image_pool: forge.core.engine.image.ImagePool = forge.core.engine.image.ImagePool(
+            forge.core.engine.constants.CORE_RENDERER, _images=[], _belongs_to_renderer=True
+        )
+        self._id: int = forge.core.utils.id.generate_random_id()
 
     def id(self) -> int:
         """
-        Get the unique ID of the renderer.
+        Get the unique ID of the core renderer.
 
-        :return: ID of the renderer.
+        :return: ID of the core renderer.
         :rtype: int
         """
         return self._id
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
+        """
+        Render all the images, shapes and game objects.
+
+        :param display: Display to which the image and shapes are to be rendered.
+        :type display: forge.core.utils.aliases.Surface
+        """
+        for shape in self.shapes:
+            shape.render(display)
+
+        for game_object in self.game_objects:
+            game_object.render(display)
+
         self.image_pool.render(display)
 
     def update(self, delta_time: float) -> None:
-        pass
-
-
-@dataclasses.dataclass
-class ObjectRenderer(Renderer):
-    def __repr__(self) -> str:
         """
-        Internal representation of the object renderer.
+        Update all the shapes and game objects.
 
-        :return: Simple string with object renderer data.
-        :rtype: str
+        :param delta_time: Delta time for the current pass.
+        :type delta_time: float
         """
-        return f'Object Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}'
+        for shape in self.shapes:
+            shape.update()
 
-    def __str__(self) -> str:
+        for game_object in self.game_objects:
+            game_object.update(delta_time)
+
+
+class UIRenderer:
+    """
+    Renderer for UI elements and components.
+    """
+
+    def __init__(self) -> None:
         """
-        String representation of the object renderer.
-
-        :return: Detailed string with object renderer data.
-        :rtype: str
+        Initialize the UI renderer.
         """
-        return f'Forge Object Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()})'
+        self.elements: list[forge.hearth.elements.base.UIElement] = []
+        self.components: list[forge.hearth.components.base.UIComponent] = []
+        self._id: int = forge.core.utils.id.generate_random_id()
 
-
-@dataclasses.dataclass
-class UIRenderer(Renderer):
-    elements: list['forge.hearth.elements.base.UIElement'] = dataclasses.field(default_factory=list)
-
-    def __repr__(self) -> str:
+    def id(self) -> int:
         """
-        Internal representation of the ui renderer.
+        Get the unique ID of the UI renderer.
 
-        :return: Simple string with ui renderer data.
-        :rtype: str
+        :return: ID of the UI renderer.
+        :rtype: int
         """
-        return f'UI Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}, ' \
-               f'Element Count: {len(self.elements)}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the ui renderer.
-
-        :return: Detailed string with ui renderer data.
-        :rtype: str
-        """
-        return f'Forge UI Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()}), ' \
-               f'Elements: {self.elements}'
+        return self._id
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
-        super().render(display)
+        """
+        Render all the UI elements and components.
 
+        :param display: Display to which the UI elements and components are to be rendered.
+        :type display: forge.core.utils.aliases.Surface
+        """
         rendered_element_ids: set[int] = set()
 
         for element in self.elements:
-            if element.id() in rendered_element_ids:
+            element_id = element.id()
+
+            if element_id in rendered_element_ids:
                 continue
 
             element.render(display)
-            rendered_element_ids.add(element.id())
+            rendered_element_ids.add(element_id)
 
             if forge.hearth.settings.AUTO_RENDER_CHILDREN:
                 for child in element.children:
                     rendered_element_ids.add(child.id())
 
-    def update(self, delta_time: float) -> None:
-        super().update(delta_time)
+        for component in self.components:
+            component.render(display)
 
+    def update(self, delta_time: float) -> None:
+        """
+        Update all the UI elements and shapes.
+
+        :param delta_time: Delta time for the current pass.
+        :type delta_time: float
+        """
         updated_element_ids: set[int] = set()
 
         for element in self.elements:
-            if element.id() in updated_element_ids:
+            element_id = element.id()
+
+            if element_id in updated_element_ids:
                 continue
 
             element.update()
-            updated_element_ids.add(element.id())
+            updated_element_ids.add(element_id)
 
             if forge.hearth.settings.AUTO_UPDATE_CHILDREN:
                 for child in element.children:
                     updated_element_ids.add(child.id())
 
-
-@dataclasses.dataclass
-class ComponentRenderer(Renderer):
-    components: list['forge.hearth.components.base.UIComponent'] = dataclasses.field(default_factory=list)
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the component renderer.
-
-        :return: Simple string with component renderer data.
-        :rtype: str
-        """
-        return f'Component Renderer -> Name: {self.name}, Image Count: {len(self.image_pool.images())}, ' \
-               f'Component Count: {len(self.components)}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the component renderer.
-
-        :return: Detailed string with component renderer data.
-        :rtype: str
-        """
-        return f'Forge Component Renderer -> Name: {self.name}, Image Pool: ({self.image_pool.__str__()}), ' \
-               f'Components: {self.components}'
-
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
-        super().render(display)
-
-        for component in self.components:
-            component.render(display)
-
-    def update(self, delta_time: float) -> None:
-        super().update(delta_time)
-
         for component in self.components:
             component.update()
 
 
-def get_renderer_from_name(renderer_name: str) -> Renderer | ObjectRenderer | UIRenderer | ComponentRenderer:
+class MasterRenderer:
     """
-    Retrieve a particular renderer from the renderer dictionary using the renderer name.
-
-    :param renderer_name: Name of the renderer to be retrieved.
-    :type renderer_name: str
-
-    :return: Renderer stored in the renderer dictionary.
-    :rtype: Renderer | ObjectRenderer | UIRenderer | ComponentRenderer
-
-    :raises KeyError: A renderer must be registered if it is to be retrieved.
+    Master renderer containing all base renderers.
     """
-    if renderer_name not in RENDERER_IDS:
-        raise KeyError(
-            f'Renderer named: {renderer_name} has not been registered as a renderer and cannot be retrieved.'
-        )
 
-    return _RENDERERS[RENDERER_IDS[renderer_name]]
+    def __init__(self) -> None:
+        """
+        Initialize the master renderer.
+        """
+        if _MASTER_RENDERER[0] is not None:
+            raise SyntaxError()
+
+        self._core_renderer: CoreRenderer = CoreRenderer()
+        self._ui_renderer: UIRenderer = UIRenderer()
+        self._id: int = forge.core.utils.id.generate_random_id()
+
+        _MASTER_RENDERER[0] = self
+
+    def id(self) -> int:
+        """
+        Get the unique ID of the master renderer.
+
+        :return: ID of the master renderer.
+        :rtype: int
+        """
+        return self._id
+
+    def add_image(self, image: forge.core.engine.image.Image) -> None:
+        """
+        Add an image to the core renderer of the master renderer.
+
+        :param image: Image to be added.
+        :type image: forge.core.engine.image.Image
+        """
+        self._core_renderer.image_pool += image
+
+    def add_images(self, images: list[forge.core.engine.image.Image]) -> None:
+        """
+        Add a multiple images to the core renderer of the master renderer.
+
+        :param images: Images to be added.
+        :type images: list[forge.core.engine.image.Image]
+        """
+        self._core_renderer.image_pool += images
+
+    def remove_image(self, image: forge.core.engine.image.Image) -> None:
+        """
+        Remove an image from the core renderer of the master renderer.
+
+        :param image: Image to be removed.
+        :type image: forge.core.engine.image.Image
+        """
+        self._core_renderer.image_pool -= image
+
+    def add_shape(self, shape: forge.hearth.elements.base.Shape) -> None:
+        """
+        Add a shape to the core renderer of the master renderer.
+
+        :param shape: Shape to be added.
+        :type shape: forge.hearth.elements.base.Shape
+        """
+        self._core_renderer.shapes.append(shape)
+
+    def remove_shape(self, shape: forge.hearth.elements.base.Shape) -> None:
+        """
+        Remove a shape from the core renderer of the master renderer.
+
+        :param shape: Shape to be removed.
+        :type shape: forge.hearth.elements.base.Shape
+        """
+        self._core_renderer.shapes.remove(shape)
+
+    def add_game_object(self, game_object: forge.core.engine.game_object.GameObject) -> None:
+        """
+        Add a game object to the core renderer of the master renderer.
+
+        :param game_object: Game object to be added.
+        :type game_object: forge.core.engine.game_object.GameObject
+        """
+        self._core_renderer.game_objects.append(game_object)
+
+    def remove_game_object(self, game_object: forge.core.engine.game_object.GameObject) -> None:
+        """
+        Remove a game object from the core renderer of the master renderer.
+
+        :param game_object: Game object to be removed.
+        :type game_object: forge.core.engine.game_object.GameObject
+        """
+        self._core_renderer.game_objects.remove(game_object)
+
+    def add_element(self, element: forge.hearth.elements.base.UIElement) -> None:
+        """
+        Add an element to the UI renderer of the master renderer.
+
+        :param element: Element to be added.
+        :type element: forge.hearth.elements.base.Shape
+        """
+        self._ui_renderer.elements.append(element)
+
+    def remove_element(self, element: forge.hearth.elements.base.UIElement) -> None:
+        """
+        Remove an element from the UI renderer of the master renderer.
+
+        :param element: Element to be removed.
+        :type element: forge.hearth.elements.base.Shape
+        """
+        self._ui_renderer.elements.remove(element)
+
+    def add_component(self, component: forge.hearth.components.base.UIComponent) -> None:
+        """
+        Add a component to the UI renderer of the master renderer.
+
+        :param component: Component to be added.
+        :type component: forge.hearth.elements.base.Shape
+        """
+        self._ui_renderer.components.append(component)
+
+    def remove_component(self, component: forge.hearth.components.base.UIComponent) -> None:
+        """
+        Remove a component from the UI renderer of the master renderer.
+
+        :param component: Component to be removed.
+        :type component: forge.hearth.elements.base.Shape
+        """
+        self._ui_renderer.components.remove(component)
+
+    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+        """
+        Render all the renderers.
+
+        :param display: Display to which the renderers have to render.
+        :type display: forge.core.utils.aliases.Surface
+        """
+        self._core_renderer.render(display)
+        self._ui_renderer.render(display)
+
+    def update(self, delta_time: float) -> None:
+        """
+        Update all the renderers.
+
+        :param delta_time: Delta time for the current pass.
+        :type delta_time: float
+        """
+        self._core_renderer.update(delta_time)
+        self._ui_renderer.update(delta_time)
 
 
-def get_renderer_from_id(renderer_id: int) -> Renderer | ObjectRenderer | UIRenderer | ComponentRenderer:
+def get_master_renderer() -> MasterRenderer | None:
     """
-    Retrieve a registered renderer from the renderer dictionary using the renderer ID.
+    Retrieve the current master renderer.
 
-    :param renderer_id: ID of the renderer to be retrieved.
-    :type renderer_id: int
-
-    :return: Renderer stored in the renderer dictionary.
-    :rtype: Renderer | ObjectRenderer | UIRenderer | ComponentRenderer
+    :return: Current master renderer; if it exists.
+    :rtype: MasterRenderer | None
     """
-    if renderer_id not in _RENDERERS:
-        raise KeyError(
-            f'Renderer with ID: {renderer_id} has not been registered as a renderer and cannot be retrieved.'
-        )
-
-    return _RENDERERS[renderer_id]
-
-
-# A no-inspection is used because all overloaded functions will be re-written from scratch.
-# noinspection DuplicatedCode
-def delete_renderer_from_name(renderer_name: str) -> None:
-    """
-    Delete a registered renderer from the renderer dictionary using the renderer name and free the ID of the renderer.
-
-    :param renderer_name: Name of the renderer to be deleted.
-    :type renderer_name: str
-
-    :raises KeyError: A renderer must be registered if it is to be deleted.
-    """
-    if renderer_name not in RENDERER_IDS:
-        raise KeyError(f'Renderer named: {renderer_name} has not been registered as a renderer and cannot be deleted.')
-
-    _RENDERERS.pop(RENDERER_IDS[renderer_name])
-    forge.core.utils.id.delete_id(RENDERER_IDS[renderer_name])
-    RENDERER_IDS.pop(renderer_name)
-
-
-def delete_renderer_from_id(renderer_id: int) -> None:
-    """
-    Delete a registered renderer from the renderer dictionary using the renderer ID and free the ID of the renderer.
-
-    :param renderer_id: ID of the renderer to be deleted.
-    :type renderer_id: int
-
-    :raises KeyError: A renderer must be registered if it is to be deleted.
-    """
-    if renderer_id not in _RENDERERS:
-        raise KeyError(f'Renderer with ID: {renderer_id} has not been registered as a renderer and cannot be deleted.')
-
-    renderer_name = _RENDERERS.pop(renderer_id).name
-    forge.core.utils.id.delete_id(renderer_id)
-    RENDERER_IDS.pop(renderer_name)
+    return _MASTER_RENDERER[0]

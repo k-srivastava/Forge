@@ -4,6 +4,7 @@ Images in Forge.
 from __future__ import annotations
 
 import dataclasses
+import typing
 import warnings
 
 import attrs
@@ -17,10 +18,10 @@ import forge.core.utils.base
 import forge.core.utils.dispatch
 import forge.core.utils.id
 
-_IMAGES: dict[int, Image] = {}
+_IMAGES: dict[int, 'Image'] = {}
 IMAGE_IDS: dict[str, int] = {}
 
-_IMAGE_POOLS: dict[int, ImagePool] = {}
+_IMAGE_POOLS: dict[int, 'ImagePool'] = {}
 IMAGE_POOL_IDS: dict[str, int] = {}
 
 
@@ -77,15 +78,11 @@ class Image(forge.core.utils.base.Renderable):
         """
         return self._id
 
-    def add_to_renderer(self, renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the image to a renderer.
-
-        :param renderer_name: Name of the renderer to which the image is to be added; defaults to the base object
-                              renderer.
-        :type renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(renderer_name).image_pool += self
+        forge.core.engine.renderer.get_master_renderer().add_image(self)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
@@ -107,12 +104,11 @@ class Image(forge.core.utils.base.Renderable):
 
 
 @dataclasses.dataclass(slots=True)
-class ImagePool:
+class ImagePool(forge.core.utils.base.Renderable):
     """
     Forge's image pool utility.
     """
     name: str = attrs.field(on_setattr=attrs.setters.frozen)
-    renderer_name: str = forge.core.engine.constants.DISPLAY_OBJECT_RENDERER
     _id: int = dataclasses.field(init=False)
     _images: list[Image] = dataclasses.field(default_factory=list)
     _belongs_to_renderer: bool = False
@@ -137,7 +133,7 @@ class ImagePool:
                 image.parent = self
 
     @forge.core.utils.dispatch.multidispatch(Image)
-    def __iadd__(self, image: Image) -> ImagePool:
+    def __iadd__(self, image: Image) -> typing.Self:
         """
         Add an image to the pool using the '+=' operator.
 
@@ -145,7 +141,7 @@ class ImagePool:
         :type image: Image
 
         :return: Image pool with the image added to its internal list.
-        :rtype: ImagePool
+        :rtype: typing.Self
 
         :raises ValueError: All images in the pool must be unique.
         """
@@ -155,13 +151,13 @@ class ImagePool:
 
         if not self._belongs_to_renderer:
             image.parent = self
-            forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += image
+            forge.core.engine.renderer.get_master_renderer().add_image(image)
 
         self._images.append(image)
         return self
 
     @forge.core.utils.dispatch.multidispatch(list)
-    def __iadd__(self, images: list[Image]) -> ImagePool:
+    def __iadd__(self, images: list[Image]) -> typing.Self:
         """
         Add a list of images to the pool using the '+=' operator.
 
@@ -169,7 +165,7 @@ class ImagePool:
         :type images: list[Image]
 
         :return: Image pool with the images added to its internal list.
-        :rtype: ImagePool
+        :rtype: typing.Self
 
         :raises ValueError: All images in the pool must be unique.
         """
@@ -180,14 +176,14 @@ class ImagePool:
 
             if not self._belongs_to_renderer:
                 image.parent = self
-                forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += image
+                forge.core.engine.renderer.get_master_renderer().add_image(image)
 
             self._images.append(image)
 
         return self
 
     @forge.core.utils.dispatch.multidispatch(Image)
-    def __isub__(self, image: Image) -> ImagePool:
+    def __isub__(self, image: Image) -> typing.Self:
         """
         Remove an image from the pool using the '-=' operator.
 
@@ -195,7 +191,7 @@ class ImagePool:
         :type image: Image
 
         :return: Image pool with the image removed from its internal list.
-        :rtype: ImagePool
+        :rtype: typing.Self
 
         :raises ValueError: Image must be part of the pool to be removed.
         """
@@ -211,12 +207,12 @@ class ImagePool:
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool -= image
+        forge.core.engine.renderer.get_master_renderer().remove_image(image)
 
         return self
 
     @forge.core.utils.dispatch.multidispatch(str)
-    def __isub__(self, image_data: str | int) -> ImagePool:
+    def __isub__(self, image_data: str | int) -> typing.Self:
         image: Image
         if type(image_data) is str:
             image = get_image_from_name(image_data)
@@ -235,7 +231,7 @@ class ImagePool:
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool -= image
+        forge.core.engine.renderer.get_master_renderer().remove_image(image)
 
         return self
 
@@ -279,7 +275,7 @@ class ImagePool:
         """
         Add the image pool to its renderer.
         """
-        forge.core.engine.renderer.get_renderer_from_name(self.renderer_name).image_pool += self._images
+        forge.core.engine.renderer.get_master_renderer().add_images(self._images)
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """

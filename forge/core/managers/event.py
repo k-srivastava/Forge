@@ -1,8 +1,6 @@
 """
 Creation, retrieval, posting and deletion of events using Forge's custom event management system.
 """
-from __future__ import annotations
-
 import dataclasses
 import enum
 import typing
@@ -13,7 +11,7 @@ import attrs
 import forge.core.utils.exceptions
 import forge.core.utils.id
 
-_EVENTS: dict[int, Event] = {}
+_EVENTS: dict[int, 'Event'] = {}
 EVENT_NAMES: dict[str, int] = {}
 INTERNAL_EVENT_NAMES: list[str] = []
 
@@ -58,7 +56,7 @@ class Event:
         _EVENTS[self._id] = self
         EVENT_NAMES[self.name] = self._id
 
-    def __iadd__(self, subscriber: typing.Callable[[], None]) -> Event:
+    def __iadd__(self, subscriber: typing.Callable[[], None]) -> typing.Self:
         """
         Register a new function to the event using the '+=' operator.
 
@@ -77,7 +75,7 @@ class Event:
         self._subscribers.append(subscriber)
         return self
 
-    def __isub__(self, subscriber: typing.Callable[[], None]) -> Event:
+    def __isub__(self, subscriber: typing.Callable[[], None]) -> typing.Self:
         """
         Deregister an existing function to the event using the '-=' operator.
 

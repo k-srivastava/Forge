@@ -38,8 +38,8 @@ class Slider(forge.hearth.components.base.UIComponent):
             bar_height: int = 10, grabber_radius: int = 15,
             bar_line_width: int = 0, grabber_line_width: int = 0,
             bar_corner_radius: int | None = None,
-            bar_border: forge.hearth.elements.shapes.Border | None = None,
-            grabber_border: forge.hearth.elements.shapes.Border | None = None,
+            bar_border: forge.hearth.elements.base.Border | None = None,
+            grabber_border: forge.hearth.elements.base.Border | None = None,
     ) -> None:
         """
         Initialize the slider.
@@ -116,6 +116,9 @@ class Slider(forge.hearth.components.base.UIComponent):
                f'On Move Event: ({self.move_event.__str__() if self.move_event else None}), ' \
                f'Bar -> ({self.bar.__str__()}), Grabber: ({self.grabber.__str__()})'
 
+    def id(self) -> int:
+        return self._id
+
     def value(self) -> float:
         """
         Compute the current raw value of the slider.
@@ -134,24 +137,13 @@ class Slider(forge.hearth.components.base.UIComponent):
         """
         return (self.grabber.center.x - self.bar.top_left.x) / self.bar.width
 
-    def add_to_renderer(
-            self,
-            component_renderer_name: str = forge.core.engine.constants.DISPLAY_COMPONENT_RENDERER,
-            ui_renderer_name: str = forge.core.engine.constants.DISPLAY_UI_RENDERER
-    ) -> None:
+    def add_to_renderer(self) -> None:
         """
         Add the slider and its text to their renderers respectively.
-
-        :param component_renderer_name: Name of the renderer to which the slider is to be added; defaults to the base
-                                        component renderer.
-        :type component_renderer_name: str
-        :param ui_renderer_name: Name of the renderer to which the elements of the slider are to be added; defaults to
-                                 the base UI renderer.
-        :type ui_renderer_name: str
         """
-        forge.core.engine.renderer.get_renderer_from_name(component_renderer_name).components.append(self)
-        self.bar.add_to_renderer(ui_renderer_name)
-        self.grabber.add_to_renderer(ui_renderer_name)
+        forge.core.engine.renderer.get_master_renderer().add_component(self)
+        # self.bar.add_to_renderer()
+        # self.grabber.add_to_renderer()
 
     def is_moved(self) -> bool:
         """
