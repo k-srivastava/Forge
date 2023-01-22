@@ -2,6 +2,7 @@
 Keyboard management in Forge.
 """
 import enum
+import typing
 
 import pygame
 
@@ -174,6 +175,7 @@ def is_clicked(key: Key) -> bool:
     :type key: Key
 
     :return: True if the keyboard key is pressed once; else False.
+    :rtype: bool
     """
     if DISABLED:
         return False
@@ -215,7 +217,10 @@ def is_pressed(key: Key) -> bool:
     Check if a certain key is pressed continuously.
 
     :param key: Enum value of the key to check.
+    :type key: Key
+
     :return: True if the keyboard key is pressed continuously; else False.
+    :rtype: bool
     """
     if DISABLED:
         return False
@@ -228,8 +233,41 @@ def is_any_pressed() -> bool:
     Check if any keyboard key is pressed continuously.
 
     :return: True if any keyboard key is pressed continuously; else False.
+    :rtype: bool
     """
     if DISABLED:
         return False
 
     return any(pygame.key.get_pressed())
+
+
+def is_none_pressed() -> bool:
+    """
+    Check if no keyboard key is pressed continuously.
+
+    :return: True if no keyboard key is pressed continuously; else False.
+    :rtype: bool
+    """
+    if DISABLED:
+        return False
+
+    keys = pygame.key.get_pressed()
+
+    for key in keys:
+        if key:
+            return False
+
+    return True
+
+
+def get_all_pressed() -> typing.Sequence[bool]:
+    """
+    Get all the keys of the keyboard.
+
+    :return: All the keys that are pressed.
+    :rtype: typing.Sequence[bool]
+    """
+    if DISABLED:
+        return pygame.key.ScancodeWrapper()
+
+    return pygame.key.get_pressed()
