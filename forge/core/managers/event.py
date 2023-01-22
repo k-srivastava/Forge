@@ -1,8 +1,6 @@
 """
 Creation, retrieval, posting and deletion of events using Forge's custom event management system.
 """
-from __future__ import annotations
-
 import dataclasses
 import enum
 import typing
@@ -13,7 +11,7 @@ import attrs
 import forge.core.utils.exceptions
 import forge.core.utils.id
 
-_EVENTS: dict[int, Event] = {}
+_EVENTS: dict[int, 'Event'] = {}
 EVENT_NAMES: dict[str, int] = {}
 INTERNAL_EVENT_NAMES: list[str] = []
 

@@ -1,8 +1,6 @@
 """
 Images in Forge.
 """
-from __future__ import annotations
-
 import dataclasses
 import typing
 import warnings
@@ -18,10 +16,10 @@ import forge.core.utils.base
 import forge.core.utils.dispatch
 import forge.core.utils.id
 
-_IMAGES: dict[int, Image] = {}
+_IMAGES: dict[int, 'Image'] = {}
 IMAGE_IDS: dict[str, int] = {}
 
-_IMAGE_POOLS: dict[int, ImagePool] = {}
+_IMAGE_POOLS: dict[int, 'ImagePool'] = {}
 IMAGE_POOL_IDS: dict[str, int] = {}
 
 
