@@ -12,6 +12,7 @@ import forge.core.utils.id
 import forge.hearth.settings
 
 if typing.TYPE_CHECKING:
+    import forge.core.engine.game_object
     import forge.hearth.components.base
     import forge.hearth.elements.base
 
@@ -20,7 +21,7 @@ _MASTER_RENDERER: list[MasterRenderer | None] = [None]
 
 class CoreRenderer:
     """
-    Renderer for images and shapes.
+    Renderer for images, shapes and game objects.
     """
 
     def __init__(self) -> None:
@@ -28,6 +29,7 @@ class CoreRenderer:
         Initialize the core renderer.
         """
         self.shapes: list[forge.hearth.elements.base.Shape] = []
+        self.game_objects: list[forge.core.engine.game_object.GameObject] = []
         self.image_pool: forge.core.engine.image.ImagePool = forge.core.engine.image.ImagePool(
             forge.core.engine.constants.CORE_RENDERER, _images=[], _belongs_to_renderer=True
         )
@@ -44,7 +46,7 @@ class CoreRenderer:
 
     def render(self, display: forge.core.utils.aliases.Surface) -> None:
         """
-        Render all the images and shapes.
+        Render all the images, shapes and game objects.
 
         :param display: Display to which the image and shapes are to be rendered.
         :type display: forge.core.utils.aliases.Surface
@@ -52,17 +54,23 @@ class CoreRenderer:
         for shape in self.shapes:
             shape.render(display)
 
+        for game_object in self.game_objects:
+            game_object.render(display)
+
         self.image_pool.render(display)
 
     def update(self, delta_time: float) -> None:
         """
-        Update all the shapes.
+        Update all the shapes and game objects.
 
         :param delta_time: Delta time for the current pass.
         :type delta_time: float
         """
         for shape in self.shapes:
             shape.update()
+
+        for game_object in self.game_objects:
+            game_object.update(delta_time)
 
 
 class UIRenderer:
@@ -209,6 +217,24 @@ class MasterRenderer:
         :type shape: forge.hearth.elements.base.Shape
         """
         self._core_renderer.shapes.remove(shape)
+
+    def add_game_object(self, game_object: forge.core.engine.game_object.GameObject) -> None:
+        """
+        Add a game object to the core renderer of the master renderer.
+
+        :param game_object: Game object to be added.
+        :type game_object: forge.core.engine.game_object.GameObject
+        """
+        self._core_renderer.game_objects.append(game_object)
+
+    def remove_game_object(self, game_object: forge.core.engine.game_object.GameObject) -> None:
+        """
+        Remove a game object from the core renderer of the master renderer.
+
+        :param game_object: Game object to be removed.
+        :type game_object: forge.core.engine.game_object.GameObject
+        """
+        self._core_renderer.game_objects.remove(game_object)
 
     def add_element(self, element: forge.hearth.elements.base.UIElement) -> None:
         """
