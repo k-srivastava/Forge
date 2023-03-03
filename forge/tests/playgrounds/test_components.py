@@ -1,67 +1,48 @@
-from forge.core.engine import color, display, game
-from forge.core.managers import event
-from forge.core.physics import vector
-from forge.hearth.components import checkbox, slider
-from forge.hearth.elements import text
+from forge.core.engine import color
+from forge.core.engine.display import Display
+from forge.core.engine.game import Game
+from forge.core.physics.vector import Vector2D
+from forge.hearth.components.button import RectangleButton
+from forge.hearth.components.checkbox import CheckboxStyle, SquareCheckbox
+from forge.hearth.components.slider import Slider
 
 
-class CustomCheckBox:
-    __slots__ = 'check_box', 'text_box'
-
-    def __init__(self, check_box: checkbox.Checkbox, text_box: text.Text) -> None:
-        self.check_box = check_box
-        self.text_box = text_box
-
-    def add_to_default_renderer(self) -> None:
-        self.check_box.add_to_renderer()
-        self.text_box.add_to_renderer()
-
-
-class CustomSlider:
-    __slots__ = 'slider_comp', 'text_box'
-
-    def __init__(self, slider_comp: slider.Slider, text_box: text.Text) -> None:
-        self.slider_comp = slider_comp
-        self.text_box = text_box
-
-    def add_to_default_renderer(self) -> None:
-        self.slider_comp.add_to_renderer()
-        self.text_box.add_to_renderer()
-
-
-class ComponentTest(game.Game):
+class SliderTest(Game):
     def __init__(self) -> None:
-        super().__init__(display.Display(title='Component Tests'))
+        super().__init__(Display(title='New Slider Tests'))
 
-        self.base_event = event.Event('<BASE-EVENT>')
+        self.slider = Slider(0, 100, Vector2D(100, 100), 350, color.random(), color.random(), [],
+                             move_function=self.calc)
 
-        self.custom_slider = CustomSlider(
-            slider.Slider(0, 100, None, self.base_event, vector.Vector2D(100, 100), 350, color.random(),
-                          color.random()),
-            text.Text('0', 32, vector.Vector2D(500, 100))
+        self.square_box = SquareCheckbox(
+            Vector2D(100, 500), 100, color.random(), False, [],
+            style=CheckboxStyle.BORDERED, corner_radius=10
         )
 
-        self.custom_checkbox = CustomCheckBox(
-            checkbox.CircularCheckbox(vector.Vector2D(150, 500), 50, color.random(), None, self.base_event),
-            text.Text('False', 32, vector.Vector2D(500, 500))
+        self.slider.add_to_renderer()
+        self.square_box.add_to_renderer()
+
+    def calc(self) -> None:
+        print(self.slider.value_clamped)
+
+
+class ButtonTest(Game):
+    def __init__(self) -> None:
+        super().__init__(Display(title='New Button Tests'))
+
+        self.button = RectangleButton(
+            Vector2D(100, 100), 300, 200, color.random(), 'Click me!', [], click_function=lambda: print('Hello, world!')
         )
 
-        self.base_event += lambda: self.update_slider(self.custom_slider.slider_comp.value())
-        self.base_event += lambda: self.update_checkbox(self.custom_checkbox.check_box.value)
-
-        self.custom_slider.add_to_default_renderer()
-        self.custom_checkbox.add_to_default_renderer()
-
-    def update_slider(self, value: float) -> None:
-        self.custom_slider.text_box.text = str(round(value, 2))
-
-    def update_checkbox(self, value: bool) -> None:
-        self.custom_checkbox.text_box.text = str(value).lower()
+        self.button.add_to_renderer()
 
 
 def main() -> None:
-    component_tests = ComponentTest()
-    component_tests.mainloop()
+    # component_tests = SliderTest()
+    # component_tests.mainloop()
+
+    button_tests = ButtonTest()
+    button_tests.mainloop()
 
 
 if __name__ == '__main__':

@@ -1,53 +1,37 @@
-from forge.core.engine import color, display, game
+from forge.core.engine.color import Color
+from forge.core.engine.display import Display
+from forge.core.engine.game import Game
 from forge.core.managers import keyboard
 from forge.core.physics import vector
-from forge.hearth.components import button
-from forge.hearth.elements import base, shapes, text
+from forge.core.physics.vector import Vector2D
+from forge.hearth.elements.shapes import Circle, Polygon, Rectangle
+from forge.hearth.elements.text import Text
 
 
-class UITest(game.Game):
+class UITest(Game):
     def __init__(self) -> None:
-        super().__init__(display.Display(title='UI Tests'))
+        super().__init__(Display(title='UI Tests'))
 
-        self.hello_world = text.Text('Hello, world!', 32)
-        self.circle = shapes.Circle(
-            vector.Vector2D(300, 300), 100, color.random(), border=base.Border(10, color.random())
-        )
-        self.press = button.CircularButton(
-            vector.Vector2D(1150, 600), 100, color.random(), click_function=lambda: print('Hello, world!'),
-            text='Button', text_color=color.Color(255, 255, 255)
-        )
+        self.title = Text('UI Test', vector.zero(), 64)
+        self.title.center = Vector2D(self.display.width() // 2, 100)
 
-        self.circle.add_to_renderer()
-        self.hello_world.add_to_renderer()
-        self.press.add_to_renderer()
+        self.chassis = Rectangle(Vector2D(100, 100), 350, 150, Color(255, 80, 80))
+        self.window = Rectangle(Vector2D(300, 0), 50, 20, Color(80, 255, 255), parent=self.chassis)
+        self.wheel_1 = Circle(Vector2D(60, 150), 50, Color(50, 50, 50), parent=self.chassis)
+        self.wheel_2 = Circle(Vector2D(290, 150), 50, Color(50, 50, 50), parent=self.chassis)
+
+        self.title.add_to_renderer()
+        self.chassis.add_to_renderer()
+
+        self.polygon = Polygon([Vector2D(100, 100), Vector2D(100, 300), Vector2D(300, 300)], Color(0, 100, 255))
+        self.polygon.add_to_renderer()
 
     def update(self) -> None:
-        displacement = 1
-        direction = vector.zero()
-
-        if keyboard.is_any_pressed():
-            if keyboard.is_pressed(keyboard.Key.W):
-                direction.y = -1
-
-            elif keyboard.is_pressed(keyboard.Key.S):
-                direction.y = 1
-
-            if keyboard.is_pressed(keyboard.Key.A):
-                direction.x = -1
-
-            elif keyboard.is_pressed(keyboard.Key.D):
-                direction.x = 1
-
-            direction.normalize()
-
-        else:
-            direction = vector.zero()
-
-        self.circle.center += direction * displacement
+        if keyboard.is_pressed(keyboard.Key.D):
+            self.chassis.top_left += vector.right()
+            self.polygon.center += vector.right()
 
         super().update()
-        self.press.update()
 
 
 def main() -> None:
