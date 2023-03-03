@@ -1,126 +1,46 @@
-"""
-Checkboxes in Hearth.
-"""
-import enum
-import typing
+"""Checkboxes in Hearth."""
+from abc import abstractmethod
+from enum import IntEnum, auto
+from typing import Callable, Optional
 
-import forge.core.engine.color
-import forge.core.engine.constants
-import forge.core.engine.renderer
-import forge.core.managers.event
-import forge.core.managers.mouse
-import forge.core.physics.vector
-import forge.core.utils.aliases
-import forge.core.utils.id
-import forge.hearth.components.base
-import forge.hearth.elements.base
-import forge.hearth.elements.shapes
-import forge.hearth.elements.text
-import forge.hearth.settings
-import forge.hearth.utils.bounds
+from forge.core.engine.color import Color
+from forge.core.managers import mouse
+from forge.core.managers.event import Event
+from forge.core.managers.mouse import MouseButton
+from forge.core.physics.vector import Vector2D
+from forge.core.utils.aliases import Surface
+from forge.hearth.components.base import UIComponent
+from forge.hearth.elements.base import Shape, UIElement
+from forge.hearth.elements.border import Border
+from forge.hearth.elements.shapes import Circle, Line, Polygon, Rectangle
+from forge.hearth.settings import PADDING
+from forge.hearth.utils import bounds
 
 
-# A no-inspection has to be inserted because of a PyCharm bug.
-# PyCharm displays erroneous warnings when using enum.auto().
-# noinspection PyArgumentList
-class CheckboxStyle(enum.IntEnum):
-    """
-    Enumeration of all valid checkbox check styles in Hearth.
-    """
-    SOLID = enum.auto()
-    BORDERED = enum.auto()
-    CHECKED = enum.auto()
+class CheckboxStyle(IntEnum):
+    """Enumeration of all valid checkbox check styles in Hearth."""
+    SOLID = auto()
+    BORDERED = auto()
+    CHECKED = auto()
 
 
-class Checkbox(forge.hearth.components.base.UIComponent):
-    """
-    Base checkbox class in Hearth.
-    """
+class Checkbox(UIComponent):
+    __slots__ = 'value', 'click_function', 'click_event', 'style'
 
-    __slots__ = 'click_function', 'click_event', 'value', 'style', '_id'
+    def __init__(self, value: bool, children: list[UIElement | Shape], style: CheckboxStyle = CheckboxStyle.SOLID,
+                 click_function: Optional[Callable[[], None]] = None, click_event: Optional[Event] = None) -> None:
+        super().__init__(children)
 
-    def __init__(
-            self,
-            click_function: typing.Callable[[], None] | None,
-            click_event: forge.core.managers.event.Event | None,
-            value: bool = False, style: CheckboxStyle = CheckboxStyle.SOLID
-    ) -> None:
-        """
-        Initialize the checkbox.
-
-        :param click_function: Function to call when the checkbox is clicked.
-        :type click_function: typing.Callable[[], None] | None
-        :param click_event: Event to post when the checkbox is clicked.
-        :type click_event: forge.core.managers.event.Event | None
-        :param value: Current checked value of the checkbox; defaults to False.
-        :type value: bool
-        :param style: Style of the checkbox; defaults to a solid fill style.
-        :type style: CheckboxStyle
-        """
+        self.value = value
         self.click_function = click_function
         self.click_event = click_event
-        self.value = value
         self.style = style
 
-        self._id = forge.core.utils.id.generate_random_id()
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the checkbox.
-
-        :return: Simple string with checkbox data.
-        :rtype: str
-        """
-        return f'Checkbox -> Value: {self.value}, ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
-               f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
-
-    def __str__(self) -> str:
-        """
-        String representation of the checkbox.
-
-        :return: Detailed string with checkbox data.
-        :rtype: str
-        """
-        return f'Forge Checkbox -> Value: {self.value}, ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
-               f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
-
-    def id(self) -> int:
-        """
-        Get the unique ID of the checkbox.
-
-        :return: ID of the checkbox.
-        :rtype: int
-        """
-        return self._id
-
-    def add_to_renderer(self) -> None:
-        """
-        Add the checkbox and its text to their renderers respectively.
-        """
-        forge.core.engine.renderer.get_master_renderer().add_component(self)
-
+    @abstractmethod
     def is_clicked(self) -> bool:
-        """
-        Check if the checkbox is clicked or not.
-
-        :return: True if the checkbox is clicked; else False.
-        :rtype: bool
-        """
-
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
-        """
-        Render the checkbox and its elements to the display.
-
-        :param display: Display to which the checkbox and its elements are to be rendered.
-        :type display: forge.core.utils.aliases.Surface
-        """
+        """"""
 
     def update(self) -> None:
-        """
-        Update the checkbox.
-        """
         if self.is_clicked():
             self.value = not self.value
 
@@ -130,145 +50,64 @@ class Checkbox(forge.hearth.components.base.UIComponent):
             if self.click_event is not None:
                 self.click_event.post()
 
+        super().update()
+
 
 class SquareCheckbox(Checkbox):
-    """
-    Square checkbox class in Hearth.
-    """
-
     __slots__ = 'square'
 
-    def __init__(
-            self,
-            top_left: forge.core.physics.vector.Vector2D, size: int,
-            color: forge.core.engine.color.Color,
-            click_function: typing.Callable[[], None] | None,
-            click_event: forge.core.managers.event.Event | None,
-            parent: forge.hearth.elements.base.UIElement | None = None,
-            line_width: int = 0,
-            corner_radius: int | None = None,
-            border: forge.hearth.elements.base.Border | None = None,
-            value: bool = False,
-            style: CheckboxStyle = CheckboxStyle.SOLID
-    ) -> None:
-        """
-        Initialize the square checkbox.
+    def __init__(self, top_left: Vector2D, size: int, color: Color, value: bool, children: list[UIElement | Shape],
+                 line_width: int = 0, corner_radius: Optional[int] = None, border: Optional[Border] = None,
+                 style: CheckboxStyle = CheckboxStyle.SOLID, click_function: Optional[Callable[[], None]] = None,
+                 click_event: Optional[Event] = None) -> None:
+        super().__init__(value, children, style, click_function, click_event)
 
-        :param top_left: Top-left vertex position of the checkbox.
-        :type top_left: forge.core.physics.vector.Vector2D
-        :param size: Size of the sides of the square of the checkbox.
-        :type size: int
-        :param color: Color of the checkbox.
-        :type color: forge.core.engine.color.Color
-        :param click_function: Function to call when the checkbox is clicked.
-        :type click_function: typing.Callable[[], None] | None
-        :param click_event: Event to post when the checkbox is clicked.
-        :type click_event: forge.core.managers.event.Event | None
-        :param parent: Parent of the checkbox; defaults to None.
-        :type parent: forge.hearth.elements.base.UIElement | None
-        :param line_width: Width of the checkbox line; defaults to 0.
-        :type line_width: int
-        :param corner_radius: Radii of the corners of the checkbox; defaults to None.
-        :type corner_radius: int | None
-        :param border: Border of the checkbox; defaults to None.
-        :type border:  forge.hearth.elements.shapes.Border | None
-        :param value: Current checked value of the checkbox; defaults to False.
-        :type value: bool
-        :param style: Style of the checkbox; defaults to a solid fill style.
-        :type style: CheckboxStyle
-        """
-        super().__init__(click_function, click_event, value, style)
-
-        self.children = []
-
-        self.square = forge.hearth.elements.shapes.Rectangle(
-            top_left, size, size, color, parent, line_width, corner_radius, border
+        self.square = Rectangle(
+            top_left, size, size, color, line_width=line_width, corner_radius=corner_radius,
+            border=border
         )
 
-    def __repr__(self) -> str:
-        """
-        Internal representation of the square checkbox.
-
-        :return: Simple string with square checkbox data.
-        :rtype: str
-        """
-        return f'Square Checkbox -> Value: {self.value}, ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
-               f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
-
-    def __str__(self) -> str:
-        """
-        String representation of the square checkbox.
-
-        :return: Detailed string with square checkbox data.
-        :rtype: str
-        """
-        return f'Forge Square Checkbox -> Value: {self.value}, Square: ({self.square.__str__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
-               f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
-
-    def add_to_renderer(self) -> None:
-        """
-        Add the checkbox and its text to their renderers respectively.
-        """
-        super().add_to_renderer()
-        self.square.add_to_renderer()
-
     def is_clicked(self) -> bool:
-        """
-        Check if the checkbox is clicked or not.
-
-        :return: True if the checkbox is clicked; else False.
-        :rtype: bool
-        """
-        mouse_position: forge.core.physics.vector.Vector2D = forge.core.managers.mouse.position()
-
-        if forge.core.managers.mouse.is_clicked(forge.core.managers.mouse.MouseButton.LEFT):
-            return forge.hearth.utils.bounds.point_within_rectangle(
-                mouse_position,
-                self.square.top_left, self.square.width, self.square.height
+        if mouse.is_clicked(MouseButton.LEFT):
+            return bounds.point_within_rectangle(
+                mouse.position(), self.square.top_left, self.square.width, self.square.height
             )
 
         return False
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
-        """
-        Render the checkbox and its elements to the display.
-
-        :param display: Display to which the checkbox and its elements are to be rendered.
-        :type display: forge.core.utils.aliases.Surface
-        """
+    def render(self, display: Surface) -> None:
         if self.value:
             match self.style:
                 case CheckboxStyle.SOLID:
                     self.square.line_width = 0
 
                 case CheckboxStyle.BORDERED:
-                    sub_square = forge.hearth.elements.shapes.Rectangle(
-                        self.square.top_left + forge.core.physics.vector.Vector2D(8, 8),
-                        self.square.width - 16, self.square.height - 16,
+                    sub_square = Rectangle(
+                        self.square.top_left + Vector2D(PADDING // 2, PADDING // 2),
+                        self.square.width - PADDING, self.square.height - PADDING,
                         self.square.color, corner_radius=self.square.corner_radius, border=self.square.border
                     )
+
                     sub_square.render(display)
 
                 case CheckboxStyle.CHECKED:
-                    start_point = forge.core.physics.vector.Vector2D(
-                        self.square.top_left.x + forge.hearth.settings.PADDING,
-                        self.square.top_left.y + (self.square.height * 0.75) - forge.hearth.settings.PADDING
+                    start_point = Vector2D(
+                        self.square.top_left.x + PADDING,
+                        self.square.top_left.y + (self.square.height * 0.75) - PADDING
                     )
 
-                    mid_point = forge.core.physics.vector.Vector2D(
-                        self.square.top_left.x + (self.square.width * 0.25) + forge.hearth.settings.PADDING,
-                        self.square.top_left.y + self.square.height - forge.hearth.settings.PADDING
+                    mid_point = Vector2D(
+                        self.square.top_left.x + (self.square.width * 0.25) + PADDING,
+                        self.square.top_left.y + self.square.height - PADDING
                     )
 
-                    end_point = forge.core.physics.vector.Vector2D(
-                        self.square.top_left.x + (self.square.width * 0.75) + forge.hearth.settings.PADDING,
-                        self.square.top_left.y + forge.hearth.settings.PADDING
+                    end_point = Vector2D(
+                        self.square.top_left.x + (self.square.width * 0.75) + PADDING,
+                        self.square.top_left.y + PADDING
                     )
 
-                    tick_1 = forge.hearth.elements.shapes.Line(start_point, mid_point, self.square.color, line_width=3)
-                    tick_2 = forge.hearth.elements.shapes.Line(mid_point, end_point, self.square.color, line_width=3)
+                    tick_1 = Line(start_point, mid_point, self.square.color, width=3)
+                    tick_2 = Line(mid_point, end_point, self.square.color, width=3)
 
                     tick_1.render(display)
                     tick_2.render(display)
@@ -276,145 +115,100 @@ class SquareCheckbox(Checkbox):
         else:
             self.square.line_width = 3
 
+        self.square.render(display)
+
         super().render(display)
 
 
-class CircularCheckbox(Checkbox):
-    """
-    Circular checkbox class in Hearth.
-    """
-
+class CircleCheckbox(Checkbox):
     __slots__ = 'circle'
 
-    def __init__(
-            self,
-            center: forge.core.physics.vector.Vector2D, radius: int,
-            color: forge.core.engine.color.Color,
-            click_function: typing.Callable[[], None] | None,
-            click_event: forge.core.managers.event.Event | None,
-            parent: forge.hearth.elements.base.UIElement | None = None,
-            line_width: int = 0,
-            border: forge.hearth.elements.base.Border | None = None,
-            value: bool = False,
-            style: CheckboxStyle = CheckboxStyle.SOLID
-    ) -> None:
-        """
-        Initialize the circle checkbox.
-
-        :param center: Center of the checkbox.
-        :type center: forge.core.physics.vector.Vector2D
-        :param radius: Radius of the checkbox.
-        :type radius: int
-        :param color: Color of the checkbox.
-        :type color: forge.core.engine.color.Color
-        :param click_function: Function to call when the checkbox is clicked.
-        :type click_function: typing.Callable[[], None] | None
-        :param click_event: Event to post when the checkbox is clicked.
-        :type click_event: forge.core.managers.event.Event | None
-        :param parent: Parent of the checkbox; defaults to None.
-        :type parent: forge.hearth.elements.base.UIElement | None
-        :param line_width: Width of the checkbox line; defaults to 0.
-        :type line_width: int
-        :param border: Border of the checkbox; defaults to None.
-        :type border:  forge.hearth.elements.shapes.Border | None
-        :param value: Current checked value of the checkbox; defaults to False.
-        :type value: bool
-        :param style: Style of the checkbox; defaults to a solid fill style.
-        :type style: CheckboxStyle
-        """
-        super().__init__(click_function, click_event, value, style)
-
-        self.children = []
-
-        self.circle = forge.hearth.elements.shapes.Circle(
-            center, radius, color, parent, line_width, border
-        )
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the circular checkbox.
-
-        :return: Simple string with circular checkbox data.
-        :rtype: str
-        """
-        return f'Circular Checkbox -> Value: {self.value}, ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
-               f'On Click Event: ({self.click_event.__repr__() if self.click_event else None})'
-
-    def __str__(self) -> str:
-        """
-        String representation of the circular checkbox.
-
-        :return: Detailed string with circular checkbox information.
-        :rtype: str
-        """
-        return f'Forge Circular Checkbox -> Value: {self.value}, Circle: ({self.circle.__str__()}), ' \
-               f'On Click Function: {self.click_function.__name__ if self.click_function else None}, ' \
-               f'On Click Event: ({self.click_event.__str__() if self.click_event else None})'
-
-    def add_to_renderer(self) -> None:
-        """
-        Add the checkbox and its text to their renderers respectively.
-        """
-        super().add_to_renderer()
-        self.circle.add_to_renderer()
+    def __init__(self, center: Vector2D, radius: int, color: Color, value: bool, children: list[UIElement | Shape],
+                 line_width: int = 0, border: Optional[Border] = None, style: CheckboxStyle = CheckboxStyle.SOLID,
+                 click_function: Optional[Callable[[], None]] = None, click_event: Optional[Event] = None) -> None:
+        super().__init__(value, children, style, click_function, click_event)
+        self.circle = Circle(center, radius, color, line_width=line_width, border=border)
 
     def is_clicked(self) -> bool:
-        """
-        Check if the checkbox is clicked or not.
-
-        :return: True if the checkbox is clicked; else False.
-        :rtype: bool
-        """
-        mouse_position: forge.core.physics.vector.Vector2D = forge.core.managers.mouse.position()
-
-        if forge.core.managers.mouse.is_clicked(forge.core.managers.mouse.MouseButton.LEFT):
-            return forge.hearth.utils.bounds.point_within_circle(mouse_position, self.circle.center, self.circle.radius)
+        if mouse.is_clicked(MouseButton.LEFT):
+            return bounds.point_within_circle(mouse.position(), self.circle.center, self.circle.radius)
 
         return False
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
-        """
-        Render the checkbox and its elements to the display.
-
-        :param display: Display to which the checkbox and its elements are to be rendered.
-        :type display: forge.core.utils.aliases.Surface
-        """
+    def render(self, display: Surface) -> None:
         if self.value:
             match self.style:
                 case CheckboxStyle.SOLID:
                     self.circle.line_width = 0
 
                 case CheckboxStyle.BORDERED:
-                    sub_circle = forge.hearth.elements.shapes.Circle(
-                        self.circle.center, self.circle.radius - 8, self.circle.color, border=self.circle.border
+                    sub_circle = Circle(
+                        self.circle.center, self.circle.radius - PADDING // 2, self.circle.color,
+                        border=self.circle.border
                     )
 
                     sub_circle.render(display)
 
                 case CheckboxStyle.CHECKED:
-                    start_point = forge.core.physics.vector.Vector2D(
-                        self.circle.center.x - self.circle.radius + (forge.hearth.settings.PADDING * 2),
+                    start_point = Vector2D(
+                        self.circle.center.x - self.circle.radius + (PADDING * 2),
                         self.circle.center.y + (self.circle.radius // 2)
                     )
 
-                    mid_point = forge.core.physics.vector.Vector2D(
-                        self.circle.center.x - forge.hearth.settings.PADDING,
-                        self.circle.center.y + self.circle.radius - forge.hearth.settings.PADDING
+                    mid_point = Vector2D(
+                        self.circle.center.x - PADDING,
+                        self.circle.center.y + self.circle.radius - PADDING
                     )
 
-                    end_point = forge.core.physics.vector.Vector2D(
-                        self.circle.center.x + self.circle.radius - (forge.hearth.settings.PADDING * 2),
+                    end_point = Vector2D(
+                        self.circle.center.x + self.circle.radius - (PADDING * 2),
                         self.circle.center.y - (self.circle.radius // 2)
                     )
 
-                    tick_1 = forge.hearth.elements.shapes.Line(start_point, mid_point, self.circle.color, line_width=3)
-                    tick_2 = forge.hearth.elements.shapes.Line(mid_point, end_point, self.circle.color, line_width=3)
+                    tick_1 = Line(start_point, mid_point, self.circle.color, width=3)
+                    tick_2 = Line(mid_point, end_point, self.circle.color, width=3)
 
-                    tick_1.render(display)
-                    tick_2.render(display)
+                    tick_1.add_to_renderer()
+                    tick_2.add_to_renderer()
 
         else:
             self.circle.line_width = 3
+
+        self.circle.render(display)
+
+        super().render(display)
+
+
+class PolygonCheckbox(Checkbox):
+    __slots__ = 'polygon'
+
+    def __init__(self, vertices: list[Vector2D], color: Color, value: bool, children: list[UIElement | Shape],
+                 line_width: int = 0, border: Optional[Border] = None, style: CheckboxStyle = CheckboxStyle.SOLID,
+                 click_function: Optional[Callable[[], None]] = None, click_event: Optional[Event] = None) -> None:
+        super().__init__(value, children, style, click_function, click_event)
+        self.polygon = Polygon(vertices, color, line_width=line_width, border=border)
+
+    def is_clicked(self) -> bool:
+        if mouse.is_clicked(MouseButton.LEFT):
+            return bounds.point_within_polygon(mouse.position(), self.polygon.vertices)
+
+        return False
+
+    def render(self, display: Surface) -> None:
+        if self.value:
+            match self.style:
+                case CheckboxStyle.SOLID:
+                    self.polygon.line_width = 0
+
+                case CheckboxStyle.BORDERED:
+                    raise NotImplementedError('Bordered style not implemented for polygons.')
+
+                case CheckboxStyle.CHECKED:
+                    raise NotImplementedError('Checked style not implemented for polygons.')
+
+        else:
+            self.polygon.line_width = 3
+
+        self.polygon.render(display)
 
         super().render(display)

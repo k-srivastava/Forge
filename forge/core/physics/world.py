@@ -4,8 +4,8 @@ Game environment in Forge.
 import forge.core.utils.exceptions
 
 # Constraints on the body sizes.
-MIN_BODY_AREA: float = 0.01 * 0.01
-MAX_BODY_AREA: float = 64 * 64
+MIN_BODY_AREA: float = 5 * 5
+MAX_BODY_AREA: float = 2000 * 2000
 
 # Constraints on the body densities.
 MIN_BODY_DENSITY: float = 0.25

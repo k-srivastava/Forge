@@ -1,147 +1,106 @@
-"""
-Shapes used throughout Hearth to create more complex UI elements.
-"""
-import copy
-import enum
+"""Shapes used throughout Hearth."""
+from copy import copy
+from enum import IntEnum, auto
+from functools import cached_property
+from math import pi
+from typing import Optional
 
 import pygame
 
-import forge.core.engine.color
-import forge.core.engine.constants
-import forge.core.engine.renderer
-import forge.core.physics.vector
-import forge.core.utils.aliases
-import forge.core.utils.base
-import forge.core.utils.id
-import forge.hearth.elements.base
-import forge.hearth.settings
+from forge.core.engine.color import Color
+from forge.core.physics import vector
+from forge.core.physics.vector import Vector2D
+from forge.core.utils.aliases import Surface
+from forge.hearth.elements.base import Shape, UIElement
+from forge.hearth.elements.border import Border
 
 
-class Shapes(enum.IntEnum):
-    """
-    Enumeration of shapes supported by Hearth.
-    """
-    RECTANGLE = enum.auto()
-    CIRCLE = enum.auto()
-    POLYGON = enum.auto()
+class ShapeType(IntEnum):
+    """Enumeration of shapes supported by Hearth."""
+    RECTANGLE = auto()
+    CIRCLE = auto()
+    POLYGON = auto()
 
 
-class Line(forge.hearth.elements.base.UIElement):
-    """
-    Basic lines in Hearth.
-    """
+class Line(UIElement):
+    """Basic lines in Hearth."""
+    __slots__ = 'start_point', 'end_point', 'width'
 
-    __slots__ = 'start_point', 'end_point', 'line_width'
-
-    def __init__(
-            self,
-            start_point: forge.core.physics.vector.Vector2D,
-            end_point: forge.core.physics.vector.Vector2D,
-            color: forge.core.engine.color.Color,
-            parent: forge.hearth.elements.base.UIElement | None = None,
-            line_width: int = 1
-    ) -> None:
+    def __init__(self, start_point: Vector2D, end_point: Vector2D, color: Color,
+                 parent: Optional[UIElement | Shape] = None, width: int = 1) -> None:
         """
         Initialize the line.
 
         :param start_point: Starting point of the line.
-        :type start_point: forge.core.physics.vector.Vector2D
+        :type start_point: Vector2D
         :param end_point: Ending point of the line.
-        :type end_point: forge.core.physics.vector.Vector2D
+        :type end_point: Vector2D
         :param color: Color of the line.
-        :type color: forge.core.engine.color.Color
+        :type color: Color
         :param parent: Parent of the line; defaults to None.
-        :type parent: forge.hearth.elements.base.UIElement | None
-        :param line_width: Width of the line; defaults to 1.
-        :type line_width: int
+        :type parent: Optional[UIElement | Shape]
+        :param width: Width of the line; defaults to 1.
+        :type width: int
         """
         self.start_point = start_point
         self.end_point = end_point
-        self.parent = parent
-        self.children = []
+        self.width = width
 
-        self.color = color
-        self.line_width = line_width
-
-        self._id = forge.core.utils.id.generate_random_id()
-
-        if self.parent is not None:
-            self.parent.children.append(self)
-
-            if forge.hearth.settings.NON_CONSTRAINED_CHILDREN_USE_RELATIVE_POSITIONING:
-                calculate_relative_positions(self.parent, [self.start_point, self.end_point])
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the line.
-
-        :return: Simple string with line data.
-        :rtype: str
-        """
-        return f'Line -> Start Point: ({self.start_point.__repr__()}), End Point: ({self.end_point.__repr__()}), ' \
-               f'Child Count: {len(self.children)}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the line.
-
-        :return: Detailed string with line data.
-        :rtype: str
-        """
-        return f'Forge Line -> Start Point: ({self.start_point.__str__()}), End Point: ({self.end_point.__str__()}), ' \
-               f'Center: ({self.center.__str__()}), Color: ({self.color.__str__()}), ' \
-               f'Parent: ({self.parent.__str__()}), Children: {self.children}'
+        super().__init__(color, parent)
 
     @property
-    def center(self) -> forge.core.physics.vector.Vector2D:
+    def top_left(self) -> Vector2D:
         """
-        Calculate the center of the line.
+        Top-left of the line.
+
+        :return: Top-left of the line.
+        :rtype: Vector2D
+        """
+        return Vector2D(min(self.start_point.x, self.end_point.x), min(self.start_point.y, self.end_point.y))
+
+    @property
+    def center(self) -> Vector2D:
+        """
+        Center of the line.
 
         :return: Center of the line.
-        :rtype: forge.core.physics.vector.Vector2D
+        :rtype: Vector2D
         """
         return (self.start_point + self.end_point) / 2
 
-    def id(self) -> int:
+    @property
+    def length(self) -> float:
         """
-        Get the unique ID of the line.
+        Length of the line.
 
-        :return: ID of the line.
-        :rtype: int
+        :return: Length of the line.
+        :rtype: float
         """
-        return self._id
+        return vector.distance_between(self.start_point, self.end_point)
 
-    def add_to_renderer(self) -> None:
+    @property
+    def length_squared(self) -> float:
         """
-        Add the line to a renderer.
-        """
-        forge.core.engine.renderer.get_master_renderer().add_shape(self)
+        Square of the length of the line. Faster due to lack of a square root operation.
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+        :return: Square of the length of the line.
+        :rtype: float
+        """
+        return vector.distance_squared_between(self.start_point, self.end_point)
+
+    def render(self, display: Surface) -> None:
         """
         Render the line to the display.
 
         :param display: Display to which the line is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
         pygame.draw.line(
-            display,
-            self.color.as_pygame_color(),
-            self.start_point.as_tuple(), self.end_point.as_tuple(),
-            self.line_width
+            display, self.color.as_tuple(), self.start_point.as_tuple(), self.end_point.as_tuple(),
+            self.width
         )
 
-        if forge.hearth.settings.AUTO_RENDER_CHILDREN:
-            for child in self.children:
-                child.render(display)
-
-    def update(self) -> None:
-        """
-        Update the line.
-        """
-        if forge.hearth.settings.AUTO_UPDATE_CHILDREN:
-            for child in self.children:
-                child.update()
+        super().render(display)
 
     def as_tuples(self) -> tuple[tuple[float, float], tuple[float, float]]:
         """
@@ -163,181 +122,146 @@ class Line(forge.hearth.elements.base.UIElement):
         return self.start_point.as_pygame_vector(), self.end_point.as_pygame_vector()
 
 
-class Rectangle(forge.hearth.elements.base.Shape):
-    """
-    Basic rectangles in Hearth.
-    """
+class Rectangle(Shape):
+    """Basic rectangles in Hearth."""
+    __slots__ = 'width', 'height', 'corner_radius', '_top_left'
 
-    __slots__ = (
-        'width', 'height', 'line_width', 'corner_radius', '_top_left'
-    )
-
-    def __init__(
-            self,
-            top_left: forge.core.physics.vector.Vector2D, width: int, height: int,
-            color: forge.core.engine.color.Color,
-            parent: forge.hearth.elements.base.UIElement | None = None,
-            line_width: int = 0,
-            corner_radius: int | None = None,
-            border: forge.hearth.elements.base.Border | None = None
-    ) -> None:
+    def __init__(self, top_left: Vector2D, width: int, height: int, color: Color,
+                 parent: Optional[UIElement | Shape] = None, line_width: int = 0, corner_radius: Optional[int] = None,
+                 border: Optional[Border] = None) -> None:
         """
         Initialize the rectangle.
 
-        :param top_left: Top left point of the rectangle.
-        :type top_left: forge.core.physics.vector.Vector2D
+        :param top_left: Top-left point of the rectangle.
+        :type top_left: Vector2D
         :param width: Width of the rectangle.
         :type width: int
         :param height: Height of the rectangle.
         :type height: int
-        :param color: Color of thr rectangle.
-        :type color: forge.core.engine.color.Color
+        :param color: Color of the rectangle.
+        :type color: Color
         :param parent: Parent of the rectangle; defaults to None.
-        :type parent: forge.hearth.elements.base.UIElement | None = None
-        :param line_width: Width of the rectangle line; defaults to 0.
+        :type parent: Optional[UIElement | Shape]
+        :param line_width: Width of the line of the rectangle; defaults to 0 - solid rectangle.
         :type line_width: int
         :param corner_radius: Radii of the corners of the rectangle; defaults to None.
-        :type corner_radius: int | None
+        :type corner_radius: Optional[int]
         :param border: Border of the rectangle; defaults to None.
-        :type border: Border | None
+        :type border: Optional[Border]
+
+        :raises BodyAreaError: Size of the rectangle should be within the given body size constraints, if being checked.
         """
-        self._top_left = top_left
         self.width = width
         self.height = height
-        self.parent = parent
-
-        self.color = color
-        self.line_width = line_width
         self.corner_radius = corner_radius
-        self.border = border
 
-        self._id = forge.core.utils.id.generate_random_id()
+        self._top_left = top_left
 
-        if self.parent is not None:
-            self.parent.children.append(self)
-
-            if forge.hearth.settings.NON_CONSTRAINED_CHILDREN_USE_RELATIVE_POSITIONING:
-                calculate_relative_positions(self.parent, [self.top_left])
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the rectangle.
-
-        :return: Simple string with rectangle data.
-        :rtype: str
-        """
-        return f'Rectangle -> Width: {self.width}, Height: {self.height}, Top Left: ({self.top_left.__repr__()})'
-
-    def __str__(self) -> str:
-        """
-        String representation of the rectangle.
-
-        :return: Detailed string with rectangle information.
-        :rtype: str
-        """
-        return f'Forge Rectangle -> Width: {self.width}, Height: {self.height}, ' \
-               f'Top Left: ({self.top_left.__str__()}), Center: ({self.center.__str__()}), ' \
-               f'Color: ({self.color.__str__()}), Parent: ({self.parent.__str__()})'
+        super().__init__(color, line_width, border, parent)
 
     @property
-    def top_left(self) -> forge.core.physics.vector.Vector2D:
+    def top_left(self) -> Vector2D:
+        """
+        Getter for the top-left-most point of the rectangle.
+
+        :return: Top-left-most point of the rectangle.
+        :rtype: Vector2D
+        """
         return self._top_left
 
     @top_left.setter
-    def top_left(self, value: forge.core.physics.vector.Vector2D) -> None:
+    def top_left(self, value: Vector2D) -> None:
+        """
+        Setter for the top-left-most point of the rectangle.
+
+        :param value: New value of the top-left-most point of the rectangle.
+        :type value: Vector2D
+        """
         self._top_left = value
 
     @property
-    def center(self) -> forge.core.physics.vector.Vector2D:
+    def center(self) -> Vector2D:
         """
-        Calculate the center of the rectangle.
+        Getter for the center point of the rectangle.
 
-        :return: Center of the rectangle.
-        :rtype: forge.core.physics.vector.Vector2D
+        :return: Center point of the rectangle.
+        :rtype: Vector2D
         """
-        return forge.core.physics.vector.Vector2D(
-            self.top_left.x + (self.width // 2),
-            self.top_left.y + (self.height // 2)
-        )
+        return Vector2D(self.top_left.x + (self.width // 2), self.top_left.y + (self.height // 2))
 
     @center.setter
-    def center(self, value: forge.core.physics.vector.Vector2D) -> None:
+    def center(self, value: Vector2D) -> None:
         """
-        Set the center of the rectangle and update the other vertices accordingly.
+        Setter for the center point of the rectangle.
 
-        :param value: New center of the rectangle.
-        :type value: forge.core.physics.vector.Vector2D
+        :param value: New value of the center of the rectangle.
+        :type value: Vector2D
         """
-        self.top_left = forge.core.physics.vector.Vector2D(value.x - self.width // 2, value.y - self.height // 2)
+        self._top_left = Vector2D(value.x - self.width // 2, value.y - self.height // 2)
 
-    def id(self) -> int:
+    @cached_property
+    def area(self) -> float:
         """
-        Get the unique ID of the rectangle.
+        Getter for the area of the rectangle.
 
-        :return: ID of the rectangle.
-        :rtype: int
+        :return: Area of the rectangle.
+        :rtype: float
         """
-        return self._id
+        return float(self.width * self.height)
 
-    def vertices(self, clockwise: bool = True) -> tuple[
-        forge.core.physics.vector.Vector2D,
-        forge.core.physics.vector.Vector2D,
-        forge.core.physics.vector.Vector2D,
-        forge.core.physics.vector.Vector2D
-    ]:
+    @cached_property
+    def perimeter(self) -> float:
+        """
+        Getter for the perimeter of the rectangle.
+
+        :return: Perimeter of the rectangle.
+        :rtype: float
+        """
+        return float((self.width + self.height) * 2)
+
+    def vertices(self, clockwise: bool = True) -> tuple[Vector2D, Vector2D, Vector2D, Vector2D]:
         """
         Retrieve the vertices of the rectangle.
 
         :param clockwise: Whether to get the vertices in clockwise or counter-clockwise order; defaults to True.
         :type clockwise: bool
+
         :return: All the vertices of the rectangle.
-        :rtype: tuple[forge.core.physics.vector.Vector2D, forge.core.physics.vector.Vector2D,
-                forge.core.physics.vector.Vector2D, forge.core.physics.vector.Vector2D]
+        :rtype: tuple[Vector2D, Vector2D, Vector2D, Vector2D]
         """
-        top_left = copy.copy(self.top_left)
-        top_right = forge.core.physics.vector.Vector2D(self.top_left.x + self.width, self.top_left.y)
-        bottom_left = forge.core.physics.vector.Vector2D(self.top_left.x, self.top_left.y + self.height)
-        bottom_right = forge.core.physics.vector.Vector2D(self.top_left.x + self.width, self.top_left.y + self.height)
+        top_left = copy(self._top_left)
+        top_right = Vector2D(self._top_left.x + self.width, self._top_left.y)
+        bottom_left = Vector2D(self._top_left.x, self._top_left.y + self.height)
+        bottom_right = Vector2D(self._top_left.x + self.width, self._top_left.y + self.height)
 
         if clockwise:
             return top_left, top_right, bottom_right, bottom_left
 
         return top_left, bottom_left, bottom_right, top_right
 
-    def add_to_renderer(self) -> None:
-        """
-        Add the rectangle to a renderer.
-        """
-        forge.core.engine.renderer.get_master_renderer().add_shape(self)
-
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render the rectangle to the display.
 
         :param display: Display to which the rectangle is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
         pygame.draw.rect(
-            display,
-            self.color.as_pygame_color(), self.as_pygame_rect(),
-            self.line_width, self.corner_radius if self.corner_radius is not None else -1
+            display, self.color.as_tuple(), self.as_pygame_rect(), self.line_width,
+            self.corner_radius if self.corner_radius is not None else -1
         )
 
         if self.border is not None:
             pygame.draw.rect(
-                display,
-                self.border.color.as_pygame_color(), self.as_pygame_rect(),
-                self.border.width, self.border.radius if self.border.radius is not None else -1
+                display, self.border.color.as_tuple(), self.as_pygame_rect(), self.border.width,
+                self.border.radius if self.border.radius is not None else -1
             )
 
-    def update(self) -> None:
-        """
-        Update the rectangle.
-        """
+        super().render(display)
 
     def as_pygame_rect(self) -> pygame.rect.Rect:
         """
-        Return the vertices the line as Pygame rect. Beneficial for internal interoperability with Pygame.
+        Return the vertices of the rectangle as a Pygame rect. Beneficial for interoperability with Pygame.
 
         :return: Pygame rect bounds of the rectangle.
         :rtype: pygame.rect.Rect
@@ -345,322 +269,232 @@ class Rectangle(forge.hearth.elements.base.Shape):
         return pygame.rect.Rect(self.top_left.x, self.top_left.y, self.width, self.height)
 
 
-class Circle(forge.hearth.elements.base.Shape):
-    """
-    Basic circle in Hearth.
-    """
+class Circle(Shape):
+    """Basic circles in Hearth."""
+    __slots__ = 'radius', 'line_width'
 
-    __slots__ = 'radius', 'line_width', '_center'
-
-    def __init__(
-            self,
-            center: forge.core.physics.vector.Vector2D, radius: int,
-            color: forge.core.engine.color.Color,
-            parent: forge.hearth.elements.base.UIElement | None = None,
-            line_width: int = 0,
-            border: forge.hearth.elements.base.Border | None = None
-    ) -> None:
+    def __init__(self, center: Vector2D, radius: int, color: Color, parent: Optional[UIElement | Shape] = None,
+                 line_width: int = 0, border: Optional[Border] = None) -> None:
         """
         Initialize the circle.
 
         :param center: Center of the circle.
-        :type center: forge.core.physics.vector.Vector2D
+        :type center: Vector2D
         :param radius: Radius of the circle.
         :type radius: int
-        :param color: Color of the center.
-        :type color: forge.core.engine.color.Color
+        :param color: Color of the circle.
+        :type color: Color
         :param parent: Parent of the circle; defaults to None.
-        :type parent: forge.hearth.elements.base.UIElement | None
-        :param line_width: Width of the circle line; defaults to 0.
+        :type parent: Optional[UIElement | Shape]
+        :param line_width: Width of the line of the circle; defaults to 0 - solid circle.
         :type line_width: int
         :param border: Border of the circle; defaults to None.
-        :type border: Border | None
+        :type border: Optional[Border]
+
+        :raises BodyAreaError: Size of the circle should be within the given body size constraints, if being checked.
         """
-        self._center = center
         self.radius = radius
-        self.parent = parent
+        self._center = center
 
-        self.color = color
-        self.line_width = line_width
-        self.border = border
-
-        self._id = forge.core.utils.id.generate_random_id()
-
-        if self.parent is not None:
-            self.parent.children.append(self)
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the circle.
-
-        :return: Simple string with circle data.
-        :rtype: str
-        """
-        return f'Circle -> Radius, Center: ({self.center.__repr__()})'
-
-    def __str__(self) -> str:
-        """
-        String representation of the circle.
-
-        :return: Detailed string with circle information.
-        :rtype: str
-        """
-        return f'Forge Circle -> Radius: {self.radius}, Center: ({self.center.__str__()}), ' \
-               f'Top Left: ({self.top_left.__str__()}), Color: ({self.color.__str__()}), ' \
-               f'Parent: ({self.parent.__str__()})'
+        super().__init__(color, line_width, border, parent)
 
     @property
-    def center(self) -> forge.core.physics.vector.Vector2D:
+    def top_left(self) -> Vector2D:
+        """
+        Getter for the top-left-most point of the circle.
+
+        :return: Top-left-most point of the circle.
+        :rtype: Vector2D
+        """
+        return self._center - Vector2D(self.radius, self.radius)
+
+    @top_left.setter
+    def top_left(self, value: Vector2D) -> None:
+        """
+        Setter for the top-left-most point of the circle.
+
+        :param value: New value of the top-left-most point of the circle.
+        :type value: Vector2D
+        """
+        self._center = value + Vector2D(self.radius, self.radius)
+
+    @property
+    def center(self) -> Vector2D:
+        """
+        Getter for the center point of the circle.
+
+        :return: Center point of the circle.
+        :rtype: Vector2D
+        """
         return self._center
 
     @center.setter
-    def center(self, value: forge.core.physics.vector.Vector2D) -> None:
+    def center(self, value: Vector2D) -> None:
+        """
+        Setter for the center point of the circle.
+
+        :param value: New value of the center of the circle.
+        :type value: Vector2D
+        """
         self._center = value
 
-    @property
-    def top_left(self) -> forge.core.physics.vector.Vector2D:
+    @cached_property
+    def area(self) -> float:
         """
-        Calculate the top left of the circle.
+        Getter for the area of the circle.
 
-        :return: Top left of the circle.
-        :rtype: forge.core.physics.vector.Vector2D
+        :return: Area of the circle.
+        :rtype: float
         """
-        return self.center - forge.core.physics.vector.Vector2D(self.radius, self.radius)
+        return pi * self.radius ** 2
 
-    @top_left.setter
-    def top_left(self, value: forge.core.physics.vector.Vector2D) -> None:
+    @cached_property
+    def perimeter(self) -> float:
         """
-        Set the top left of the circle and update the center accordingly.
+        Getter for the perimeter of the circle.
 
-        :param value: New top left of the circle.
-        :type value: forge.core.physics.vector.Vector2D
+        :return: Perimeter of the circle.
+        :rtype: float
         """
-        self.center = value + forge.core.physics.vector.Vector2D(self.radius, self.radius)
+        return 2 * pi * self.radius
 
-    def id(self) -> int:
-        """
-        Get the unique ID of the circle.
-
-        :return: ID of the circle.
-        :rtype: int
-        """
-        return self._id
-
-    def add_to_renderer(self) -> None:
-        """
-        Add the circle to a renderer.
-        """
-        forge.core.engine.renderer.get_master_renderer().add_shape(self)
-
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render the circle to the display.
 
         :param display: Display to which the circle is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
         pygame.draw.circle(
-            display,
-            self.color.as_pygame_color(),
-            self.center.as_tuple(), self.radius,
-            self.line_width
+            display, self.color.as_tuple(), self.center.as_tuple(), self.radius, self.line_width
         )
 
         if self.border is not None:
             pygame.draw.circle(
-                display,
-                self.border.color.as_pygame_color(),
-                self.center.as_tuple(), self.radius,
-                self.border.width
+                display, self.border.color.as_tuple(), self.center.as_tuple(), self.radius, self.border.width
             )
 
-    def update(self) -> None:
-        """"""
+        super().render(display)
 
 
-class Polygon(forge.hearth.elements.base.Shape):
-    """
-    Basic polygon in Hearth.
-    """
+class Polygon(Shape):
+    """Basic polygons in Hearth."""
+    __slots__ = 'vertices'
 
-    __slots__ = 'vertices', 'line_width'
-
-    def __init__(
-            self,
-            vertices: list[forge.core.physics.vector.Vector2D],
-            color: forge.core.engine.color.Color,
-            parent: forge.hearth.elements.base.UIElement | None = None,
-            line_width: int = 0,
-            border: forge.hearth.elements.base.Border | None = None
-    ) -> None:
+    def __init__(self, vertices: list[Vector2D], color: Color, parent: Optional[UIElement | Shape] = None,
+                 line_width: int = 0, border: Optional[Border] = None) -> None:
         """
         Initialize the polygon.
 
         :param vertices: Vertices of the polygon.
-        :type vertices: list[forge.core.physics.vector.Vector2D]
+        :type vertices: list[Vector2D]
         :param color: Color of the polygon.
-        :type color: forge.core.engine.color.Color
+        :type color: Color
         :param parent: Parent of the polygon; defaults to None.
-        :type parent: forge.hearth.elements.base.UIElement | None
+        :type parent: Optional[UIElement | Shape]
         :param line_width: Width of the polygon line; defaults to 0.
         :type line_width: int
-        :param border: Border of the circle; defaults to None.
-        :type border: Border | None
+        :param border: Border of the polygon; defaults to None.
+        :type border: Optional[Border]
         """
         self.vertices = vertices
-        self.parent = parent
-
-        self.color = color
-        self.line_width = line_width
-        self.border = border
-
-        self._id = forge.core.utils.id.generate_random_id()
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the polygon.
-
-        :return: Simple string with polygon data.
-        :rtype: str
-        """
-        return f'Polygon -> Vertex Count: {len(self.vertices)}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the polygon.
-
-        :return: Detailed string with polygon information.
-        :rtype: str
-        """
-        return f'Forge Polygon -> Vertices: {self.vertices}, Color: ({self.color.__str__()}), ' \
-               f'Parent: ({self.parent.__str__()})'
+        super().__init__(color, line_width, border, parent)
 
     @property
-    def top_left(self) -> forge.core.physics.vector.Vector2D:
+    def top_left(self) -> Vector2D:
         """
-        Calculate the top left of the polygon.
+        Getter for the top-left-most point of the polygon.
 
-        :return: Top left of the polygon.
-        :rtype: forge.core.physics.vector.Vector2D
+        :return: Top-left-most point of the polygon.
+        :rtype: Vector2D
         """
-        vertices = self.vertices
+        return Vector2D(min(vertex.x for vertex in self.vertices), min(vertex.y for vertex in self.vertices))
 
-        return forge.core.physics.vector.Vector2D(
-            min([vertex.x for vertex in vertices]),
-            min([vertex.y for vertex in vertices])
-        )
+    @top_left.setter
+    def top_left(self, value: Vector2D) -> None:
+        """
+        Setter for the top-left-most point of the polygon.
+
+        :param value: New value of the top-left-most point of the polygon.
+        :type value: Vector2D
+        """
+        displacement: Vector2D = value - self.top_left
+
+        for vertex in self.vertices:
+            vertex += displacement
 
     @property
-    def center(self) -> forge.core.physics.vector.Vector2D:
+    def center(self) -> Vector2D:
         """
-        Calculate the center of the circle.
+        Getter for the center point of the polygon.
 
-        :return: Center of the polygon.
-        :rtype: forge.core.physics.vector.Vector2D
+        :return: Center point of the polygon.
+        :rtype: vector.Vector2D
         """
-        total = forge.core.physics.vector.zero()
+        total = vector.zero()
 
         for vertex in self.vertices:
             total += vertex
 
         return total / len(self.vertices)
 
-    def id(self) -> int:
+    @center.setter
+    def center(self, value: Vector2D) -> None:
         """
-        Get the unique ID of the polygon.
+        Setter for the center point of the polygon.
 
-        :return: ID of the polygon.
-        :rtype: int
+        :param value: New value of the center of the polygon.
+        :type value: Vector2D
         """
-        return self._id
+        displacement: Vector2D = value - self.center
 
-    def add_to_renderer(self) -> None:
-        """
-        Add the polygon to a renderer.
-        """
-        forge.core.engine.renderer.get_master_renderer().add_shape(self)
+        for vertex in self.vertices:
+            vertex += displacement
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    @cached_property
+    def area(self) -> float:
+        """
+        Getter for the area of the polygon.
+
+        :return: Area of the polygon.
+        :rtype: float
+        """
+        # TODO: Implement the area of a polygon.
+        raise NotImplementedError('Area of the polygon not implemented.')
+
+    @cached_property
+    def perimeter(self) -> float:
+        """
+        Getter for the perimeter of the rectangle.
+
+        :return: Perimeter of the rectangle.
+        :rtype: float
+        """
+        length: float = 0
+
+        for i in range(len(self.vertices) - 1):
+            length += vector.distance_between(self.vertices[i], self.vertices[i + 1])
+
+        length += vector.distance_between(self.vertices[-1], self.vertices[0])
+
+        return length
+
+    def render(self, display: Surface) -> None:
         """
         Render the polygon to the display.
 
         :param display: Display to which the polygon is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
+
         pygame.draw.polygon(
-            display,
-            self.color.as_pygame_color(), self.as_tuples(),
-            self.line_width
+            display, self.color.as_tuple(), [vertex.as_tuple() for vertex in self.vertices], self.line_width,
         )
 
         if self.border is not None:
             pygame.draw.polygon(
-                display,
-                self.border.color.as_pygame_color(), self.as_tuples(),
+                display, self.border.color.as_tuple(), [vertex.as_tuple() for vertex in self.vertices],
                 self.border.width
             )
 
-    def update(self) -> None:
-        """
-        Update the polygon.
-        """
-
-    def as_tuples(self) -> list[tuple[float, float]]:
-        """
-        Return the vertices of the polygon as tuples. Beneficial for internal interoperability with Pygame.
-
-        :return: Tuple of the vertices' x and y components respectively.
-        :rtype: list[tuple[float, float]]
-        """
-        return [vertex.as_tuple() for vertex in self.vertices]
-
-    def as_pygame_vectors(self) -> list[pygame.math.Vector2]:
-        """
-        Return the vertices of the polygon as Pygame vectors. Beneficial for internal interoperability with Pygame.
-
-        :return: Tuple of the start and end points as Pygame vectors.
-        :rtype: tuple[pygame.math.Vector2, pygame.math.Vector2]
-        """
-        return [vertex.as_pygame_vector() for vertex in self.vertices]
-
-
-def calculate_relative_positions(
-        parent: forge.hearth.elements.base.UIElement, vertices: list[forge.core.physics.vector.Vector2D]
-) -> None:
-    """
-    Calculate the relative positions of children components given the parent's vertices.
-
-    :param parent: Parent of the UI element.
-    :type parent: forge.hearth.elements.base.UIElement
-    :param vertices: List of vertices of the UI elements.
-    :type vertices: list[forge.core.physics.vector.Vector2D]
-    """
-    parent_type = type(parent)
-
-    if parent_type is Line:
-        parent: Line
-
-        for vertex in vertices:
-            vertex += parent.start_point
-
-    elif parent_type is Rectangle:
-        parent: Rectangle
-
-        for vertex in vertices:
-            vertex += parent.top_left
-
-    elif parent_type is Circle:
-        parent: Circle
-
-        for vertex in vertices:
-            vertex += parent.center
-
-    elif parent_type is Polygon:
-        parent: Polygon
-        top_left = parent.top_left
-
-        for vertex in vertices:
-            vertex += top_left
-
-    else:
-        raise ValueError(f'The UIElement {parent.__repr__()} cannot be a parent of other UIElements.')
+        super().render(display)

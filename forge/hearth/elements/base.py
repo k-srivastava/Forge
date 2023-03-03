@@ -1,54 +1,59 @@
-"""
-Various base classes used throughout Hearth to define UI elements.
-"""
+"""Various base classes used throughout Hearth to define shapes and UI elements."""
 from __future__ import annotations
 
-import abc
-import dataclasses
-import typing
+from abc import abstractmethod
+from copy import copy
+from functools import cached_property
+from typing import Optional, Self, TYPE_CHECKING
 
-import forge.core.engine.color
-import forge.core.physics.vector
-import forge.core.utils.aliases
+from forge.core.engine import renderer
+from forge.core.engine.color import Color
+from forge.core.physics.vector import Vector2D
+from forge.core.physics.world import MAX_BODY_AREA, MIN_BODY_AREA
+from forge.core.utils import id
+from forge.core.utils.aliases import Surface
+from forge.core.utils.base import Renderable
+from forge.core.utils.exceptions import BodyAreaError
+from forge.hearth.elements.border import Border
+
+if TYPE_CHECKING:
+    from forge.hearth.components.base import UIComponent
 
 
-@dataclasses.dataclass(slots=True)
-class Border:
-    """
-    Border for each supported shape in Hearth.
-    """
+class Shape(Renderable):
+    """Shape base class for Hearth."""
+    __slots__ = 'color', 'line_width', 'border', 'parent', 'children', '_id', '_previous_position'
 
-    width: int
-    color: forge.core.engine.color.Color
-    radius: int | None = None  # A border radius is only applicable for rectangles.
-
-    def __repr__(self) -> str:
+    def __init__(self, color: Color, line_width: int = 0, border: Optional[Border] = None,
+                 parent: Optional[UIComponent | UIElement | Shape] = None) -> None:
         """
-        Internal representation of the border.
+        Initialize the shape.
 
-        :return: Simple string with border data.
-        :rtype: str
+        :param color: Color of the shape.
+        :type color: Color
+        :param border: Border of the shape; defaults to None.
+        :type border: Optional[Border]
+        :param parent: Parent of the shape; defaults to None.
+        :type parent: Optional[UIElement | Shape]
+
+        :raises BodyAreaError: Size of the shape should be within the given body size constraints, if being checked.
         """
-        return f'Border -> Width: {self.width}, Radius: {self.radius}, Color: ({self.color.__repr__()})'
+        self.color = color
+        self.line_width = line_width
+        self.border = border
+        self.parent = parent
+        self.children: list[Shape] = []
 
-    def __str__(self) -> str:
-        """
-        String representation of the border.
+        self._id = id.generate_random_id()
+        self._previous_position = copy(self.top_left)
 
-        :return: Detailed string with border data.
-        :rtype: str
-        """
-        return f'Forge Border -> Width: {self.width}, Radius: {self.radius}, Color: ({self.color.__repr__()})'
+        if self.parent is not None:
+            self.top_left += self.parent.top_left
+            self.parent.children.append(self)
 
+        if not MIN_BODY_AREA <= self.area <= MAX_BODY_AREA:
+            raise BodyAreaError(self.area, MIN_BODY_AREA, MAX_BODY_AREA)
 
-class Shape(abc.ABC):
-    """Base shape class for Hearth."""
-    color: forge.core.engine.color.Color
-    border: Border | None
-    parent: UIElement | None
-    _id: int
-
-    @abc.abstractmethod
     def id(self) -> int:
         """
         Get the unique ID of the shape.
@@ -56,79 +61,119 @@ class Shape(abc.ABC):
         :return: ID of the shape.
         :rtype: int
         """
+        return self._id
 
     @property
-    @abc.abstractmethod
-    def top_left(self) -> forge.core.physics.vector.Vector2D:
+    @abstractmethod
+    def top_left(self) -> Vector2D:
         """
         Getter for the top-left-most point of the shape.
 
         :return: Top-left-most point of the shape.
-        :rtype: forge.core.physics.vector.Vector2D
+        :rtype: Vector2D
         """
 
     @top_left.setter
-    @abc.abstractmethod
-    def top_left(self, value: forge.core.physics.vector.Vector2D) -> None:
+    @abstractmethod
+    def top_left(self, value: Vector2D) -> None:
         """
         Setter for the top-left-most point of the shape.
 
         :param value: New value of the top-left-most point of the shape.
-        :type value: forge.core.physics.vector.Vector2D
+        :type value: Vector2D
         """
 
     @property
-    @abc.abstractmethod
-    def center(self) -> forge.core.physics.vector.Vector2D:
+    @abstractmethod
+    def center(self) -> Vector2D:
         """
         Getter for the center point of the shape.
 
-        :return: Center of the shape.
-        :rtype: forge.core.physics.vector.Vector2D
+        :return: Center point of the shape.
+        :rtype: Vector2D
         """
 
     @center.setter
-    @abc.abstractmethod
-    def center(self, value: forge.core.physics.vector.Vector2D) -> None:
+    @abstractmethod
+    def center(self, value: Vector2D) -> None:
         """
         Setter for the center point of the shape.
 
-        :param value: New value of the center point of the shape.
-        :type value: forge.core.physics.vector.Vector2D
+        :param value: New value of the center of the shape.
+        :type value: Vector2D
         """
 
-    @abc.abstractmethod
+    @cached_property
+    @abstractmethod
+    def area(self) -> float:
+        """
+        Getter for the area of the shape.
+
+        :return: Area of the shape.
+        :rtype: float
+        """
+
+    @cached_property
+    @abstractmethod
+    def perimeter(self) -> float:
+        """
+        Getter for the perimeter of the shape.
+
+        :return: Perimeter of the shape.
+        :rtype: float
+        """
+
     def add_to_renderer(self) -> None:
-        """
-        Add the shape to a renderer.
-        """
+        """Add the shape to a renderer."""
+        renderer.get_master_renderer().add_shape(self)
 
-    @abc.abstractmethod
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render the shape to the display.
 
         :param display: Display to which the shape is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
+        for child in self.children:
+            child.render(display)
 
-    @abc.abstractmethod
     def update(self) -> None:
+        """Update the shape."""
+        if self.top_left != self._previous_position:
+            displacement: Vector2D = self.top_left - self._previous_position
+
+            for child in self.children:
+                child.top_left += displacement
+
+            self._previous_position = copy(self.top_left)
+
+        for child in self.children:
+            child.update()
+
+
+class UIElement(Renderable):
+    """UI element abstract base class for Hearth."""
+    __slots__ = 'color', 'parent', 'children', '_id', '_previous_position'
+
+    def __init__(self, color: Color, parent: Optional[UIComponent | Self] = None) -> None:
         """
-        Update the shape.
+        Initialize the UI element.
+
+        :param color: Color of the UI element.
+        :type color: Color
+        :param parent: Parent of the UI element; defaults to None.
+        :type parent: Optional[Self]
         """
+        self.color = color
+        self.parent = parent
+        self.children: list[Self | Shape] = []
 
+        self._id = id.generate_random_id()
+        self._previous_position = self.top_left
 
-class UIElement(abc.ABC):
-    """
-    Base UI element class for Hearth.
-    """
-    parent: typing.Self | None
-    children: list[typing.Self | Shape]
-    color: forge.core.engine.color.Color
-    _id: int
+        if self.parent is not None:
+            self.parent.children.append(self)
 
-    @abc.abstractmethod
     def id(self) -> int:
         """
         Get the unique ID of the UI element.
@@ -136,24 +181,71 @@ class UIElement(abc.ABC):
         :return: ID of the UI element.
         :rtype: int
         """
+        return self._id
 
-    @abc.abstractmethod
+    @property
+    @abstractmethod
+    def top_left(self) -> Vector2D:
+        """
+        Getter for the top-left-most point of the shape.
+
+        :return: Top-left-most point of the shape.
+        :rtype: Vector2D
+        """
+
+    @top_left.setter
+    @abstractmethod
+    def top_left(self, value: Vector2D) -> None:
+        """
+        Setter for the top-left-most point of the shape.
+
+        :param value: New value of the top-left-most point of the shape.
+        :type value: Vector2D
+        """
+
+    @property
+    @abstractmethod
+    def center(self) -> Vector2D:
+        """
+        Getter for the center point of the shape.
+
+        :return: Center point of the shape.
+        :rtype: Vector2D
+        """
+
+    @center.setter
+    @abstractmethod
+    def center(self, value: Vector2D) -> None:
+        """
+        Setter for the center point of the shape.
+
+        :param value: New value of the center of the shape.
+        :type value: Vector2D
+        """
+
     def add_to_renderer(self) -> None:
-        """
-        Add the UI element to a renderer.
-        """
+        """Add the UI element to a renderer."""
+        renderer.get_master_renderer().add_element(self)
 
-    @abc.abstractmethod
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render the UI element to the display.
 
         :param display: Display to which the UI element is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
+        for child in self.children:
+            child.render(display)
 
-    @abc.abstractmethod
     def update(self) -> None:
-        """
-        Update the UI element.
-        """
+        """Update the UI element."""
+        if self.top_left != self._previous_position:
+            displacement: Vector2D = self.top_left - self._previous_position
+
+            for child in self.children:
+                child.top_left += displacement
+
+            self._previous_position = self.top_left
+
+        for child in self.children:
+            child.update()

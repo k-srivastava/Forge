@@ -1,22 +1,22 @@
-"""
-Various base classes for Hearth components.
-"""
-import abc
-import typing
-
-import forge.core.engine.constants
-import forge.core.utils.aliases
-import forge.hearth.elements.base
+"""Various base classes used throughout Hearth to define more complex UI elements."""
+from forge.core.engine import renderer
+from forge.core.utils import id
+from forge.core.utils.aliases import Surface
+from forge.core.utils.base import Renderable
+from forge.hearth.elements.base import Shape, UIElement
 
 
-class UIComponent(abc.ABC):
-    """
-    Base UI component class for Hearth.
-    """
-    children: list[forge.hearth.elements.base.UIElement | typing.Self]
-    _id: int
+class UIComponent(Renderable):
+    """UI component base class for Hearth."""
+    __slots__ = 'children', '_id'
 
-    @abc.abstractmethod
+    def __init__(self, children: list[UIElement | Shape]) -> None:
+        self.children = children
+        self._id = id.generate_random_id()
+
+        for child in self.children:
+            child.parent = self
+
     def id(self) -> int:
         """
         Get the unique ID of the UI component.
@@ -24,24 +24,23 @@ class UIComponent(abc.ABC):
         :return: ID of the UI component.
         :rtype: int
         """
+        return self._id
 
-    @abc.abstractmethod
     def add_to_renderer(self) -> None:
-        """
-        Add the UI component and its base elements to their renderers respectively.
-        """
+        """Add the UI component to a renderer."""
+        renderer.get_master_renderer().add_component(self)
 
-    @abc.abstractmethod
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
-        Render the UI component and its elements to the display.
+        Render the UI component to the display.
 
-        :param display: Display to which the UI component and its elements are to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :param display: Display to which the UI component is to be rendered.
+        :type display: Surface
         """
+        for child in self.children:
+            child.render(display)
 
-    @abc.abstractmethod
     def update(self) -> None:
-        """
-        Update the UI component.
-        """
+        """Update the UI component."""
+        for child in self.children:
+            child.update()

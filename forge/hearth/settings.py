@@ -1,6 +1,4 @@
-"""
-Basic settings for UI described using Hearth.
-"""
+"""Basic settings for UI described using Hearth."""
 AUTO_RENDER_CHILDREN = True
 AUTO_UPDATE_CHILDREN = True
 
