@@ -1,27 +1,27 @@
 """
 Various base classes for Forge to organize code.
 """
-import abc
+from abc import ABC, abstractmethod
 
-import forge.core.utils.aliases
+from forge.core.utils.aliases import Surface
 
 
-class Renderable(abc.ABC):
+class Renderable(ABC):
     """
     Base renderable class for Forge.
     """
 
-    @abc.abstractmethod
+    @abstractmethod
     def add_to_renderer(self) -> None:
         """
         Add the object to a renderer.
         """
 
-    @abc.abstractmethod
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    @abstractmethod
+    def render(self, display: Surface) -> None:
         """
         Render the object to the display.
 
         :param display: Display to which the object is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """

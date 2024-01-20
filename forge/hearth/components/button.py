@@ -6,7 +6,6 @@ from forge.core.engine.color import Color
 from forge.core.managers import mouse
 from forge.core.managers.event import Event
 from forge.core.managers.mouse import MouseButton
-from forge.core.physics import vector
 from forge.core.physics.vector import Vector2D
 from forge.core.utils.aliases import Surface
 from forge.hearth.components.base import UIComponent
@@ -28,7 +27,7 @@ class Button(UIComponent):
         super().__init__(children)
 
         self.text = Text(
-            text, vector.zero(), font_size, font_face, text_color, text_background_color,
+            text, Vector2D.zero(), font_size, font_face, text_color, text_background_color,
             anti_aliasing=anti_aliasing
         )
 

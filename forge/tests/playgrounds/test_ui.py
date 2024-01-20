@@ -2,7 +2,6 @@ from forge.core.engine.color import Color
 from forge.core.engine.display import Display
 from forge.core.engine.game import Game
 from forge.core.managers import keyboard
-from forge.core.physics import vector
 from forge.core.physics.vector import Vector2D
 from forge.hearth.elements.shapes import Circle, Polygon, Rectangle
 from forge.hearth.elements.text import Text
@@ -12,7 +11,7 @@ class UITest(Game):
     def __init__(self) -> None:
         super().__init__(Display(title='UI Tests'))
 
-        self.title = Text('UI Test', vector.zero(), 64)
+        self.title = Text('UI Test', Vector2D.zero(), 64)
         self.title.center = Vector2D(self.display.width() // 2, 100)
 
         self.chassis = Rectangle(Vector2D(100, 100), 350, 150, Color(255, 80, 80))
@@ -28,8 +27,8 @@ class UITest(Game):
 
     def update(self) -> None:
         if keyboard.is_pressed(keyboard.Key.D):
-            self.chassis.top_left += vector.right()
-            self.polygon.center += vector.right()
+            self.chassis.top_left += Vector2D.right()
+            self.polygon.center += Vector2D.right()
 
         super().update()
 

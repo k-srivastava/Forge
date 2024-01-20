@@ -26,8 +26,10 @@ class Line(UIElement):
     """Basic lines in Hearth."""
     __slots__ = 'start_point', 'end_point', 'width'
 
-    def __init__(self, start_point: Vector2D, end_point: Vector2D, color: Color,
-                 parent: Optional[UIElement | Shape] = None, width: int = 1) -> None:
+    def __init__(
+            self, start_point: Vector2D, end_point: Vector2D, color: Color,
+            parent: Optional[UIElement | Shape] = None, width: int = 1
+    ) -> None:
         """
         Initialize the line.
 
@@ -126,9 +128,11 @@ class Rectangle(Shape):
     """Basic rectangles in Hearth."""
     __slots__ = 'width', 'height', 'corner_radius', '_top_left'
 
-    def __init__(self, top_left: Vector2D, width: int, height: int, color: Color,
-                 parent: Optional[UIElement | Shape] = None, line_width: int = 0, corner_radius: Optional[int] = None,
-                 border: Optional[Border] = None) -> None:
+    def __init__(
+            self, top_left: Vector2D, width: int, height: int, color: Color,
+            parent: Optional[UIElement | Shape] = None, line_width: int = 0, corner_radius: Optional[int] = None,
+            border: Optional[Border] = None
+    ) -> None:
         """
         Initialize the rectangle.
 
@@ -199,7 +203,7 @@ class Rectangle(Shape):
         """
         self._top_left = Vector2D(value.x - self.width // 2, value.y - self.height // 2)
 
-    @cached_property
+    @property
     def area(self) -> float:
         """
         Getter for the area of the rectangle.
@@ -209,7 +213,7 @@ class Rectangle(Shape):
         """
         return float(self.width * self.height)
 
-    @cached_property
+    @property
     def perimeter(self) -> float:
         """
         Getter for the perimeter of the rectangle.
@@ -218,6 +222,12 @@ class Rectangle(Shape):
         :rtype: float
         """
         return float((self.width + self.height) * 2)
+
+    def computed_width(self) -> float:
+        return self.width
+
+    def computed_height(self) -> float:
+        return self.height
 
     def vertices(self, clockwise: bool = True) -> tuple[Vector2D, Vector2D, Vector2D, Vector2D]:
         """
@@ -273,8 +283,10 @@ class Circle(Shape):
     """Basic circles in Hearth."""
     __slots__ = 'radius', 'line_width'
 
-    def __init__(self, center: Vector2D, radius: int, color: Color, parent: Optional[UIElement | Shape] = None,
-                 line_width: int = 0, border: Optional[Border] = None) -> None:
+    def __init__(
+            self, center: Vector2D, radius: int, color: Color, parent: Optional[UIElement | Shape] = None,
+            line_width: int = 0, border: Optional[Border] = None
+    ) -> None:
         """
         Initialize the circle.
 
@@ -358,6 +370,12 @@ class Circle(Shape):
         """
         return 2 * pi * self.radius
 
+    def computed_width(self) -> float:
+        return self.radius * 2
+
+    def computed_height(self) -> float:
+        return self.radius * 2
+
     def render(self, display: Surface) -> None:
         """
         Render the circle to the display.
@@ -381,8 +399,10 @@ class Polygon(Shape):
     """Basic polygons in Hearth."""
     __slots__ = 'vertices'
 
-    def __init__(self, vertices: list[Vector2D], color: Color, parent: Optional[UIElement | Shape] = None,
-                 line_width: int = 0, border: Optional[Border] = None) -> None:
+    def __init__(
+            self, vertices: list[Vector2D], color: Color, parent: Optional[UIElement | Shape] = None,
+            line_width: int = 0, border: Optional[Border] = None
+    ) -> None:
         """
         Initialize the polygon.
 
@@ -431,7 +451,7 @@ class Polygon(Shape):
         :return: Center point of the polygon.
         :rtype: vector.Vector2D
         """
-        total = vector.zero()
+        total = Vector2D.zero()
 
         for vertex in self.vertices:
             total += vertex
@@ -478,6 +498,14 @@ class Polygon(Shape):
         length += vector.distance_between(self.vertices[-1], self.vertices[0])
 
         return length
+
+    def computed_width(self) -> float:
+        vertices_x = (vertex.x for vertex in self.vertices)
+        return max(vertices_x) - min(vertices_x)
+
+    def computed_height(self) -> float:
+        vertices_y = (vertex.y for vertex in self.vertices)
+        return max(vertices_y) - min(vertices_y)
 
     def render(self, display: Surface) -> None:
         """

@@ -2,12 +2,12 @@
 """
 Custom function-overloading in Python using Python decorators with type-hints.
 """
-import functools
-import typing
+from functools import wraps
+from typing import Callable, Type
 
 
 # Code Source: https://stackoverflow.com/questions/25343981/method-overloading-for-different-argument-type-in-python
-def multidispatch(*types: typing.Type):
+def multidispatch(*types: Type):
     """
     Decorator for class methods using type-hints enabling, function-overloading using dynamic dispatch.
 
@@ -15,7 +15,7 @@ def multidispatch(*types: typing.Type):
     :type types: tuple[typing.Type]
     """
 
-    def register(function: typing.Callable):
+    def register(function: Callable):
         """
         Register the function under the decorator.
 
@@ -30,7 +30,7 @@ def multidispatch(*types: typing.Type):
         overloaded_function = multidispatch.registry.get(name)
 
         if overloaded_function is None:
-            @functools.wraps(function)
+            @wraps(function)
             def wrapper(self, *args):
                 """
                 Wrap the function to be overloaded and check if matches are found.

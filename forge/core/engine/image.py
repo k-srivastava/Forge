@@ -3,20 +3,18 @@ Images in Forge.
 """
 from __future__ import annotations
 
-import dataclasses
-import typing
-import warnings
+from dataclasses import dataclass, field
+from typing import Optional, Self
+from warnings import warn
 
 import attrs
 import pygame
 
-import forge.core.engine.constants
-import forge.core.engine.renderer
-import forge.core.physics.vector
-import forge.core.utils.aliases
-import forge.core.utils.base
-import forge.core.utils.dispatch
-import forge.core.utils.id
+from forge.core.engine import renderer
+from forge.core.physics.vector import Vector2D
+from forge.core.utils import dispatch, id
+from forge.core.utils.aliases import Surface
+from forge.core.utils.base import Renderable
 
 _IMAGES: dict[int, 'Image'] = {}
 IMAGE_IDS: dict[str, int] = {}
@@ -25,16 +23,16 @@ _IMAGE_POOLS: dict[int, 'ImagePool'] = {}
 IMAGE_POOL_IDS: dict[str, int] = {}
 
 
-@dataclasses.dataclass(slots=True)
-class Image(forge.core.utils.base.Renderable):
+@dataclass(slots=True)
+class Image(Renderable):
     """
     Forge's representation of a unique image.
     """
     filename: str
-    position: forge.core.physics.vector.Vector2D
+    position: Vector2D
     name: str = attrs.field(on_setattr=attrs.setters.frozen)
-    parent: ImagePool | None = dataclasses.field(default=None, init=False)
-    _id: int = dataclasses.field(init=False)
+    parent: Optional[ImagePool] = field(default=None, init=False)
+    _id: int = field(init=False)
 
     def __post_init__(self) -> None:
         """
@@ -46,28 +44,10 @@ class Image(forge.core.utils.base.Renderable):
         if self.name in IMAGE_IDS:
             raise ValueError(f'Cannot create two images of the same name: {self.name}.')
 
-        self._id = forge.core.utils.id.generate_random_id()
+        self._id = id.generate_random_id()
 
         _IMAGES[self._id] = self
         IMAGE_IDS[self.name] = self._id
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the image.
-
-        :return: Simple string with basic image data.
-        :rtype: str
-        """
-        return f'Image -> Name: {self.name}, Position: ({self.position.__repr__()})'
-
-    def __str__(self) -> str:
-        """
-        String representation of the image.
-
-        :return: Detailed string with image data.
-        :rtype: str
-        """
-        return f'Forge Image -> Name: {self.name}, Filename: {self.filename}, Position: ({self.position.__str__()})'
 
     def id(self) -> int:
         """
@@ -82,9 +62,9 @@ class Image(forge.core.utils.base.Renderable):
         """
         Add the image to a renderer.
         """
-        forge.core.engine.renderer.get_master_renderer().add_image(self)
+        renderer.get_master_renderer().add_image(self)
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render the Forge image as a Pygame surface to the display at its given position.
 
@@ -103,14 +83,14 @@ class Image(forge.core.utils.base.Renderable):
         return pygame.image.load(self.filename).convert_alpha()
 
 
-@dataclasses.dataclass(slots=True)
-class ImagePool(forge.core.utils.base.Renderable):
+@dataclass(slots=True)
+class ImagePool(Renderable):
     """
     Forge's image pool utility.
     """
     name: str = attrs.field(on_setattr=attrs.setters.frozen)
-    _id: int = dataclasses.field(init=False)
-    _images: list[Image] = dataclasses.field(default_factory=list)
+    _id: int = field(init=False)
+    _images: list[Image] = field(default_factory=list)
     _belongs_to_renderer: bool = False
 
     def __post_init__(self) -> None:
@@ -123,7 +103,7 @@ class ImagePool(forge.core.utils.base.Renderable):
         if self.name in IMAGE_POOL_IDS:
             raise ValueError(f'Cannot create two image pools of the same name: {self.name}.')
 
-        self._id = forge.core.utils.id.generate_random_id()
+        self._id = id.generate_random_id()
 
         _IMAGE_POOLS[self._id] = self
         IMAGE_POOL_IDS[self.name] = self._id
@@ -132,8 +112,8 @@ class ImagePool(forge.core.utils.base.Renderable):
             for image in self._images:
                 image.parent = self
 
-    @forge.core.utils.dispatch.multidispatch(Image)
-    def __iadd__(self, image: Image) -> typing.Self:
+    @dispatch.multidispatch(Image)
+    def __iadd__(self, image: Image) -> Self:
         """
         Add an image to the pool using the '+=' operator.
 
@@ -141,23 +121,23 @@ class ImagePool(forge.core.utils.base.Renderable):
         :type image: Image
 
         :return: Image pool with the image added to its internal list.
-        :rtype: typing.Self
+        :rtype: Self
 
         :raises ValueError: All images in the pool must be unique.
         """
         if image.parent == self:
-            warnings.warn(f'Image {image.name} is already part of the pool.')
+            warn(f'Image {image.name} is already part of the pool.')
             return self
 
         if not self._belongs_to_renderer:
             image.parent = self
-            forge.core.engine.renderer.get_master_renderer().add_image(image)
+            renderer.get_master_renderer().add_image(image)
 
         self._images.append(image)
         return self
 
-    @forge.core.utils.dispatch.multidispatch(list)
-    def __iadd__(self, images: list[Image]) -> typing.Self:
+    @dispatch.multidispatch(list)
+    def __iadd__(self, images: list[Image]) -> Self:
         """
         Add a list of images to the pool using the '+=' operator.
 
@@ -165,25 +145,25 @@ class ImagePool(forge.core.utils.base.Renderable):
         :type images: list[Image]
 
         :return: Image pool with the images added to its internal list.
-        :rtype: typing.Self
+        :rtype: Self
 
         :raises ValueError: All images in the pool must be unique.
         """
         for image in images:
             if image.parent == self:
-                warnings.warn(f'Image {image.name} is already part of the pool.')
+                warn(f'Image {image.name} is already part of the pool.')
                 continue
 
             if not self._belongs_to_renderer:
                 image.parent = self
-                forge.core.engine.renderer.get_master_renderer().add_image(image)
+                renderer.get_master_renderer().add_image(image)
 
             self._images.append(image)
 
         return self
 
-    @forge.core.utils.dispatch.multidispatch(Image)
-    def __isub__(self, image: Image) -> typing.Self:
+    @dispatch.multidispatch(Image)
+    def __isub__(self, image: Image) -> Self:
         """
         Remove an image from the pool using the '-=' operator.
 
@@ -191,7 +171,7 @@ class ImagePool(forge.core.utils.base.Renderable):
         :type image: Image
 
         :return: Image pool with the image removed from its internal list.
-        :rtype: typing.Self
+        :rtype: Self
 
         :raises ValueError: Image must be part of the pool to be removed.
         """
@@ -207,12 +187,12 @@ class ImagePool(forge.core.utils.base.Renderable):
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_master_renderer().remove_image(image)
+        renderer.get_master_renderer().remove_image(image)
 
         return self
 
-    @forge.core.utils.dispatch.multidispatch(str)
-    def __isub__(self, image_data: str | int) -> typing.Self:
+    @dispatch.multidispatch(str)
+    def __isub__(self, image_data: str | int) -> Self:
         image: Image
         if type(image_data) is str:
             image = get_image_from_name(image_data)
@@ -231,27 +211,9 @@ class ImagePool(forge.core.utils.base.Renderable):
         image.parent = None
 
         self._images.remove(image)
-        forge.core.engine.renderer.get_master_renderer().remove_image(image)
+        renderer.get_master_renderer().remove_image(image)
 
         return self
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the image.
-
-        :return: Simple string with basic image pool data.
-        :rtype: str
-        """
-        return f'Image Pool -> Name: {self.name}, Image Count: {len(self._images)}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the image.
-
-        :return: Detailed string with image pool data.
-        :rtype: str
-        """
-        return f'Forge Image Pool -> Name: {self.name}, Images: {self._images}'
 
     def id(self) -> int:
         """
@@ -275,14 +237,14 @@ class ImagePool(forge.core.utils.base.Renderable):
         """
         Add the image pool to its renderer.
         """
-        forge.core.engine.renderer.get_master_renderer().add_images(self._images)
+        renderer.get_master_renderer().add_images(self._images)
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         For each Forge image in the pool, render it as a Pygame surface to the display at its given position.
 
         :param display: Display to which the image pool is to be rendered.
-        :type display: core.utils.aliases.Surface
+        :type display: Surface
         """
         for image in self._images:
             image.render(display)
@@ -348,7 +310,7 @@ def delete_image_from_name(image_name: str) -> None:
         raise KeyError(f'Image named: {image_name} has not been registered as an image and cannot be deleted.')
 
     _IMAGES.pop(IMAGE_IDS[image_name])
-    forge.core.utils.id.delete_id(IMAGE_IDS[image_name])
+    id.delete_id(IMAGE_IDS[image_name])
     IMAGE_IDS.pop(image_name)
 
 
@@ -365,7 +327,7 @@ def delete_image_from_id(image_id: int) -> None:
         raise KeyError(f'Image with ID: {image_id} has not been registered as an image and cannot be deleted.')
 
     image_name = _IMAGES.pop(image_id).name
-    forge.core.utils.id.delete_id(image_id)
+    id.delete_id(image_id)
     IMAGE_IDS.pop(image_name)
 
 
@@ -427,7 +389,7 @@ def delete_image_pool_from_name(image_pool_name: str) -> None:
         )
 
     _IMAGE_POOLS.pop(IMAGE_POOL_IDS[image_pool_name])
-    forge.core.utils.id.delete_id(IMAGE_POOL_IDS[image_pool_name])
+    id.delete_id(IMAGE_POOL_IDS[image_pool_name])
     IMAGE_POOL_IDS.pop(image_pool_name)
 
 
@@ -447,5 +409,5 @@ def delete_image_pool_from_id(image_pool_id: int) -> None:
         )
 
     image_pool_name = _IMAGE_POOLS.pop(image_pool_id).name
-    forge.core.utils.id.delete_id(image_pool_id)
+    id.delete_id(image_pool_id)
     IMAGE_POOL_IDS.pop(image_pool_name)

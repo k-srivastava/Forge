@@ -1,45 +1,27 @@
 """
 Sprites in Forge.
 """
-import dataclasses
+from dataclasses import dataclass, field
 
 import pygame
 
-import forge.core.physics.vector
-import forge.core.utils.aliases
+from forge.core.physics.vector import Vector2D
+from forge.core.utils.aliases import Surface
 
 
-@dataclasses.dataclass(slots=True)
+@dataclass(slots=True)
 class Sprite:
     """
     Forge's representation of a generic sprite, without positional data.
     """
     filename: str
-    _scale: float = dataclasses.field(default=1.0)
-    surface: forge.core.utils.aliases.Surface = dataclasses.field(init=False)
-    _surface_raw: forge.core.utils.aliases.Surface = dataclasses.field(init=False)
+    _scale: float = field(default=1.0)
+    surface: Surface = field(init=False)
+    _surface_raw: Surface = field(init=False)
 
     def __post_init__(self) -> None:
         self._surface_raw = pygame.image.load(self.filename).convert_alpha()
         self.surface = pygame.transform.smoothscale_by(self._surface_raw, self._scale)
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the sprite.
-
-        :return: Simple string with sprite data.
-        :rtype: str
-        """
-        return f'Sprite -> Filename: {self.filename}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the sprite.
-
-        :return: Detailed string with sprite data.
-        :rtype: str
-        """
-        return f'Forge Sprite -> Filename: {self.filename}'
 
     @property
     def scale(self) -> float:
@@ -86,13 +68,13 @@ class Sprite:
         """
         return pygame.image.load(self.filename).convert_alpha().get_height() if with_scale else self.surface.get_width()
 
-    def render(self, display: forge.core.utils.aliases.Surface, position: forge.core.physics.vector.Vector2D) -> None:
+    def render(self, display: Surface, position: Vector2D) -> None:
         """
         Render the sprite as a Pygame surface to the display at its given position.
 
         :param display: Display to which the sprite is to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         :param position: Position at which the sprite is to be rendered.
-        :type position: forge.core.physics.vector.Vector2D
+        :type position: Vector2D
         """
         display.blit(self.surface, position.as_tuple())

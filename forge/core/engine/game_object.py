@@ -1,21 +1,20 @@
 """
 Game objects in Forge.
 """
-import dataclasses
+from typing import Optional
 
-import forge.core.engine.renderer
-import forge.core.engine.sprite
-import forge.core.managers.keyboard
-import forge.core.physics.vector
-import forge.core.utils.aliases
-import forge.core.utils.base
-import forge.core.utils.id
-import forge.hearth.elements.base
+from forge.core.engine import renderer
+from forge.core.engine.sprite import Sprite
+from forge.core.physics.vector import Vector2D
+from forge.core.utils import id
+from forge.core.utils.aliases import Surface
+from forge.core.utils.base import Renderable
+from forge.hearth.elements.base import Shape
 
 _GAME_OBJECTS: dict[int, 'GameObject'] = {}
 
 
-class GameObject(forge.core.utils.base.Renderable):
+class GameObject(Renderable):
     """
     Forge's representation of a game object.
     """
@@ -23,10 +22,10 @@ class GameObject(forge.core.utils.base.Renderable):
 
     def __init__(
             self,
-            name: str, position: forge.core.physics.vector.Vector2D,
-            shape: forge.hearth.elements.base.Shape | None = None,
-            sprite: forge.core.engine.sprite.Sprite | None = None,
-            sprite_offset: forge.core.physics.vector.Vector2D = forge.core.physics.vector.zero()
+            name: str, position: Vector2D,
+            shape: Optional[Shape] = None,
+            sprite: Optional[Sprite] = None,
+            sprite_offset: Vector2D = Vector2D.zero()
     ) -> None:
         """
         Initialize the game object.
@@ -34,20 +33,20 @@ class GameObject(forge.core.utils.base.Renderable):
         :param name: Name of the game object.
         :type name: str
         :param position: Position of the game object.
-        :type position: forge.core.physics.vector.Vector2D
+        :type position: Vector2D
         :param shape: Shape of the game object; defaults to None.
-        :type shape: forge.hearth.elements.base.Shape | None
+        :type shape: Optional[Shape]
         :param sprite: Sprite of the game object; defaults to None.
-        :type sprite: forge.core.engine.sprite.Sprite | None
+        :type sprite: Optional[Sprite]
         :param sprite_offset: Offset position of the sprite; defaults to a zero vector.
-        :type sprite_offset: forge.core.physics.vector.Vector2D
+        :type sprite_offset: Vector2D
         """
         self.name = name
         self.position = position
         self.shape = shape
         self.sprite = sprite
         self.sprite_offset = sprite_offset
-        self._id = forge.core.utils.id.generate_random_id()
+        self._id = id.generate_random_id()
 
         _GAME_OBJECTS[self._id] = self
 
@@ -64,9 +63,9 @@ class GameObject(forge.core.utils.base.Renderable):
         """
         Add the game object to the renderer.
         """
-        forge.core.engine.renderer.get_master_renderer().add_game_object(self)
+        renderer.get_master_renderer().add_game_object(self)
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render the game object to the display.
 

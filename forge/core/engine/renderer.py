@@ -3,20 +3,20 @@ Base renderer for Forge.
 """
 from __future__ import annotations
 
-import typing
+from typing import Optional, TYPE_CHECKING
 
-import forge.core.engine.constants
-import forge.core.engine.image
-import forge.core.utils.aliases
-import forge.core.utils.id
-import forge.hearth.settings
+from forge.core.engine.constants import CORE_RENDERER
+from forge.core.engine.image import Image, ImagePool
+from forge.core.utils import id
+from forge.core.utils.aliases import Surface
+from forge.hearth.settings import AUTO_RENDER_CHILDREN, AUTO_UPDATE_CHILDREN
 
-if typing.TYPE_CHECKING:
-    import forge.core.engine.game_object
-    import forge.hearth.components.base
-    import forge.hearth.elements.base
+if TYPE_CHECKING:
+    from forge.core.engine.game_object import GameObject
+    from forge.hearth.components.base import UIComponent
+    from forge.hearth.elements.base import Shape, UIElement
 
-_MASTER_RENDERER: list[MasterRenderer | None] = [None]
+_MASTER_RENDERER: list[Optional[MasterRenderer]] = [None]
 
 
 class CoreRenderer:
@@ -28,12 +28,12 @@ class CoreRenderer:
         """
         Initialize the core renderer.
         """
-        self.shapes: list[forge.hearth.elements.base.Shape] = []
-        self.game_objects: list[forge.core.engine.game_object.GameObject] = []
-        self.image_pool: forge.core.engine.image.ImagePool = forge.core.engine.image.ImagePool(
-            forge.core.engine.constants.CORE_RENDERER, _images=[], _belongs_to_renderer=True
+        self.shapes: list[Shape] = []
+        self.game_objects: list[GameObject] = []
+        self.image_pool: ImagePool = ImagePool(
+            CORE_RENDERER, _images=[], _belongs_to_renderer=True
         )
-        self._id: int = forge.core.utils.id.generate_random_id()
+        self._id: int = id.generate_random_id()
 
     def id(self) -> int:
         """
@@ -44,12 +44,12 @@ class CoreRenderer:
         """
         return self._id
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render all the images, shapes and game objects.
 
         :param display: Display to which the image and shapes are to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
         for shape in self.shapes:
             shape.render(display)
@@ -82,9 +82,9 @@ class UIRenderer:
         """
         Initialize the UI renderer.
         """
-        self.elements: list[forge.hearth.elements.base.UIElement] = []
-        self.components: list[forge.hearth.components.base.UIComponent] = []
-        self._id: int = forge.core.utils.id.generate_random_id()
+        self.elements: list[UIElement] = []
+        self.components: list[UIComponent] = []
+        self._id: int = id.generate_random_id()
 
     def id(self) -> int:
         """
@@ -95,12 +95,12 @@ class UIRenderer:
         """
         return self._id
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render all the UI elements and components.
 
         :param display: Display to which the UI elements and components are to be rendered.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
         rendered_element_ids: set[int] = set()
 
@@ -113,7 +113,7 @@ class UIRenderer:
             element.render(display)
             rendered_element_ids.add(element_id)
 
-            if forge.hearth.settings.AUTO_RENDER_CHILDREN:
+            if AUTO_RENDER_CHILDREN:
                 for child in element.children:
                     rendered_element_ids.add(child.id())
 
@@ -138,7 +138,7 @@ class UIRenderer:
             element.update()
             updated_element_ids.add(element_id)
 
-            if forge.hearth.settings.AUTO_UPDATE_CHILDREN:
+            if AUTO_UPDATE_CHILDREN:
                 for child in element.children:
                     updated_element_ids.add(child.id())
 
@@ -160,7 +160,7 @@ class MasterRenderer:
 
         self._core_renderer: CoreRenderer = CoreRenderer()
         self._ui_renderer: UIRenderer = UIRenderer()
-        self._id: int = forge.core.utils.id.generate_random_id()
+        self._id: int = id.generate_random_id()
 
         _MASTER_RENDERER[0] = self
 
@@ -173,111 +173,111 @@ class MasterRenderer:
         """
         return self._id
 
-    def add_image(self, image: forge.core.engine.image.Image) -> None:
+    def add_image(self, image: Image) -> None:
         """
         Add an image to the core renderer of the master renderer.
 
         :param image: Image to be added.
-        :type image: forge.core.engine.image.Image
+        :type image: Image
         """
         self._core_renderer.image_pool += image
 
-    def add_images(self, images: list[forge.core.engine.image.Image]) -> None:
+    def add_images(self, images: list[Image]) -> None:
         """
         Add a multiple images to the core renderer of the master renderer.
 
         :param images: Images to be added.
-        :type images: list[forge.core.engine.image.Image]
+        :type images: list[Image]
         """
         self._core_renderer.image_pool += images
 
-    def remove_image(self, image: forge.core.engine.image.Image) -> None:
+    def remove_image(self, image: Image) -> None:
         """
         Remove an image from the core renderer of the master renderer.
 
         :param image: Image to be removed.
-        :type image: forge.core.engine.image.Image
+        :type image: Image
         """
         self._core_renderer.image_pool -= image
 
-    def add_shape(self, shape: forge.hearth.elements.base.Shape) -> None:
+    def add_shape(self, shape: Shape) -> None:
         """
         Add a shape to the core renderer of the master renderer.
 
         :param shape: Shape to be added.
-        :type shape: forge.hearth.elements.base.Shape
+        :type shape: Shape
         """
         self._core_renderer.shapes.append(shape)
 
-    def remove_shape(self, shape: forge.hearth.elements.base.Shape) -> None:
+    def remove_shape(self, shape: Shape) -> None:
         """
         Remove a shape from the core renderer of the master renderer.
 
         :param shape: Shape to be removed.
-        :type shape: forge.hearth.elements.base.Shape
+        :type shape: Shape
         """
         self._core_renderer.shapes.remove(shape)
 
-    def add_game_object(self, game_object: forge.core.engine.game_object.GameObject) -> None:
+    def add_game_object(self, game_object: GameObject) -> None:
         """
         Add a game object to the core renderer of the master renderer.
 
         :param game_object: Game object to be added.
-        :type game_object: forge.core.engine.game_object.GameObject
+        :type game_object: GameObject
         """
         self._core_renderer.game_objects.append(game_object)
 
-    def remove_game_object(self, game_object: forge.core.engine.game_object.GameObject) -> None:
+    def remove_game_object(self, game_object: GameObject) -> None:
         """
         Remove a game object from the core renderer of the master renderer.
 
         :param game_object: Game object to be removed.
-        :type game_object: forge.core.engine.game_object.GameObject
+        :type game_object: GameObject
         """
         self._core_renderer.game_objects.remove(game_object)
 
-    def add_element(self, element: forge.hearth.elements.base.UIElement) -> None:
+    def add_element(self, element: UIElement) -> None:
         """
         Add an element to the UI renderer of the master renderer.
 
         :param element: Element to be added.
-        :type element: forge.hearth.elements.base.Shape
+        :type element: UIElement
         """
         self._ui_renderer.elements.append(element)
 
-    def remove_element(self, element: forge.hearth.elements.base.UIElement) -> None:
+    def remove_element(self, element: UIElement) -> None:
         """
         Remove an element from the UI renderer of the master renderer.
 
         :param element: Element to be removed.
-        :type element: forge.hearth.elements.base.Shape
+        :type element: UIElement
         """
         self._ui_renderer.elements.remove(element)
 
-    def add_component(self, component: forge.hearth.components.base.UIComponent) -> None:
+    def add_component(self, component: UIComponent) -> None:
         """
         Add a component to the UI renderer of the master renderer.
 
         :param component: Component to be added.
-        :type component: forge.hearth.elements.base.Shape
+        :type component: UIComponent
         """
         self._ui_renderer.components.append(component)
 
-    def remove_component(self, component: forge.hearth.components.base.UIComponent) -> None:
+    def remove_component(self, component: UIComponent) -> None:
         """
         Remove a component from the UI renderer of the master renderer.
 
         :param component: Component to be removed.
-        :type component: forge.hearth.elements.base.Shape
+        :type component: UIComponent
         """
         self._ui_renderer.components.remove(component)
 
-    def render(self, display: forge.core.utils.aliases.Surface) -> None:
+    def render(self, display: Surface) -> None:
         """
         Render all the renderers.
 
         :param display: Display to which the renderers have to render.
-        :type display: forge.core.utils.aliases.Surface
+        :type display: Surface
         """
         self._core_renderer.render(display)
         self._ui_renderer.render(display)
@@ -293,11 +293,11 @@ class MasterRenderer:
         self._ui_renderer.update(delta_time)
 
 
-def get_master_renderer() -> MasterRenderer | None:
+def get_master_renderer() -> Optional[MasterRenderer]:
     """
     Retrieve the current master renderer.
 
     :return: Current master renderer; if it exists.
-    :rtype: MasterRenderer | None
+    :rtype: Optional[MasterRenderer]
     """
     return _MASTER_RENDERER[0]

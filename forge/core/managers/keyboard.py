@@ -1,17 +1,17 @@
 """
 Keyboard management in Forge.
 """
-import enum
-import typing
+from enum import IntEnum
+from typing import Sequence
 
 import pygame
 
-import forge.core.engine.game
+from forge.core.engine import game
 
 DISABLED = False
 
 
-class Key(enum.IntEnum):
+class Key(IntEnum):
     """
     Keys with direct-wrapping to Pygame's key-codes; which themselves are wrapped for SDL key codes.
     """
@@ -180,10 +180,10 @@ def is_clicked(key: Key) -> bool:
     if DISABLED:
         return False
 
-    game = forge.core.engine.game.get_game()
+    current_game = game.get_game()
 
-    if game is not None:
-        for event in game.event_list:
+    if current_game is not None:
+        for event in current_game.event_list:
             if event.type == pygame.KEYDOWN:
                 if event.key == key.value:
                     return True
@@ -202,10 +202,10 @@ def is_any_clicked() -> bool:
     if DISABLED:
         return False
 
-    game = forge.core.engine.game.get_game()
+    current_game = game.get_game()
 
-    if game is not None:
-        for event in game.event_list:
+    if current_game is not None:
+        for event in current_game.event_list:
             if event.type == pygame.KEYDOWN:
                 return True
 
@@ -260,12 +260,12 @@ def is_none_pressed() -> bool:
     return True
 
 
-def get_all_pressed() -> typing.Sequence[bool]:
+def get_all_pressed() -> Sequence[bool]:
     """
     Get all the keys of the keyboard.
 
     :return: All the keys that are pressed.
-    :rtype: typing.Sequence[bool]
+    :rtype: Sequence[bool]
     """
     if DISABLED:
         return pygame.key.ScancodeWrapper()

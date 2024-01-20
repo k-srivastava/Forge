@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from abc import abstractmethod
 from copy import copy
-from functools import cached_property
 from typing import Optional, Self, TYPE_CHECKING
 
 from forge.core.engine import renderer
@@ -24,8 +23,10 @@ class Shape(Renderable):
     """Shape base class for Hearth."""
     __slots__ = 'color', 'line_width', 'border', 'parent', 'children', '_id', '_previous_position'
 
-    def __init__(self, color: Color, line_width: int = 0, border: Optional[Border] = None,
-                 parent: Optional[UIComponent | UIElement | Shape] = None) -> None:
+    def __init__(
+            self, color: Color, line_width: int = 0, border: Optional[Border] = None,
+            parent: Optional[UIComponent | UIElement | Shape] = None
+    ) -> None:
         """
         Initialize the shape.
 
@@ -103,7 +104,7 @@ class Shape(Renderable):
         :type value: Vector2D
         """
 
-    @cached_property
+    @property
     @abstractmethod
     def area(self) -> float:
         """
@@ -113,7 +114,7 @@ class Shape(Renderable):
         :rtype: float
         """
 
-    @cached_property
+    @property
     @abstractmethod
     def perimeter(self) -> float:
         """
@@ -122,6 +123,14 @@ class Shape(Renderable):
         :return: Perimeter of the shape.
         :rtype: float
         """
+
+    @abstractmethod
+    def computed_width(self) -> float:
+        ...
+
+    @abstractmethod
+    def computed_height(self) -> float:
+        ...
 
     def add_to_renderer(self) -> None:
         """Add the shape to a renderer."""

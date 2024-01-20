@@ -1,6 +1,7 @@
 from forge.core.engine import display, game, game_object, sprite
 from forge.core.managers import keyboard
 from forge.core.physics import vector
+from forge.core.physics.vector import Vector2D
 from forge.hearth.elements import text
 
 
@@ -9,13 +10,13 @@ class Flower(game_object.GameObject):
         super().__init__('Flower', position, sprite=sprite.Sprite(asset))
 
         self.speed = 300
-        self.direction = vector.zero()
+        self.direction = Vector2D.zero()
 
         self.add_to_renderer()
 
     def input_manager(self) -> None:
         if keyboard.is_none_pressed():
-            self.direction = vector.zero()
+            self.direction = Vector2D.zero()
 
         keys = keyboard.get_all_pressed()
 
@@ -70,7 +71,7 @@ class GameObjectTest(game.Game):
         for i in range(6):
             self.flowers.append(Flower(vector.Vector2D(i * 100, i * 100), 'assets/flower.png'))
 
-        title = text.Text('Game Object Test', 64, vector.zero())
+        title = text.Text('Game Object Test', Vector2D.zero(), 64)
         title.center = vector.Vector2D(display.get_display().width() // 2, 120)
 
         for flower in self.flowers:

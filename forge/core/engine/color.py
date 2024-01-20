@@ -214,24 +214,6 @@ class Color:
         """
         return Color(self.red, self.green, self.blue, self.alpha)
 
-    def __repr__(self) -> str:
-        """
-        Internal representation of the color.
-
-        :return: Simple string with values of all components of the color.
-        :rtype: str
-        """
-        return f'Color -> R: {self.red}, G: {self.green}, B: {self.blue}, A: {self.alpha}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the color.
-
-        :return: Detailed string with values of all components of the color.
-        :rtype: str
-        """
-        return f'Forge ColorRGBA -> Red: {self.red}, Green: {self.green}, Blue: {self.blue}, Alpha: {self.alpha}'
-
     def as_tuple(self, with_alpha: bool = False) -> tuple[int, int, int] | tuple[int, int, int, int]:
         """
         Return the R, G, B and (optionally) A components of the Color in a tuple. Beneficial for internal

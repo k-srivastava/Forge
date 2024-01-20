@@ -3,18 +3,20 @@ Base display for Forge.
 """
 from __future__ import annotations
 
+from typing import Optional
+
 import pygame
 
-import forge.core.engine.color
-import forge.core.engine.constants
-import forge.core.engine.renderer
-import forge.core.engine.sprite
-import forge.core.physics.vector
-import forge.core.utils.aliases
+from forge.core.engine.color import Color
+from forge.core.engine.renderer import MasterRenderer
+from forge.core.engine.sprite import Sprite
+from forge.core.physics import vector
+from forge.core.physics.vector import Vector2D
+from forge.core.utils.aliases import Surface
 
 # Store the current display in a list of length one.
 # A list has to be used because a global variable becomes lengthy to implement.
-_DISPLAY: list[Display | None] = [None]
+_DISPLAY: list[Optional[Display]] = [None]
 
 
 class Display:
@@ -29,8 +31,8 @@ class Display:
 
     def __init__(
             self, width: int = 1280, height: int = 720, title: str = 'Forge', max_fps: int = 0,
-            background_color: forge.core.engine.color.Color = forge.core.engine.color.Color(0, 0, 0),
-            icon: forge.core.engine.sprite.Sprite | None = None
+            background_color: Color = Color(0, 0, 0),
+            icon: Optional[Sprite] = None
     ) -> None:
         """
         Initialize the Forge display.
@@ -43,9 +45,9 @@ class Display:
         :param max_fps: Maximum FPS of the display; defaults to 0.
         :type max_fps: int
         :param background_color: Background color of the display; defaults to black.
-        :type background_color: forge.core.engine.color.Color
+        :type background_color: Color
         :param icon: Window icon sprite, if any; defaults to None.
-        :type icon: forge.core.engine.sprite.Sprite | None
+        :type icon: Optional[Sprite]
         """
         if _DISPLAY[0] is not None:
             raise SyntaxError()
@@ -55,7 +57,7 @@ class Display:
         self.background_color = background_color
         self.icon = icon
 
-        self.master_renderer = forge.core.engine.renderer.MasterRenderer()
+        self.master_renderer = MasterRenderer()
 
         self._surface = pygame.display.set_mode((width, height))
         self._clock = pygame.time.Clock()
@@ -67,25 +69,6 @@ class Display:
             pygame.display.set_icon(icon.surface)
 
         _DISPLAY[0] = self
-
-    def __repr__(self) -> str:
-        """
-        Internal representation of the display.
-
-        :return: Simple string with basic display data.
-        :rtype: str
-        """
-        return f'Display -> Width: {self.width()}, Height: {self.height()}, Title: {self.title}'
-
-    def __str__(self) -> str:
-        """
-        String representation of the display.
-
-        :return: Detailed string with display data.
-        :rtype: str
-        """
-        return f'Forge Display -> Width: {self.width()}, Height: {self.height()}, Title: {self.title}, ' \
-               f'Max FPS: {self.max_fps}, Icon: ({self.icon.__str__()})'
 
     @staticmethod
     def width() -> int:
@@ -108,16 +91,16 @@ class Display:
         return pygame.display.get_window_size()[1]
 
     @staticmethod
-    def size() -> forge.core.physics.vector.Vector2D:
+    def size() -> Vector2D:
         """
         Get the size of the display as a Forge Vector2D.
 
         :return: Size of the display.
         :rtype: forge.core.physics.vector.Vector2D
         """
-        return forge.core.physics.vector.from_tuple(pygame.display.get_window_size())
+        return vector.from_tuple(pygame.display.get_window_size())
 
-    def surface(self) -> forge.core.utils.aliases.Surface:
+    def surface(self) -> Surface:
         """
         Get the surface of the display.
 
@@ -153,11 +136,11 @@ class Display:
         pygame.display.flip()
 
 
-def get_display() -> Display | None:
+def get_display() -> Optional[Display]:
     """
     Retrieve the current display.
 
     :return: Current display; if it exists.
-    :rtype: Display | None
+    :rtype: Optional[Display]
     """
     return _DISPLAY[0]
